@@ -1,7 +1,7 @@
 #include "goal.h"
 class Criterion {
     //need to add an index parameter which begins at -1
-    enum class Type {Assignment, Midterm, Exam};
+    enum class Type {ASSIGNMENT, MIDTERM, EXAM};
     Type type;
     int index;
     Goal *adjacents[3];
