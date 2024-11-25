@@ -12,6 +12,7 @@ class Player : public Observer {
     vector<Criterion*> criteria;
     vector<Goal*> goals;
     map<string, int> resources;
+    char name;
     LoadedDice LDice;
     UnloadedDice Dice; //these should be able to be combined into one i just dont know how.
     public:
