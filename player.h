@@ -15,9 +15,9 @@ class Player : public Observer {
     LoadedDice LDice;
     UnloadedDice Dice; //these should be able to be combined into one i just dont know how.
     public:
-        void completeCriterion(int index);
-        void improveCriterion(int index);
-        void achieveGoal(int index);
+        bool completeCriterion(int index);
+        bool improveCriterion(int index);
+        bool achieveGoal(int index);
         void trade();
         void moveGoose(int index);
         void addResources(string resource, int count);
