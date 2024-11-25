@@ -70,9 +70,4 @@ class Board {
             }
         }
     }
-    std::ostream &operator<<(std::ostream &out) {
-        out << "                                          ";
-        out << "                                   |" << criteria[0].getOwner() << "|--" << goals[0].getOwner() << "--|" << criteria[1].getOwner() << "";
-        out << "                                   /                   \"
-    }
 };

@@ -10,5 +10,6 @@ class Board {
     public:
         std::ostream &operator<<(std::ostream &out);
         void saveBoard();
-        void loadBoard(bool random, int seed = 0);
+        //void loadBoard(bool random, int seed = 0, std::string boardFile = "");
+        //void loadGame(bool random, int seed = 0, std::string gameFile = "");
 };

@@ -1,5 +1,8 @@
 #include "board.h"
 #include "player.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 const int NUM_PLAYERS = 4;
 
 int main(int argc, char* argv[]) {
@@ -8,17 +11,82 @@ int main(int argc, char* argv[]) {
     Player students[NUM_PLAYERS];
     string turnOrder[] = {"Blue", "Red", "Orange", "Yellow"};
     int currentTurn = 0;
-    for(int i = 0; i < argc/2; i++) {
-        if(argv[i*2] == "-load") {
-            //load state from file
+    string command = "";
+    string boardFile = "";
+    string gameFile = "";
+    int seed = 0;
+    for (int i = 1; i < argc; i += 2) {
+        command = argv[i];
+        if (command == "-load") {
+            gameFile = argv[i + 1];
         }
-        if(argv[i*2] == "-seed") {
-            //set rng seed (idk what this is tbh, it might affect dice too)
+        else if (command == "-seed") {
+            seed = stoi(argv[i + 1]);
         }
-        if(argv[i*2] == "-board") {
-            //load board from file (sets players to default)
+        else if (command == "-board") {
+            boardFile = argv[i + 1];
         }
     }
+    if (gameFile != "") {
+        // load game with seed
+        
+        ifstream fileStream{gameFile};
+        string line;
+        getline(fileStream, line);
+        currentTurn = stoi(line);
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            getline(fileStream, line);
+            istringstream iss{line};
+            string readValue;
+            int count = 0;
+            map<string, int> resources;
+            while (count < 5 && iss >> readValue) {
+                if (count == 0) {
+                    resources["CAFFEINE"] = stoi(readValue);
+                }
+                else if (count == 1) {
+                    resources["LAB"] = stoi(readValue);
+                }
+                else if (count == 2) {
+                    resources["LECTURE"] = stoi(readValue);
+                }
+                else if (count == 3) {
+                    resources["STUDY"] = stoi(readValue);
+                }
+                else if (count == 4) {
+                    resources["TUTORIALS"] = stoi(readValue);
+                }
+                count++;
+            }
+            count = 0;
+            iss >> readValue;
+            Goal *goals = new Goal[71]; 
+            if (readValue == "g") {
+                while (readValue != "c") {
+                    iss >> readValue;
+                    if (readValue == "c") {
+                        break;
+                    }
+                    else {
+                        goals[readValue] 
+                    }
+                    
+                }
+            }
+        }
+        // curTurn
+
+        // loop through players, storing data
+        // load board
+        // geese tile number
+    }
+    else if (boardFile != "") {
+        // load board with seed
+    }
+    else {
+        // load random board
+    }
+
     //Stage 2: Setup
     for(int i = 0; i < NUM_PLAYERS; i++) {
         cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
