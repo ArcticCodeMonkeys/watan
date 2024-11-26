@@ -5,7 +5,9 @@
 #include "dice.h"
 
 
-Player::Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name): criteria{criteria}, goals{goals}, resources{resources}, name{name}  {}
+Player::Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name): criteria{criteria}, goals{goals}, resources{resources}, name{name}, victoryPoints{0}, dice{Dice::createFairDice()} {
+    //calculate and update victory points
+}
 Player::Player() {
     criteria = vector<Criterion*>();
     goals = vector<Goal*>();
@@ -18,7 +20,8 @@ Player::Player() {
         {"NETFLIX", 0}
     };
     name = '\0';
-    
+    victoryPoints = 0;
+    dice = Dice::createFairDice();
 }
 Player::~Player() {}
 bool Player::completeCriterion(int index) {
@@ -124,16 +127,4 @@ vector<Goal*> Player::getGoals() {
 
 void Player::setGoals(vector<Goal*> goals) {
     this->goals = goals;
-}
-
-bool Player::getUseLoadedDice() {
-    return useLoadedDice;
-}
-
-void Player::setUseLoadedDice(bool useLoadedDice) {
-    this->useLoadedDice = useLoadedDice;
-}
-
-LoadedDice Player::getLDice() {
-    return LDice;
 }
