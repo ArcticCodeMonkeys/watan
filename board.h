@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <iostream>
-
+#include <map>
 
 class Tile;
 class Goal;
@@ -13,6 +13,7 @@ class Board {
     Criterion *criteria[53];
     public:
         Board();
+        Board::Board(map<string, int> hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[][], int geeseTile);
         Board(int tile[19][2]);
         std::ostream &operator<<(std::ostream &out);
         void saveBoard();

@@ -60,14 +60,18 @@ Board::Board() {
     };
     for (int i = 0; i < TILE_COUNT; ++i) {
         for (int k = 0; k < 6; ++k) {
-            tiles[i]->criteria[k] = criteria[criteriaMap[i][k]];
+            tiles[i]->setCriteria(k, criteria[criteriaMap[i][k]]);
         }
     }
     for (int i = 0; i < TILE_COUNT; ++i) {
         for (int k = 0; k < 6; ++k) {
-            tiles[i]->goals[k] = goals[goalMap[i][k]];
+            tiles[i]->setCriteria(k, goals[goalMap[i][k]]);
         }
     }
+}
+
+Board::Board(map<string, int> hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int *tile[], int geeseTile) {
+
 }
 
 Tile ** Board::getTiles() {
