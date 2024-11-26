@@ -1,3 +1,5 @@
+#ifndef DICE_H
+#define DICE_H
 #include "subject.h"
 using namespace std;
 class Dice : public Subject {
@@ -15,3 +17,4 @@ class UnloadedDice : public Dice {
     public:
         int rollDice() override;
 };
+#endif
