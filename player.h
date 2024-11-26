@@ -15,6 +15,7 @@ class Player : public Observer {
     vector<Goal*> goals;
     map<string, int> resources;
     char name;
+    int victoryPoints;
     bool useLoadedDice = false;
     LoadedDice LDice;
     UnloadedDice Dice; //these should be able to be combined into one i just dont know how.
