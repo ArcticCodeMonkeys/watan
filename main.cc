@@ -164,28 +164,29 @@ int main(int argc, char* argv[]) {
     bool gameLoop = true;
     while(gameLoop) {
         //Step 1: Set the Dice
-        cout << "Student " << students[currentTurn].name << "'s Turn" << endl;
-        students[currentTurn].printStatus();
+        Player current = students[currentTurn];
+        cout << "Student " << current.name << "'s Turn" << endl;
+        current.printStatus();
         string rollCommand;
-        while(cin >> rollCommand) {
+        while(getline(cin, rollCommand)) {
             if(rollCommand == "roll") {
                 break;
             } else if (rollCommand = "load") {
-                students[currentTurn].useLoadedDice = true;
-                students[currentTurn].lDice.fixedVal << cin;
+                current.useLoadedDice = true;
+                current.lDice.fixedVal << cin;
             } else if (rollCommand == "fair") {
-                students[currentTurn].useLoadedDice = false;
+                current.useLoadedDice = false;
             } else {
                 cout << "Invalid Command; try either roll, load x, or fair." << endl;
             }
         }
         //Step 2: Roll the Dice
-        int diceRoll = students[currentTurn].rollDice();
+        int diceRoll = current.rollDice();
         if(diceRoll == 7) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
                 int cardCount = 0;
-                for(auto it = players[i].resources.begin(); it != players[i].resources.end(); ++it) {
+                for(auto it = students[i].resources.begin(); it != students[i].resources.end(); ++it) {
                     cardCount += it->second;
                 }
                 if(cardCount >= 10) {
@@ -195,7 +196,7 @@ int main(int argc, char* argv[]) {
             cout << "Choose where to place the GEESE." << endl;
             int index;
             index << cin;
-            if(board->tile[index].goosed == false) {
+            if(!(board->tile[index].goosed)) {
                 for(int i = 0; i < 19; i++) {
                     if(board->tile[i].goosed) {
                         board->tile[i].goosed = false;
@@ -217,7 +218,7 @@ int main(int argc, char* argv[]) {
         while(cin >> command) {
             switch(command) {
             case "next":
-                currentTurn = (currentTurn + 1)%4;
+                currentTurn = (currentTurn + 1) % 4;
                 exit = true;
                 break;
             case "board":
@@ -234,16 +235,56 @@ int main(int argc, char* argv[]) {
                 }
                 break;
             case "achieve":
-                break;
+                int index;
+                cin >> index;
+                current.achieveGoal(index);
             case "complete":
+                int index;
+                cin >> index;
+                current.completeCriterion(index);
                 break;
             case "improve":
+                int index;
+                cin >> index;
+                current.improveCriterion(index);
                 break;
             case "trade":
+                string target;
+                string give;
+                string take;
+                cin >> target;
+                cin >> give;
+                cin >> take;
+                for (int i = 0; i < NUM_PLAYERS; i++) {
+                    if (students[i].name == target) {
+                        current.trade(give, take, students[i]);
+                        break;
+                    }
+                }
                 break;
             case "save":
+                string saveFile;
+                cin >> saveFile;
+                ofstream saveStream{saveFile};
+                saveStream << currentTurn << endl;
+                for(int i = 0; i < NUM_PLAYERS; i++) {
+                    saveStream << students[i];
+                }
+                saveStream << board;
                 break;
             case "help":
+                cout << "Valid commands: " << endl
+                << "board " << endl
+                << "status " << endl
+                << "criteria " << endl
+                << "achieve " << endl
+                << "<goal> " << endl
+                << "complete <criterion> " << endl
+                << "improve <criterion> " << endl
+                << "trade <colour> <give> <take> " << endl
+                << "next " << endl 
+                << "save <file> " << endl
+                << "help" << endl;
                 break;
             }
             if(exit) {
