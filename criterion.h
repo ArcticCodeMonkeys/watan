@@ -23,6 +23,7 @@ class Criterion: public Observer {
         void printType();
         char getType();
         void setType(char t);
+        int getIndex();
         Criterion();
         void notify(string resource);
         friend std::ostream &operator<<(std::ostream &out, const Criterion &criterion);

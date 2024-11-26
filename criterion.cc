@@ -76,4 +76,6 @@ void Criterion::notify(string resource) {
             player->addResources(resource, 3);
         }
     }
+int Criterion::getIndex() {
+    return index;
 }

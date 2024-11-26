@@ -1,10 +1,9 @@
 #ifndef DICE_H
 #define DICE_H
-#include "subject.h"
 #include <memory>
 
 using namespace std;
-class Dice : public Subject {
+class Dice {
     public:
         virtual ~Dice() = default;
         virtual int rollDice() = 0;

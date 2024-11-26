@@ -63,15 +63,23 @@ Board::Board() {
             tiles[i]->setCriteria(k, criteria[criteriaMap[i][k]]);
         }
     }
-    for (int i = 0; i < TILE_COUNT; ++i) {
-        for (int k = 0; k < 6; ++k) {
-            tiles[i]->setCriteria(k, goals[goalMap[i][k]]);
-        }
-    }
+    
 }
 
 Board::Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int *tile[], int geeseTile) {
+}
 
+
+friend std::ostream& operator<<(std::ostream& out, const Board& board) {
+    cout << "      |00|--00--|00|     " << endl;
+    cout << "      /            \\    " << endl;
+    cout << "    00			   00  " << endl;
+    cout << "   / \\ " << endl;
+    cout << "|00|				   |00|
+      \				               /
+       00			          00
+           \			         /
+             |00|--00--|00|"
 }
 
 Tile ** Board::getTiles() {

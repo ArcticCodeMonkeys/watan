@@ -5,7 +5,12 @@
 #include "dice.h"
 
 
-Player::Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name): criteria{criteria}, goals{goals}, resources{resources}, name{name}  {}
+Player::Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name): criteria{criteria}, goals{goals}, resources{resources}, name{name}, victoryPoints{0}, dice{Dice::createFairDice()} {
+    for(auto it = getCriteria().begin(); it != getCriteria().end(); ++it) {
+        char type = (*it)->getType();
+        victoryPoints += (type == 'E' ? 3 : (type == 'M' ? 2 : (type == 'A' ? 1 : 0)));
+    }
+}
 Player::Player() {
     criteria = vector<Criterion*>();
     goals = vector<Goal*>();
@@ -18,7 +23,8 @@ Player::Player() {
         {"NETFLIX", 0}
     };
     name = '\0';
-    
+    victoryPoints = 0;
+    dice = Dice::createFairDice();
 }
 Player::~Player() {}
 bool Player::completeCriterion(int index) {
@@ -90,8 +96,20 @@ void Player::trade(Player p, string ask, string give) {
     cout << p.name << " declined the offer." << endl;
 }
 
+void Player::addResources(string resource, int count) {
+    resources[resource] += count;
+}
+
 std::ostream &Player::operator<<(std::ostream &out) {
     out << name << " has " << victoryPoints <<  " victory points, " << resources["CAFFEINE"] << " caffeines, " << resources["LABS"] << " labs, " << resources["LECTURES"] << " lectures, " << resources["TUTORIALS"] << " tutorials, and " << resources["STUDIES"] << " studies." << endl;
+}
+
+void Player::printCriteria() {
+    cout << getName() << " has completed: " << endl;
+    for(auto it = getCriteria().begin(); it != getCriteria().end(); ++it) {
+        Criterion* criterion = *it;
+        cout << criterion->getIndex() << " " << criterion->getType() << endl;
+    }
 }
 
 void Player::setName(char name) {
@@ -124,16 +142,4 @@ vector<Goal*> Player::getGoals() {
 
 void Player::setGoals(vector<Goal*> goals) {
     this->goals = goals;
-}
-
-bool Player::getUseLoadedDice() {
-    return useLoadedDice;
-}
-
-void Player::setUseLoadedDice(bool useLoadedDice) {
-    this->useLoadedDice = useLoadedDice;
-}
-
-LoadedDice Player::getLDice() {
-    return LDice;
 }
