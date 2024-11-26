@@ -23,5 +23,6 @@ class Criterion {
         void printType();
         char getType();
         void setType(char t);
+        Criterion();
 };
 #endif

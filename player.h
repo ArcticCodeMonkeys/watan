@@ -34,6 +34,18 @@ class Player : public Observer {
         std::ostream &operator<<(std::ostream &out);
         void printCriteria();
         void notify();
+        void setName(char name);
+        char getName();
+        map<string, int> getResources();
+        void setResources(map<string, int> resources);
+        vector<Criterion*> getCriteria();
+        void setCriteria(vector<Criterion*> criteria);
+        void setGoals(vector<Goal*> goals);
+        vector<Goal*> getGoals();
+        bool getUseLoadedDice();
+        void setUseLoadedDice(bool useLoadedDice);
+        LoadedDice getLDice();
+        
         
 };
 #endif

@@ -12,8 +12,11 @@ class Board {
     Goal *goals[71];
     Criterion *criteria[53];
     public:
+        Board();
+        Board(int tile[19][2]);
         std::ostream &operator<<(std::ostream &out);
         void saveBoard();
+        Tile** getTiles();
         //void loadBoard(bool random, int seed = 0, std::string boardFile = "");
         //void loadGame(bool random, int seed = 0, std::string gameFile = "");
 };

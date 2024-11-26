@@ -10,6 +10,13 @@ Criterion::Criterion(int index): index(index), type(Type::ASSIGNMENT) {
     }
 }
 
+Criterion::Criterion(): index(-1), type(Type::EMPTY) {
+    for (int i = 0; i < 3; i++) {
+        adjacents[i] = nullptr;
+        tile[i] = nullptr;
+    }
+}
+
 Criterion* Criterion::getNeighbors(int index) {
     return neighbors[index];
 }

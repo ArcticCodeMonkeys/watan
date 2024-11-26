@@ -148,11 +148,11 @@ int main(int argc, char* argv[]) {
                 tile[count][1] = rollingValue;
             }
         }
-        game = new Board (tile);
+        game = Board(tile);
     }
     else {
         // load random board
-        game = new Board();
+        game = Board();
     }
 
     //Stage 2: Setup
@@ -175,22 +175,22 @@ int main(int argc, char* argv[]) {
         //Step 1: Set the Dice
         Player current = students[currentTurn];
         cout << "Student " << current.getName() << "'s Turn" << endl;
-        current.printStatus();
+        cout << current;
         string rollCommand;
         while(getline(cin, rollCommand)) {
             if(rollCommand == "roll") {
                 break;
             } else if (rollCommand == "load") {
-                current.useLoadedDice = true;
-                current.lDice.fixedVal << cin;
+                current.setUseLoadedDice(true);
+                current.getLDice().fixedVal << cin;
             } else if (rollCommand == "fair") {
-                current.useLoadedDice = false;
+                current.setUseLoadedDice(false);
             } else {
                 cout << "Invalid Command; try either roll, load x, or fair." << endl;
             }
         }
         //Step 2: Roll the Dice
-        int diceRoll = current.rollDice();
+        int diceRoll = current.getLDice().roll();
         if(diceRoll == 7) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
@@ -235,17 +235,17 @@ int main(int argc, char* argv[]) {
             int index;
             cin >> index;
 
-            if(!(game->tile[index].goosed)) {
+            if(!(game.getTiles()[index].goosed)) {
                 for(int i = 0; i < 19; i++) {
-                    if(game->tile[i].goosed) {
-                        game->tile[i].goosed = false;
+                    if(game.getTiles()[i].goosed) {
+                        game.getTiles()[i].goosed = false;
                     }
                 }
-                game->tile[index].goosed = true;
+                game.getTiles()[index].goosed = true;
             }
-            string stealFrom [6];
+            char stealFrom [6];
             for (int i = 0; i < 6 ; i++) {
-                string name = game->tile[index]->criteria[i]->player.name;
+                char name = game->tile[index]->criteria[i]->player.name;
                 if (name != current.getName()) {
                     stealFrom[i] = name;
                 }
@@ -266,9 +266,10 @@ int main(int argc, char* argv[]) {
                     }
                 }
             }
-            cin >> command;
+            char charCommand;
+            cin >> charCommand;
             for (int i = 0; i < NUM_PLAYERS; i++) {
-                if (turnOrder[i] == command) {
+                if (turnOrder[i] == charCommand) {
                     int cardCount = 0;
                     for(auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
                         cardCount += it->second;
@@ -357,7 +358,7 @@ int main(int argc, char* argv[]) {
                     }
                     saveStream << "g ";
                     for (int j = 0; j < 71; j++) {
-                        if (students[i].goals[j] != nullptr) {
+                        if (students[i].getGoals()[j] != nullptr) {
                             saveStream << j << " ";
                         }
                     }
@@ -372,8 +373,8 @@ int main(int argc, char* argv[]) {
                 int resourceType = 0;
                 int gooseTile = 0;
                 for (int i = 0; i < 19; i++) {
-                    string resourceType = game->tile[i].resourceType;
-                    if (game.tiles[i].goosed) {
+                    string resourceType = game.getTiles()[i].resourceType;
+                    if (game.getTiles()[i].goosed) {
                         gooseTile = i;
                     }
                     int resourceInt = 0;

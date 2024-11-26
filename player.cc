@@ -93,3 +93,47 @@ void Player::trade(Player p, string ask, string give) {
 std::ostream &Player::operator<<(std::ostream &out) {
     out << name << " has " << victoryPoints <<  " victory points, " << resources["CAFFEINE"] << " caffeines, " << resources["LABS"] << " labs, " << resources["LECTURES"] << " lectures, " << resources["TUTORIALS"] << " tutorials, and " << resources["STUDIES"] << " studies." << endl;
 }
+
+void Player::setName(char name) {
+    this->name = name;
+}
+
+
+char Player::getName() {
+    return name;
+}
+map<string, int> Player::getResources() {
+    return resources;
+}
+
+void Player::setResources(map<string, int> resources) {
+    this->resources = resources;
+}
+
+vector<Criterion*> Player::getCriteria() {
+    return criteria;
+}
+
+void Player::setCriteria(vector<Criterion*> criteria) {
+    this->criteria = criteria;
+}
+
+vector<Goal*> Player::getGoals() {
+    return goals;
+}
+
+void Player::setGoals(vector<Goal*> goals) {
+    this->goals = goals;
+}
+
+bool Player::getUseLoadedDice() {
+    return useLoadedDice;
+}
+
+void Player::setUseLoadedDice(bool useLoadedDice) {
+    this->useLoadedDice = useLoadedDice;
+}
+
+LoadedDice Player::getLDice() {
+    return LDice;
+}
