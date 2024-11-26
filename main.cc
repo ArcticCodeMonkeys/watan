@@ -11,11 +11,11 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     //Stage 1: Load States
+    Board game;
     Player students[NUM_PLAYERS];
     char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        students[i] = new Player();
-        students[i].name = turnOrder[i];
+        students[i].setName(turnOrder[i]);
     }
     int currentTurn = 0;
     string command = "";
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
         // geese tile number
         getline(fileStream, line);
         int geeseTile = stoi(line);
-        Board game = new Board(total_resources, goalOwners, criterionOwners, typeArray, tile, geeseTile);
+        game = Board(total_resources, goalOwners, criterionOwners, typeArray, tile, geeseTile);
     }
     else if (boardFile != "") {
         // load board
@@ -148,11 +148,11 @@ int main(int argc, char* argv[]) {
                 tile[count][1] = rollingValue;
             }
         }
-        Board game = new Board (tile);
+        game = new Board (tile);
     }
     else {
         // load random board
-        Board game = new Board();
+        game = new Board();
     }
 
     //Stage 2: Setup
@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
     while(gameLoop) {
         //Step 1: Set the Dice
         Player current = students[currentTurn];
-        cout << "Student " << current.name << "'s Turn" << endl;
+        cout << "Student " << current.getName() << "'s Turn" << endl;
         current.printStatus();
         string rollCommand;
         while(getline(cin, rollCommand)) {
@@ -195,7 +195,7 @@ int main(int argc, char* argv[]) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
                 int cardCount = 0;
-                for(auto it = students[i].resources.begin(); it != students[i].resources.end(); ++it) {
+                for(auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
                     cardCount += it->second;
                 }
                 if(cardCount >= 10) {
@@ -215,8 +215,8 @@ int main(int argc, char* argv[]) {
                         } else if (disappearType == 4) {
                             disappearString = "TUTORIAL";
                         }
-                        if (students[i].resources[disappearString] > 0) {
-                            students[i].resources[disappearString] -= 1;
+                        if (students[i].getResources()[disappearString] > 0) {
+                            students[i].getResources()[disappearString] -= 1;
                             disappeared--;
                             if (lostResources.find(disappearString) == lostResources.end()) {
                                 lostResources[disappearString] = 1;
@@ -235,31 +235,31 @@ int main(int argc, char* argv[]) {
             int index;
             cin >> index;
 
-            if(!(board->tile[index].goosed)) {
+            if(!(game->tile[index].goosed)) {
                 for(int i = 0; i < 19; i++) {
-                    if(board->tile[i].goosed) {
-                        board->tile[i].goosed = false;
+                    if(game->tile[i].goosed) {
+                        game->tile[i].goosed = false;
                     }
                 }
-                board->tile[index].goosed = true;
+                game->tile[index].goosed = true;
             }
             string stealFrom [6];
             for (int i = 0; i < 6 ; i++) {
-                string name = board->tile[index]->criteria[i]->player.name;
-                if (name != current.name) {
+                string name = game->tile[index]->criteria[i]->player.name;
+                if (name != current.getName()) {
                     stealFrom[i] = name;
                 }
             }
             if (stealFrom[0] == "") {
-                cout << "Student " << current.name << " has no students to steal from." << endl;
+                cout << "Student " << current.getName() << " has no students to steal from." << endl;
             }
             else {
-                cout << "Student " << current.name << "can choose to steal from ";
+                cout << "Student " << current.getName() << "can choose to steal from ";
                 for (int j = 0; j < NUM_PLAYERS; j++) {
-                    if (students[j].name != current.name) {
+                    if (students[j].getName() != current.getName()) {
                         for (int i = 0; i < 6; i++) {
-                            if (students[j].name == stealFrom[i]) {
-                                cout << students[j].name << ", ";
+                            if (students[j].getName() == stealFrom[i]) {
+                                cout << students[j].getName() << ", ";
                                 break;
                             }
                         }
@@ -270,17 +270,17 @@ int main(int argc, char* argv[]) {
             for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (turnOrder[i] == command) {
                     int cardCount = 0;
-                    for(auto it = students[i].resources.begin(); it != students[i].resources.end(); ++it) {
+                    for(auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
                         cardCount += it->second;
                     }
                     int randomCard = rand() % cardCount;
                     int cardType = 0;
-                    for (auto it = students[i].resources.begin(); it != students[i].resources.end(); ++it) {
+                    for (auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
                         int val = it->second;
                         if (cardType + val > randomCard) {
-                            students[i].resources[it->first] -= 1;
-                            current.resources[it->first] += 1;
-                            cout << "Student " << current.name << " steals " << it->first << " from " << turnOrder[i] << endl;
+                            students[i].getResources()[it->first] -= 1;
+                            current.getResources()[it->first] += 1;
+                            cout << "Student " << current.getName() << " steals " << it->first << " from " << turnOrder[i] << endl;
                             break;
                         }
                         cardType += val;
@@ -292,8 +292,8 @@ int main(int argc, char* argv[]) {
         else {
             //Step 3: Else, enerate resources for the tile
             for(int i = 0; i < 19; i++) {
-                if(board->tile[i].value == diceRoll) {
-                    board->tile[i].notifyObservers();
+                if(game->tile[i].value == diceRoll) {
+                    game->tile[i].notifyObservers();
                 }
             }
         }
@@ -305,7 +305,7 @@ int main(int argc, char* argv[]) {
                 break;
             }
             else if (command == "board") {
-                cout << board;
+                cout << game;
             }
             else if (command == "status") {
                 for(int i = 0; i < NUM_PLAYERS; i++) {
@@ -313,7 +313,7 @@ int main(int argc, char* argv[]) {
                 }
             }
             else if (command == "criteria") {
-                for(auto it = students[currentTurn]->criteria.begin(); it != students[currentTurn]->criteria.end(); ++it) {
+                for(auto it = students[currentTurn].getCriteria().begin(); it != students[currentTurn].getCriteria().end(); ++it) {
                     cout << it;
                 }
             }
@@ -333,7 +333,7 @@ int main(int argc, char* argv[]) {
                 current.improveCriterion(index);
             }
             else if (command == "trade") {
-                string target;
+                char target;
                 string give;
                 string take;
                 cin >> target;
@@ -341,7 +341,7 @@ int main(int argc, char* argv[]) {
                 cin >> take;
                 for (int i = 0; i < NUM_PLAYERS; i++) {
                     if (turnOrder[i] == target) {
-                        current.trade(give, take, turn);
+                        current.trade(students[i], give, take);
                         break;
                     }
                 }
@@ -352,7 +352,7 @@ int main(int argc, char* argv[]) {
                 ofstream saveStream{saveFile};
                 saveStream << currentTurn << endl;
                 for(int i = 0; i < NUM_PLAYERS; i++) {
-                    for (auto it = students[i].resources.begin(); it != students[i].resources.end(); ++it) {
+                    for (auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
                         saveStream << it->second << " ";
                     }
                     saveStream << "g ";
@@ -363,8 +363,8 @@ int main(int argc, char* argv[]) {
                     }
                     saveStream << "c ";
                     for (int j = 0; j < 53; j++) {
-                        if (students[i].criteria[j] != nullptr) {
-                            saveStream << j << " " << students[i].criteria[j]->type << " ";
+                        if (students[i].getCriteria()[j] != nullptr) {
+                            saveStream << j << " " << students[i].getCriteria()[j]->type << " ";
                         }
                     }
                     saveStream << endl;
@@ -372,22 +372,23 @@ int main(int argc, char* argv[]) {
                 int resourceType = 0;
                 int gooseTile = 0;
                 for (int i = 0; i < 19; i++) {
-                    string resourceType = board->tile[i].resourceType;
-                    if (board->tile[i].goosed) {
+                    string resourceType = game->tile[i].resourceType;
+                    if (game.tiles[i].goosed) {
                         gooseTile = i;
                     }
+                    int resourceInt = 0;
                     if (resourceType == "CAFFEINE") {
-                        resourceType = 0;
+                        resourceInt = 0;
                     } else if (resourceType == "LAB") {
-                        resourceType = 1;
+                        resourceInt = 1;
                     } else if (resourceType == "LECTURE") {
-                        resourceType = 2;
+                        resourceInt = 2;
                     } else if (resourceType == "STUDY") {
-                        resourceType = 3;
+                        resourceInt = 3;
                     } else if (resourceType == "TUTORIAL") {
-                        resourceType = 4;
+                        resourceInt = 4;
                     }
-                    saveStream << resourceType << " " << board->tile[i].value << " ";
+                    saveStream << resourceType << " " << game->tile[i].value << " ";
                 }
                 saveStream << endl;
                 saveStream << gooseTile << endl;
