@@ -163,6 +163,92 @@ int main(int argc, char* argv[]) {
     //Stage 3: The Game
     bool gameLoop = true;
     while(gameLoop) {
+        //Step 1: Set the Dice
+        cout << "Student " << students[currentTurn].name << "'s Turn" << endl;
+        students[currentTurn].printStatus();
+        string rollCommand;
+        while(cin >> rollCommand) {
+            if(rollCommand == "roll") {
+                break;
+            } else if (rollCommand = "load") {
+                students[currentTurn].useLoadedDice = true;
+                students[currentTurn].lDice.fixedVal << cin;
+            } else if (rollCommand == "fair") {
+                students[currentTurn].useLoadedDice = false;
+            } else {
+                cout << "Invalid Command; try either roll, load x, or fair." << endl;
+            }
+        }
+        //Step 2: Roll the Dice
+        int diceRoll = students[currentTurn].rollDice();
+        if(diceRoll == 7) {
+            //GOOSE!
+            for(int i = 0; i < NUM_PLAYERS; i++) {
+                int cardCount = 0;
+                for(auto it = players[i].resources.begin(); it != players[i].resources.end(); ++it) {
+                    cardCount += it->second;
+                }
+                if(cardCount >= 10) {
+                    //YOINK
+                }
+            }
+            cout << "Choose where to place the GEESE." << endl;
+            int index;
+            index << cin;
+            if(board->tile[index].goosed == false) {
+                for(int i = 0; i < 19; i++) {
+                    if(board->tile[i].goosed) {
+                        board->tile[i].goosed = false;
+                    }
+                }
+                board->tile[index].goosed = true;
+            }
+        }
+        //Step 3: Generate resources for the tile
+        for(int i = 0; i < 19; i++) {
+            if(board->tile[i].value == diceRoll) {
+                board->tile[i].notifyObservers();
+            }
+        }
 
+        //Step 4: Action Time
+        string command;
+        bool exit = false;
+        while(cin >> command) {
+            switch(command) {
+            case "next":
+                currentTurn = (currentTurn + 1)%4;
+                exit = true;
+                break;
+            case "board":
+                cout << board;
+                break;
+            case "status":
+                for(int i = 0; i < NUM_STUDENTS; i++) {
+                    cout << students[i];
+                }
+                break;
+            case "criteria":
+                for(auto it = students[currentTurn]->criteria.begin(); it != students[currentTurn]->criteria.end(); ++it) {
+                    cout << it;
+                }
+                break;
+            case "achieve":
+                break;
+            case "complete":
+                break;
+            case "improve":
+                break;
+            case "trade":
+                break;
+            case "save":
+                break;
+            case "help":
+                break;
+            }
+            if(exit) {
+                break;
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ class Player : public Observer {
     vector<Goal*> goals;
     map<string, int> resources;
     char name;
+    bool useLoadedDice = false;
     LoadedDice LDice;
     UnloadedDice Dice; //these should be able to be combined into one i just dont know how.
     public:
@@ -20,7 +21,7 @@ class Player : public Observer {
         bool improveCriterion(int index);
         bool achieveGoal(int index);
         void trade();
-        void moveGoose(int index);
+        int moveGoose(int index);
         void addResources(string resource, int count);
         std::ostream &operator<<(std::ostream &out);
         void printCriteria();
