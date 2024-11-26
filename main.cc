@@ -1,22 +1,30 @@
 #include "board.h"
 #include "player.h"
+#include "tile.h"
+#include "goal.h"
+#include "criterion.h"
+#include "dice.h"
+#include <vector>
+#include <string>
+#include <map>
 #include <iostream>
 #include <fstream>
 #include <sstream>
-using namespace std;
 const int NUM_PLAYERS = 4;
 using namespace std;
 
 int main(int argc, char* argv[]) {
     //Stage 1: Load States
     Player students[NUM_PLAYERS];
-    string turnOrder[] = {"B", "R", "O", "Y"};
-
+    char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
+    for (int i = 0; i < NUM_PLAYERS; i++) {
+        students[i] = new Player();
+        students[i].name = turnOrder[i];
+    }
     int currentTurn = 0;
     string command = "";
     string boardFile = "";
     string gameFile = "";
-    
     int seed = 0;
     bool givenSeed = false;
     for (int i = 1; i < argc; i += 2) {
@@ -45,7 +53,7 @@ int main(int argc, char* argv[]) {
         currentTurn = stoi(line);
 
         // load players
-        map<string, int> [4] total_resources;
+        map<string, int> total_resources [NUM_PLAYERS];
         Player *goalOwners [71]; 
         Player *criterionOwners [53];
         int typeArray [53];
@@ -85,7 +93,7 @@ int main(int argc, char* argv[]) {
                 }
                 else {
                     int goalIndex = stoi(readValue);
-                    owners[goalIndex] = students[i];
+                    goalOwners[goalIndex] = &students[i];
                 }
             }
             // read criteria
@@ -94,7 +102,7 @@ int main(int argc, char* argv[]) {
             while (iss >> readValue) {
                 if (count % 2 == 0) {
                     int criterionIndex = stoi(readValue);
-                    criterionOwners[criterionIndex] = students[i];
+                    criterionOwners[criterionIndex] = &students[i];
                     prevRead = criterionIndex;
                 }
                 else {
@@ -127,7 +135,7 @@ int main(int argc, char* argv[]) {
     }
     else if (boardFile != "") {
         // load board
-         getline(fileStream, line);
+        getline(fileStream, line);
         istringstream iss{line};
         string readValue;
         int tile [19][2];
@@ -188,17 +196,43 @@ int main(int argc, char* argv[]) {
         if(diceRoll == 7) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
-                int cardCount = 0;
-                for(auto it = students[i].resources.begin(); it != students[i].resources.end(); ++it) {
-                    cardCount += it->second;
-                }
                 if(cardCount >= 10) {
-                    //YOINK
+                    int disappeared = cardCount / 2;
+                    while (disappeared > 0) {
+                        map<string, int> lostResources;
+                        int disappearType = rand() % 5;
+                        string disappearString;
+                        if (disappearType == 0) {
+                            disappearString = "CAFFEINE";
+                        } else if (disappearType == 1) {
+                            disappearString = "LAB";
+                        } else if (disappearType == 2) {
+                            disappearString = "LECTURE";
+                        } else if (disappearType == 3) {
+                            disappearString = "STUDY";
+                        } else if (disappearType == 4) {
+                            disappearString = "TUTORIAL";
+                        }
+                        if (students[i].resources[disappearString] > 0) {
+                            students[i].resources[disappearString] -= 1;
+                            disappeared--;
+                            if (lostResources.find(disappearString) == lostResources.end()) {
+                                lostResources[disappearString] = 1;
+                            } else {
+                                lostResources[disappearString] += 1;
+                            }
+                        }
+                    }
+                    cout << "Student " << turnOrder[i] << "loses " << disappeared << " resources to the geese. They lose:" << endl;
+                    for(auto it = lostResources.begin(); it != lostResources.end(); ++it) {
+                        cout << it->second << " " << it->first << endl;
+                    }
                 }
             }
             cout << "Choose where to place the GEESE." << endl;
             int index;
             index << cin;
+
             if(!(board->tile[index].goosed)) {
                 for(int i = 0; i < 19; i++) {
                     if(board->tile[i].goosed) {
@@ -207,14 +241,60 @@ int main(int argc, char* argv[]) {
                 }
                 board->tile[index].goosed = true;
             }
-        }
-        //Step 3: Generate resources for the tile
-        for(int i = 0; i < 19; i++) {
-            if(board->tile[i].value == diceRoll) {
-                board->tile[i].notifyObservers();
+            string stealFrom [6];
+            for (int i = 0; i < 6 ; i++) {
+                string name = board->tile[index]->criteria[i]->player.name;
+                if (name != current.name) {
+                    stealFrom[i] = name;
+                }
+            }
+            if (stealFrom[0] == "") {
+                cout << "Student " << current.name << " has no students to steal from." << endl;
+            }
+            else {
+                cout << "Student " << current.name << "can choose to steal from ";
+                for (int j = 0; j < NUM_PLAYERS; j++) {
+                    if (students[j].name != current.name) {
+                        for (int i = 0; i < 6; i++) {
+                            if (students[j].name == stealFrom[i]) {
+                                cout << students[j].name << ", ";
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            cin >> command;
+            for (int i = 0; i < NUM_PLAYERS; i++) {
+                if (turnOrder[i] == command) {
+                    int cardCount = 0;
+                    for(auto it = students[i].resources.begin(); it != students[i].resources.end(); ++it) {
+                        cardCount += it->second;
+                    }
+                    int randomCard = rand() % cardCount;
+                    int cardType = 0;
+                    for (auto it = students[i].resources.begin(); it != students[i].resources.end(); ++it) {
+                        int val = it->second;
+                        if (cardType + val > randomCard) {
+                            students[i].resources[it->first] -= 1;
+                            current.resources[it->first] += 1;
+                            cout << "Student " << current.name << " steals " << it->first << " from " << turnOrder[i] << endl;
+                            break;
+                        }
+                        cardType += val;
+                    }
+                    break;
+                }
             }
         }
-
+        else {
+            //Step 3: Else, enerate resources for the tile
+            for(int i = 0; i < 19; i++) {
+                if(board->tile[i].value == diceRoll) {
+                    board->tile[i].notifyObservers();
+                }
+            }
+        }
         //Step 4: Action Time
         string command;
         bool exit = false;
@@ -259,8 +339,8 @@ int main(int argc, char* argv[]) {
                 cin >> give;
                 cin >> take;
                 for (int i = 0; i < NUM_PLAYERS; i++) {
-                    if (students[i].name == target) {
-                        current.trade(give, take, students[i]);
+                    if (turnOrder[i] == target) {
+                        current.trade(give, take, turn);
                         break;
                     }
                 }
@@ -271,9 +351,30 @@ int main(int argc, char* argv[]) {
                 ofstream saveStream{saveFile};
                 saveStream << currentTurn << endl;
                 for(int i = 0; i < NUM_PLAYERS; i++) {
-                    saveStream << students[i];
+                    saveStream << students[i] << endl;
                 }
-                saveStream << board;
+                int resourceType = 0;
+                int gooseTile = 0;
+                for (int i = 0; i < 19; i++) {
+                    string resourceType = board->tile[i].resourceType;
+                    if (board->tile[i].goosed) {
+                        gooseTile = i;
+                    }
+                    if (resourceType == "CAFFEINE") {
+                        resourceType = 0;
+                    } else if (resourceType == "LAB") {
+                        resourceType = 1;
+                    } else if (resourceType == "LECTURE") {
+                        resourceType = 2;
+                    } else if (resourceType == "STUDY") {
+                        resourceType = 3;
+                    } else if (resourceType == "TUTORIAL") {
+                        resourceType = 4;
+                    }
+                    saveStream << resourceType << " " << board->tile[i].value << " ";
+                }
+                saveStream << endl;
+                saveStream << gooseTile << endl;
                 break;
             case "help":
                 cout << "Valid commands: " << endl
@@ -289,6 +390,8 @@ int main(int argc, char* argv[]) {
                 << "save <file> " << endl
                 << "help" << endl;
                 break;
+            default:
+                cout << "Invalid Command; type help for a list of commands." << endl;
             }
             if(exit) {
                 break;
