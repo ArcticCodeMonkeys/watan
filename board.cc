@@ -70,7 +70,7 @@ Board::Board() {
     }
 }
 
-Board::Board(map<string, int> hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int *tile[], int geeseTile) {
+Board::Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int *tile[], int geeseTile) {
 
 }
 
