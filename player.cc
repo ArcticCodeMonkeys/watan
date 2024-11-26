@@ -9,7 +9,11 @@ class Player {
     LoadedDice LDice;
     UnloadedDice Dice; //these should be able to be combined into one i just dont know how.
     public:
-    Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources): criteria{criteria}, goals{goals}, resources{resources}, useLoadedDice{false},  {}
+    Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources): criteria{criteria}, goals{goals}, resources{resources}, useLoadedDice{false}  {}
+    Player(): criteria{new vector<Criterion*>}, goals{new vector<Goal*>}, resources{new map<string, int>}, useLoadedDice{false} {}
+    ~Player() {
+        delete 
+    }
     bool completeCriterion(int index) {
         if(criteria[index]->type == Criterion::Type::EMPTY && criteria[index]->player == nullptr && criteria[index]->adjCriteria[0]->player == nullptr && criteria[index]->adjCriteria[1]->player == nullptr && criteria[index]->adjCriteria[2]->player == nullptr) {
             if(resources["LAB"] > 0 && resources["LECTURE"] > 0 && resources["CAFFEINE"] > 0 && resources["TUTORIAL"] > 0) {
@@ -57,18 +61,18 @@ class Player {
             return true;
         }
     }
-    void trade(Player p, string ask, string give, std::ostream &out, std:istream &in) {
+    void trade(Player p, string ask, string give) {
         if(this.resources[give] == 0)  {
-            out << this.name << ", you do not have any " << give << "." endl;
+            cout << this.name << ", you do not have any " << give << "." endl;
             return;
         }
         if(p.resources[ask] == 0) {
-            out << p.name << " does not have any " << ask << " to give." << endl;
+            cout << p.name << " does not have any " << ask << " to give." << endl;
             return;
         }
-        out << this.name << " offers " << p.name << " one " << give << " for one " << ask << ". Does " << p.name << " accept this offer?" << endl;
+        cout << this.name << " offers " << p.name << " one " << give << " for one " << ask << ". Does " << p.name << " accept this offer?" << endl;
         char confirmation;
-        confirmation << in;
+        confirmation << cin;
         if(confirmation == "Y") {
             this.resources[give] -= 1;
             p.resources[give] += 1;
@@ -76,7 +80,6 @@ class Player {
             p.resources[ask] -= 1;
             return;
         }
-        out << p.name << " declined the offer." << endl;
+        cout << p.name << " declined the offer." << endl;
     }
-    int moveGoose(Player p, int gooseIndex, std::ostream &out)
 };
