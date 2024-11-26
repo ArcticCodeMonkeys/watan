@@ -2,8 +2,9 @@
 #define _OBSERVER_H_
 
 class Observer {
+  string resource;
  public:
-  virtual void notify() = 0;
+  virtual void notify(string resource) = 0;
   virtual ~Observer() = default;
 };
 

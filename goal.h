@@ -14,5 +14,6 @@ class Goal {
         void setPlayer(Player* p);
         Goal* getAdjacent(int index);
         Goal();
+        string printOwner();
 };
 #endif

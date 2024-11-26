@@ -1,7 +1,7 @@
 #ifndef CRITERION_H
 #define CRITERION_H
 #include <iostream>
-#include "observer.h"`
+#include "observer.h"
 class Player;
 class Goal;
 class Tile;
@@ -20,6 +20,7 @@ class Criterion: public Observer {
         Criterion* getNeighbors(int index);
         Goal* getAdjacents(int index);
         Player* getPlayer();
+        string printOwner();
         void printType();
         char getType();
         void setType(char t);

@@ -25,6 +25,20 @@ Goal* Criterion::getAdjacents(int index) {
     return adjacents[index];
 }
 
+string Criterion::printOwner() {
+    if (player != nullptr) {
+        char name = player->getName();
+        char getType = this->getType();
+        return string(1, name) + getType;
+    } else {
+        if (index < 10) {
+            return " " + to_string(index);
+        } else {
+            return to_string(index);
+        }
+    }
+}
+
 Player* Criterion::getPlayer() {
     return player;
 }
@@ -76,6 +90,7 @@ void Criterion::notify(string resource) {
             player->addResources(resource, 3);
         }
     }
+}
 int Criterion::getIndex() {
     return index;
 }

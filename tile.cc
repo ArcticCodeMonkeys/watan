@@ -38,6 +38,15 @@ string Tile::getResource() {
     return resource;
 }
 
+string Tile::printResource() {
+    int remaining_spaces = 12 - resource.length();
+    string output_string = "       " + resource;
+    for (int i = 0; i < remaining_spaces; i++) {
+        output_string += " ";
+    }
+    return output_string;
+}
+
 std::unique_ptr<Dice> Tile::getDice() {
     return std::move(dice);
 }
@@ -48,4 +57,12 @@ Criterion *Tile::getCriteria(int index) {
 
 void Tile::setDice(std::unique_ptr<Dice> dice) {
     this->dice = std::move(dice);
+}
+
+Goal **Tile::getGoals(int index) {
+    return goals;
+}
+
+void Tile::setGoals(int index, Goal *g) {
+    goals[index] = g;
 }

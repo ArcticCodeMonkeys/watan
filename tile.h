@@ -9,6 +9,7 @@ class Tile: public Subject {
     int rollingValue;
     string resource;
     Criterion * criteria[6];
+    Goal * goals[6];
     bool geese;
     std::unique_ptr<Dice> dice;
 
@@ -24,5 +25,8 @@ class Tile: public Subject {
         int getRollingValue();
         string getResource();
         std::unique_ptr<Dice> getDice();
+        Goal ** getGoals(int index);
+        void setGoals(int index, Goal *g);
+        string printResource();
 };
 #endif

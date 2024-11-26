@@ -20,3 +20,16 @@ Goal::Goal(): player{nullptr}, index{-1}, adjacents{nullptr} {
         adjacents[i] = nullptr;
     }
 }
+
+string Goal::printOwner() {
+    if (player != nullptr) {
+        char name = player->getName();
+        return " " + string(1, name);
+    } else {
+        if (index < 10) {
+            return " " + to_string(index);
+        } else {
+            return to_string(index);
+        }
+    }
+}
