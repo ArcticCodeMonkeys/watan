@@ -2,11 +2,11 @@
 #include <string>
 #include <map>
 #include <ostream>
-#include "goal.h"
 #include "criterion.h"
 #include "dice.h"
 #include "observer.h"
 using namespace std;
+
 
 class Player : public Observer {
     vector<Criterion*> criteria;
@@ -17,6 +17,9 @@ class Player : public Observer {
     LoadedDice LDice;
     UnloadedDice Dice; //these should be able to be combined into one i just dont know how.
     public:
+        Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name);
+        Player();
+        ~Player();
         bool completeCriterion(int index);
         bool improveCriterion(int index);
         bool achieveGoal(int index);

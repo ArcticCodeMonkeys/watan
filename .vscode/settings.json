@@ -3,6 +3,9 @@
         "iosfwd": "cpp",
         "vector": "cpp",
         "string": "cpp",
-        "format": "cpp"
+        "format": "cpp",
+        "complex": "cpp",
+        "__tree": "cpp",
+        "map": "cpp"
     }
 }

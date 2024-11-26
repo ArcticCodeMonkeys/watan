@@ -3,6 +3,7 @@
 #include "goal.h"
 #include "criterion.h"
 
+using namespace std;
 class Board {
     Tile *tiles[19];
     Goal *goals[71];

@@ -1,5 +1,5 @@
 #include "criterion.h"
-
+using namespace std;
 Criterion::Criterion(int index): index(index), type(Type::ASSIGNMENT) {
     for (int i = 0; i < 3; i++) {
         adjacents[i] = nullptr;

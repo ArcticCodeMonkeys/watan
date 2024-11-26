@@ -1,4 +1,5 @@
 #include "board.h"
+using namespace std;
 const int TILE_COUNT = 19;
 const int GOAL_COUNT = 71;
 const int CRITERIA_COUNT = 53;

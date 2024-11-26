@@ -1,4 +1,5 @@
 #include "dice.h"
+using namespace std;
 int LoadedDice::rollDice() {
     return fixedVal;
 }

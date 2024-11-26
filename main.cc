@@ -3,7 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+using namespace std;
 const int NUM_PLAYERS = 4;
+using namespace std;
 
 int main(int argc, char* argv[]) {
     //Stage 1: Load States
@@ -14,6 +16,7 @@ int main(int argc, char* argv[]) {
     string command = "";
     string boardFile = "";
     string gameFile = "";
+    
     int seed = 0;
     bool givenSeed = false;
     for (int i = 1; i < argc; i += 2) {

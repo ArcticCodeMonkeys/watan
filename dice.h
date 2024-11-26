@@ -1,4 +1,5 @@
 #include "subject.h"
+using namespace std;
 class Dice : public Subject {
     public:
         virtual int rollDice() = 0;
