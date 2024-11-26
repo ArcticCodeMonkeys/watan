@@ -1,12 +1,15 @@
 #include "criterion.h"
-using namespace std;
+#include "goal.h"
+#include "tile.h"
+#include "player.h"
+
 Criterion::Criterion(int index): index(index), type(Type::ASSIGNMENT) {
     for (int i = 0; i < 3; i++) {
         adjacents[i] = nullptr;
         tile[i] = nullptr;
     }
 }
-Criterion::printType() {
+void Criterion::printType() {
     if (type == Type::ASSIGNMENT) {
         cout << "Assignment";
     } else if (type == Type::MIDTERM) {

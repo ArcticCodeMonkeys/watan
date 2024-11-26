@@ -1,8 +1,12 @@
 #include "board.h"
-using namespace std;
+#include "tile.h"
+#include "goal.h"
+#include "criterion.h"
+
 const int TILE_COUNT = 19;
 const int GOAL_COUNT = 71;
 const int CRITERIA_COUNT = 53;
+
 class Board {
     Tile *tiles[TILE_COUNT];
     Goal *goals[GOAL_COUNT];

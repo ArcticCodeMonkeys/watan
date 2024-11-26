@@ -1,9 +1,10 @@
 #include <iostream>
-#include "tile.h"
-#include "goal.h"
-#include "criterion.h"
 
-using namespace std;
+
+class Tile;
+class Goal;
+class Criterion;
+
 class Board {
     Tile *tiles[19];
     Goal *goals[71];

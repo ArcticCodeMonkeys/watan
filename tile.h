@@ -1,5 +1,7 @@
-#include "criterion.h"
-#include "goal.h"
+
+class Criterion;
+class Dice;
+
 class Tile {
     //need to add an index parameter which begins at -1
 };

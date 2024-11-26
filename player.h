@@ -2,11 +2,13 @@
 #include <string>
 #include <map>
 #include <ostream>
-#include "criterion.h"
-#include "dice.h"
 #include "observer.h"
-using namespace std;
 
+
+class Goal;
+class Criterion;
+class Tile;
+class Dice;
 
 class Player : public Observer {
     vector<Criterion*> criteria;
@@ -23,7 +25,7 @@ class Player : public Observer {
         bool completeCriterion(int index);
         bool improveCriterion(int index);
         bool achieveGoal(int index);
-        void trade();
+        void trade(Player p, string ask, string give);
         int moveGoose(int index);
         void addResources(string resource, int count);
         std::ostream &operator<<(std::ostream &out);
