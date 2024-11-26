@@ -63,6 +63,11 @@ Board::Board() {
             tiles[i]->setCriteria(k, criteria[criteriaMap[i][k]]);
         }
     }
+    for (int i = 0; i < TILE_COUNT; ++i) {
+        for (int k = 0; k < 6; ++k) {
+            tiles[i]->setGoals(k, goals[goalMap[i][k]]);
+        }
+    }
     
 }
 
@@ -71,15 +76,17 @@ Board::Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwne
 
 
 friend std::ostream& operator<<(std::ostream& out, const Board& board) {
-    cout << "      |00|--00--|00|     " << endl;
-    cout << "      /            \\    " << endl;
-    cout << "    00			   00  " << endl;
-    cout << "   / \\ " << endl;
-    cout << "|00|				   |00|
-      \				               /
-       00			          00
-           \			         /
-             |00|--00--|00|"
+    for(int i = 0; i < TILE_COUNT; i++) {
+        cout << "      |" << board.tiles[i]->getCriteria(0)->printOwner() << "|--" << board.tiles[i]->getGoal(0)->printOwner() << "--|" << board.tiles[i]->getCriteria(1)->printOwner() << "|      " << endl;
+        cout << "      /            \\     " << endl;
+        cout << "    " << board.tiles[i]->getGoal(1)->printOwner() << "              " << board.tiles[i]->getGoal(2)->printOwner() << "    " << endl;
+        cout << "   /         " << i << "        \\  " << endl;
+        cout << "|" << board.tiles[i]->getCriteria(3)->printOwner() << "|" << board.tiles->printResource() << "|" << board.tiles[i]->getCriteria(4)->printOwner() << "|" << endl;
+        cout << "   \\        " << board.tiles[i]->getRollingValue() << "         /  " << endl;
+        cout << "    " << board.tiles[i]->getGoal(3)->printOwner() << "              " << board.tiles[i]->getGoal(4)->printOwner() << "    " << endl;
+        cout << "      \\			/      " << endl;
+        cout << "      |" << board.tiles[i]->getCriteria(4)->printOwner() << "|--" << board.tiles[i]->getGoal(5)->printOwner() << "--|" << board.tiles[i]->getCriteria(5)->printOwner() << "|      " << endl;
+    }
 }
 
 Tile ** Board::getTiles() {
