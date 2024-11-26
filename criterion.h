@@ -1,12 +1,12 @@
 #ifndef CRITERION_H
 #define CRITERION_H
 #include <iostream>
-
+#include "observer.h"`
 class Player;
 class Goal;
 class Tile;
 
-class Criterion {
+class Criterion: public Observer {
     //need to add an index parameter which begins at -1
     enum class Type {EMPTY, ASSIGNMENT, MIDTERM, EXAM};
     Type type;
@@ -24,5 +24,7 @@ class Criterion {
         char getType();
         void setType(char t);
         Criterion();
+        void notify(string resource);
+        friend std::ostream &operator<<(std::ostream &out, const Criterion &criterion);
 };
 #endif

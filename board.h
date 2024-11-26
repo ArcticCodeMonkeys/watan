@@ -15,7 +15,7 @@ class Board {
         Board();
         Board(map<string, int> hands [], Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile);
         Board(int tile[19][2]);
-        std::ostream &operator<<(std::ostream &out);
+        friend std::ostream &operator<<(std::ostream &out, const Board &board);
         void saveBoard();
         Tile** getTiles();
         //void loadBoard(bool random, int seed = 0, std::string boardFile = "");

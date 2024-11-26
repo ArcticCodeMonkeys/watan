@@ -65,3 +65,15 @@ void Criterion::setType(char t) {
     }
     
 }
+
+void Criterion::notify(string resource) {
+    if (player != nullptr) {
+        if (type == Criterion::Type::ASSIGNMENT) {
+            player->addResources(resource, 1);
+        } else if (type == Criterion::Type::MIDTERM) {
+            player->addResources(resource, 2);
+        } else if (type == Criterion::Type::EXAM) {
+            player->addResources(resource, 3);
+        }
+    }
+}

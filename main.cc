@@ -315,7 +315,7 @@ int main(int argc, char* argv[]) {
             }
             else if (command == "criteria") {
                 for(auto it = students[currentTurn].getCriteria().begin(); it != students[currentTurn].getCriteria().end(); ++it) {
-                    cout << it;
+                    cout << *it;
                 }
             }
             else if (command == "achieve") {
@@ -374,7 +374,7 @@ int main(int argc, char* argv[]) {
                 int gooseTile = 0;
                 for (int i = 0; i < 19; i++) {
                     string resourceType = game.getTiles()[i].resourceType;
-                    if (game.getTiles()[i].goosed) {
+                    if (game.getTiles()[i].getGeese()) {
                         gooseTile = i;
                     }
                     int resourceInt = 0;
