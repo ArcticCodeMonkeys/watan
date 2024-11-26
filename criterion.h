@@ -7,6 +7,7 @@ class Criterion {
     Goal *adjacents[3];
     Tile *tile [3];
     public:
-        Criterion (index);
+        Criterion(int index);
         void printType();
+        char getType();
 };

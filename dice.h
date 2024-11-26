@@ -7,14 +7,10 @@ class Dice : public Subject {
 class LoadedDice : public Dice {
     int fixedVal;
     public:
-       int rollDice()  override {
-            return fixedVal;
-        }
+       int rollDice() override;
 };
 
 class UnloadedDice : public Dice {
     public:
-        int rollDice() override {
-            return (std::rand() % 6 + 1) + (std::rand() % 6 + 1);
-        }
+        int rollDice() override;
 };
