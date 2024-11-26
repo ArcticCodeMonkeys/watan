@@ -1,14 +1,16 @@
+#include <iostream>
 #include <vector>
-#include <string>
 #include <map>
-#include <ostream>
+
+#ifndef PLAYER_H
+#define PLAYER_H
 #include "observer.h"
+using namespace std;
 
-
-class Goal;
 class Criterion;
-class Tile;
-class Dice;
+class Goal;
+class LoadedDice;
+class UnloadedDice;
 
 class Player : public Observer {
     vector<Criterion*> criteria;
@@ -20,7 +22,7 @@ class Player : public Observer {
     LoadedDice LDice;
     UnloadedDice Dice; //these should be able to be combined into one i just dont know how.
     public:
-        Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name);
+        Player(std::vector<Criterion*> criteria, std::vector<Goal*> goals, map<string, int> resources, char name);
         Player();
         ~Player();
         bool completeCriterion(int index);
@@ -34,3 +36,4 @@ class Player : public Observer {
         void notify();
         
 };
+#endif

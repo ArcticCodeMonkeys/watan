@@ -1,3 +1,5 @@
+#ifndef BOARD_H
+#define BOARD_H
 #include <iostream>
 
 
@@ -15,3 +17,4 @@ class Board {
         //void loadBoard(bool random, int seed = 0, std::string boardFile = "");
         //void loadGame(bool random, int seed = 0, std::string gameFile = "");
 };
+#endif

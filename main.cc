@@ -4,7 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <player.h>
+#include "player.h"
+#include "board.h"
 const int NUM_PLAYERS = 4;
 using namespace std;
 
@@ -126,7 +127,7 @@ int main(int argc, char* argv[]) {
         // geese tile number
         getline(fileStream, line);
         int geeseTile = stoi(line);
-        Board game = new Board (total_resources, goalOwners, criterionOwners, typeArray, tile, geeseTile);
+        Board game = new Board(total_resources, goalOwners, criterionOwners, typeArray, tile, geeseTile);
     }
     else if (boardFile != "") {
         // load board
