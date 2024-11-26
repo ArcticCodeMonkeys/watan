@@ -31,7 +31,6 @@ class Player : public Observer {
         void trade(Player p, string ask, string give);
         int moveGoose(int index);
         void addResources(string resource, int count);
-        std::ostream &operator<<(std::ostream &out);
         void printCriteria();
         void notify();
         void setName(char name);
@@ -44,8 +43,9 @@ class Player : public Observer {
         vector<Goal*> getGoals();
         bool getUseLoadedDice();
         void setUseLoadedDice(bool useLoadedDice);
-        LoadedDice getLDice();
-        
-        
+        LoadedDice getLDice();   
+        friend std::ostream& operator<<(std::ostream &out, const Player &player);
 };
+
+
 #endif

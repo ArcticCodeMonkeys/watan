@@ -190,7 +190,7 @@ int main(int argc, char* argv[]) {
             }
         }
         //Step 2: Roll the Dice
-        int diceRoll = current.getLDice().roll();
+        int diceRoll = current.getLDice().rollDice();
         if(diceRoll == 7) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {

@@ -13,7 +13,7 @@ class Board {
     Criterion *criteria[53];
     public:
         Board();
-        Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int *tile[], int geeseTile);
+        Board(map<string, int> hands [], Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile);
         Board(int tile[19][2]);
         std::ostream &operator<<(std::ostream &out);
         void saveBoard();
