@@ -65,3 +65,7 @@ void Criterion::setType(char t) {
     }
     
 }
+
+int Criterion::getIndex() {
+    return index;
+}

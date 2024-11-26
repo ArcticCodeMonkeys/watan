@@ -25,11 +25,9 @@ class Player {
         bool improveCriterion(int index);
         bool achieveGoal(int index);
         void trade(Player p, string ask, string give);
-        int moveGoose(int index);
         void addResources(string resource, int count);
         std::ostream &operator<<(std::ostream &out);
         void printCriteria();
-        void notify();
         void setName(char c);
         char getName();
         map<string, int> getResources();

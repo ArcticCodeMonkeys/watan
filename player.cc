@@ -6,7 +6,10 @@
 
 
 Player::Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name): criteria{criteria}, goals{goals}, resources{resources}, name{name}, victoryPoints{0}, dice{Dice::createFairDice()} {
-    //calculate and update victory points
+    for(auto it = getCriteria().begin(); it != getCriteria().end(); ++it) {
+        char type = (*it)->getType();
+        victoryPoints += (type == 'E' ? 3 : (type == 'M' ? 2 : (type == 'A' ? 1 : 0)));
+    }
 }
 Player::Player() {
     criteria = vector<Criterion*>();
@@ -93,8 +96,20 @@ void Player::trade(Player p, string ask, string give) {
     cout << p.name << " declined the offer." << endl;
 }
 
+void Player::addResources(string resource, int count) {
+    resources[resource] += count;
+}
+
 std::ostream &Player::operator<<(std::ostream &out) {
     out << name << " has " << victoryPoints <<  " victory points, " << resources["CAFFEINE"] << " caffeines, " << resources["LABS"] << " labs, " << resources["LECTURES"] << " lectures, " << resources["TUTORIALS"] << " tutorials, and " << resources["STUDIES"] << " studies." << endl;
+}
+
+void Player::printCriteria() {
+    cout << getName() << " has completed: " << endl;
+    for(auto it = getCriteria().begin(); it != getCriteria().end(); ++it) {
+        Criterion* criterion = *it;
+        cout << criterion->getIndex() << " " << criterion->getType() << endl;
+    }
 }
 
 void Player::setName(char name) {
