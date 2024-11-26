@@ -71,11 +71,11 @@ Board::Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwne
 
 
 friend std::ostream& operator<<(std::ostream& out, const Board& board) {
-    cout < "     |00|--00--|00|     " << endl;
-           /			         \
-       00			          00
-      /				               \
-|00|					        |00|
+    cout << "      |00|--00--|00|     " << endl;
+    cout << "      /            \\    " << endl;
+    cout << "    00			   00  " << endl;
+    cout << "   / \\ " << endl;
+    cout << "|00|				   |00|
       \				               /
        00			          00
            \			         /
