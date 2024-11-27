@@ -173,24 +173,23 @@ int main(int argc, char* argv[]) {
     bool gameLoop = true;
     while(gameLoop) {
         //Step 1: Set the Dice
-        Player current = students[currentTurn];
-        cout << "Student " << current.getName() << "'s Turn" << endl;
-        cout << current;
+        cout << "Student " << students[currentTurn].getName() << "'s Turn" << endl;
+        cout << students[currentTurn];
         string rollCommand;
         while(getline(cin, rollCommand)) {
             if(rollCommand == "roll") {
                 break;
             } else if (rollCommand == "load") {
-                current.setUseLoadedDice(true);
-                current.getLDice().fixedVal << cin;
+                students[currentTurn].setUseLoadedDice(true);
+                students[currentTurn].getLDice().fixedVal << cin;
             } else if (rollCommand == "fair") {
-                current.setUseLoadedDice(false);
+                students[currentTurn].setUseLoadedDice(false);
             } else {
                 cout << "Invalid Command; try either roll, load x, or fair." << endl;
             }
         }
         //Step 2: Roll the Dice
-        int diceRoll = current.getLDice().rollDice();
+        int diceRoll = students[currentTurn].getLDice().rollDice();
         if(diceRoll == 7) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
@@ -246,17 +245,17 @@ int main(int argc, char* argv[]) {
             char stealFrom [6];
             for (int i = 0; i < 6 ; i++) {
                 char name = game->tile[index]->criteria[i]->player.name;
-                if (name != current.getName()) {
+                if (name != students[currentTurn].getName()) {
                     stealFrom[i] = name;
                 }
             }
             if (stealFrom[0] == "") {
-                cout << "Student " << current.getName() << " has no students to steal from." << endl;
+                cout << "Student " << students[currentTurn].getName() << " has no students to steal from." << endl;
             }
             else {
-                cout << "Student " << current.getName() << "can choose to steal from ";
+                cout << "Student " << students[currentTurn].getName() << "can choose to steal from ";
                 for (int j = 0; j < NUM_PLAYERS; j++) {
-                    if (students[j].getName() != current.getName()) {
+                    if (students[j].getName() != students[currentTurn].getName()) {
                         for (int i = 0; i < 6; i++) {
                             if (students[j].getName() == stealFrom[i]) {
                                 cout << students[j].getName() << ", ";
@@ -280,8 +279,8 @@ int main(int argc, char* argv[]) {
                         int val = it->second;
                         if (cardType + val > randomCard) {
                             students[i].getResources()[it->first] -= 1;
-                            current.getResources()[it->first] += 1;
-                            cout << "Student " << current.getName() << " steals " << it->first << " from " << turnOrder[i] << endl;
+                            students[currentTurn].getResources()[it->first] += 1;
+                            cout << "Student " << students[currentTurn].getName() << " steals " << it->first << " from " << turnOrder[i] << endl;
                             break;
                         }
                         cardType += val;
@@ -321,17 +320,17 @@ int main(int argc, char* argv[]) {
             else if (command == "achieve") {
                 int index;
                 cin >> index;
-                current.achieveGoal(index);
+                students[currentTurn].achieveGoal(index);
             }
             else if (command == "complete") {
                 int index;
                 cin >> index;
-                current.completeCriterion(index);
+                students[currentTurn].completeCriterion(index);
             }
             else if (command == "improve") {
                 int index;
                 cin >> index;
-                current.improveCriterion(index);
+                students[currentTurn].improveCriterion(index);
             }
             else if (command == "trade") {
                 char target;
@@ -342,7 +341,7 @@ int main(int argc, char* argv[]) {
                 cin >> take;
                 for (int i = 0; i < NUM_PLAYERS; i++) {
                     if (turnOrder[i] == target) {
-                        current.trade(students[i], give, take);
+                        students[currentTurn].trade(students[i], give, take);
                         break;
                     }
                 }

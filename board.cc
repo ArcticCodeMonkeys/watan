@@ -75,7 +75,7 @@ Board::Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwne
 }
 
 
-friend std::ostream& operator<<(std::ostream& out, const Board& board) {
+std::ostream& operator<<(std::ostream& out, const Board& board) {
     for(int i = 0; i < TILE_COUNT; i++) {
         cout << "      |" << board.tiles[i]->getCriteria(0)->printOwner() << "|--" << board.tiles[i]->getGoal(0)->printOwner() << "--|" << board.tiles[i]->getCriteria(1)->printOwner() << "|      " << endl;
         cout << "      /            \\     " << endl;
