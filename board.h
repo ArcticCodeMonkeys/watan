@@ -2,6 +2,7 @@
 #define BOARD_H
 #include <iostream>
 #include <map>
+#include <algorithm>
 
 class Tile;
 class Goal;

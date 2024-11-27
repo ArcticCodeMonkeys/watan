@@ -2,7 +2,6 @@
 #include "tile.h"
 #include "goal.h"
 #include "criterion.h"
-
 const int TILE_COUNT = 19;
 const int GOAL_COUNT = 71;
 const int CRITERIA_COUNT = 53;
@@ -62,8 +61,23 @@ void Board::tileLinking() {
     }
 }
 Board::Board() {
-    for (int i = 0; i < TILE_COUNT; ++i) {
-        tiles[i] = new Tile();
+    vector<string> tileBag = {"TUTORIAL", "TUTORIAL", "TUTORIAL", "STUDY", "STUDY", "STUDY", "CAFFEINE", "CAFFEINE", "CAFFEINE", "CAFFEINE", "LAB", "LAB", "LAB", "LAB", "LECTURE", "LECTURE", "LECTURE", "LECTURE", "NETFLIX" };
+    vector<int> valBag = {2, 12, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 7};
+    int leftInBag = 19;
+    for(int i = 0; i < 19; i++) {
+        int index = rand() % leftInBag;
+        int rollVal = valBag[index];
+        string resource = tileBag[index];
+        if(rollVal == 7) {
+            tiles[i] = new Tile(7, "NETFLIX", true);
+            valBag.erase(std::remove(valBag.begin(), valBag.end(), 7), valBag.end());
+            tileBag.erase(std::remove(tileBag.begin(), tileBag.end(), "NETFLIX"), tileBag.end());
+        } else {
+            tiles[i] = new Tile[rollVal, resource, false];
+            valBag.erase(valBag.begin() + index);
+            tileBag.erase(tileBag.begin() + index);
+        }
+        leftInBag--;
     }
     for (int i = 0; i < GOAL_COUNT; ++i) {
         goals[i] = new Goal();
