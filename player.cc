@@ -28,6 +28,11 @@ Player::Player() {
 }
 Player::~Player() {}
 bool Player::completeCriterion(int index) {
+    for(int i = 0; i < criteria[index]->getNeighbors().size(); i++) {
+        if(criteria[index]->getNeighbors(0)->getPlayer() !- nullptr) {
+            return false;
+        }
+    }
     if(criteria[index]->getType() == '\0' && criteria[index]->getPlayer() == nullptr && criteria[index]->getNeighbors(0)->getPlayer() == nullptr && criteria[index]->getNeighbors(1)->getPlayer() == nullptr && criteria[index]->getNeighbors(2)->getPlayer() == nullptr) {
         if(resources["LAB"] > 0 && resources["LECTURE"] > 0 && resources["CAFFEINE"] > 0 && resources["TUTORIAL"] > 0) {
             resources["LAB"] -= 1;

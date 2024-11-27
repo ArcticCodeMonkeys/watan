@@ -126,10 +126,26 @@ Board::Board() {
     
 }
 
-Board::Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile) {
+Board::Board(map<string, int> hands[], Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile) {
     string resources[] = {"CAFFIENE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"}; 
     for (int i = 0; i < TILE_COUNT; i++) {
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (i == geeseTile));
+    }
+    for (int i = 0; i < GOAL_COUNT; i++ ) {
+        goals[i] = new Goal(); //update
+    }
+
+    for (int i = 0; i < CRITERIA_COUNT; i++ ) {
+        criteria[i] = new Criterion(); //update
+    }
+    tileLinking();
+
+}
+
+Board::Board(int tile[19][2]) {
+    string resources[] = {"CAFFIENE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"}; 
+    for (int i = 0; i < TILE_COUNT; i++) {
+        tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (resources[tile[i][0]] == "NETFLIX"));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
         goals[i] = new Goal(); //update
