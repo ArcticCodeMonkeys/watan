@@ -13,7 +13,6 @@ class Tile: public Subject {
 
     public:
         Tile(int rollingValue, string resource, bool geese);
-        Tile();
         void notifyObservers();
         void setCriteria(int index, Criterion *c);
         void setGeese(bool geese);
