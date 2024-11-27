@@ -6,16 +6,8 @@
 const int TILE_COUNT = 19;
 const int GOAL_COUNT = 71;
 const int CRITERIA_COUNT = 53;
-Board::Board() {
-    for (int i = 0; i < TILE_COUNT; ++i) {
-        tiles[i] = new Tile();
-    }
-    for (int i = 0; i < GOAL_COUNT; ++i) {
-        goals[i] = new Goal();
-    }
-    for (int i = 0; i < CRITERIA_COUNT; ++i) {
-        criteria[i] = new Criterion();
-    }
+
+void Board::tileLinking() {
     int criteriaMap[TILE_COUNT][6] = {
         {0, 1, 4, 9, 8, 3},
         {2, 3, 8, 14, 13, 7},
@@ -68,14 +60,39 @@ Board::Board() {
             tiles[i]->setGoals(k, goals[goalMap[i][k]]);
         }
     }
+}
+Board::Board() {
+    for (int i = 0; i < TILE_COUNT; ++i) {
+        tiles[i] = new Tile();
+    }
+    for (int i = 0; i < GOAL_COUNT; ++i) {
+        goals[i] = new Goal();
+    }
+    for (int i = 0; i < CRITERIA_COUNT; ++i) {
+        criteria[i] = new Criterion();
+    }
+    tileLinking();
     
 }
 
-Board::Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int *tile[], int geeseTile) {
+Board::Board(map<string, int> *hands, Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile) {
+    string resources[] = {"CAFFIENE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"}; 
+    for (int i = 0; i < TILE_COUNT; i++) {
+        tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (i == geeseTile));
+    }
+    for (int i = 0; i < GOAL_COUNT; i++ ) {
+        goals[i] = new Goal(); //update
+    }
+
+    for (int i = 0; i < CRITERIA_COUNT; i++ ) {
+        criteria[i] = new Criterion(); //update
+    }
+    tileLinking();
+
 }
 
 
-friend std::ostream& operator<<(std::ostream& out, const Board& board) {
+std::ostream& operator<<(std::ostream& out, const Board& board) {
     for(int i = 0; i < TILE_COUNT; i++) {
         cout << "      |" << board.tiles[i]->getCriteria(0)->printOwner() << "|--" << board.tiles[i]->getGoal(0)->printOwner() << "--|" << board.tiles[i]->getCriteria(1)->printOwner() << "|      " << endl;
         cout << "      /            \\     " << endl;

@@ -15,6 +15,7 @@ class Board {
         Board();
         Board(map<string, int> hands [], Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile);
         Board(int tile[19][2]);
+        void tileLinking();
         friend std::ostream &operator<<(std::ostream &out, const Board &board);
         void saveBoard();
         Tile** getTiles();
