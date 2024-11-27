@@ -106,6 +106,7 @@ void Player::takeResources(string resource, int count) {
 
 std::ostream &Player::operator<<(std::ostream &out) {
     out << name << " has " << victoryPoints <<  " victory points, " << resources["CAFFEINE"] << " caffeines, " << resources["LABS"] << " labs, " << resources["LECTURES"] << " lectures, " << resources["TUTORIALS"] << " tutorials, and " << resources["STUDIES"] << " studies." << endl;
+    return out;
 }
 
 void Player::printCriteria() {

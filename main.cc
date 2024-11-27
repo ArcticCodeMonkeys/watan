@@ -392,6 +392,9 @@ int main(int argc, char* argv[]) {
                     } else if (resourceType == "TUTORIAL") {
                         resourceInt = 4;
                     }
+                    else if (resourceType == "NETFLIX") {
+                        resourceInt = 5;
+                    }
                     saveStream << resourceType << " " << tiles[i]->getRollingValue() << " ";
                 }
                 saveStream << endl;

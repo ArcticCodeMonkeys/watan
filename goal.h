@@ -10,6 +10,7 @@ class Goal {
     int index;
     Goal *adjacents[3];
     public:
+        
         Player* getPlayer();
         void setPlayer(Player* p);
         Goal* getAdjacent(int index);
