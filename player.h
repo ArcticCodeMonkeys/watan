@@ -24,8 +24,9 @@ class Player {
         bool completeCriterion(int index);
         bool improveCriterion(int index);
         bool achieveGoal(int index);
-        void trade(Player p, string ask, string give);
+        void trade(Player *p, string ask, string give);
         void addResources(string resource, int count);
+        void takeResources(string resource, int count);
         void printCriteria();
         void setName(char c);
         char getName();

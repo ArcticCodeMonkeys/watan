@@ -7,6 +7,7 @@
 #include "player.h"
 #include "board.h"
 #include "tile.h"
+#include "criterion.h"
 const int NUM_PLAYERS = 4;
 using namespace std;
 
@@ -191,6 +192,7 @@ int main(int argc, char* argv[]) {
             }
         }
         //Step 2: Roll the Dice
+        Tile** tiles = game.getTiles();
         int diceRoll = students[currentTurn].rollDice();
         if(diceRoll == 7) {
             //GOOSE!
@@ -235,18 +237,18 @@ int main(int argc, char* argv[]) {
             cout << "Choose where to place the GEESE." << endl;
             int index;
             cin >> index;
-            Tile* tiles[] = game.getTiles();
-            if(!(game.getTiles()[index].goosed)) {
+            
+            if(!(tiles[index]->getGeese())) {
                 for(int i = 0; i < 19; i++) {
-                    if(game.getTiles()[i].goosed) {
-                        game.getTiles()[i].goosed = false;
+                    if(tiles[i]->getGeese()) {
+                       tiles[i]->setGeese(false);
                     }
                 }
-                game.getTiles()[index].goosed = true;
+                tiles[index]->setGeese(true);
             }
             char stealFrom [6] = {'\0', '\0', '\0', '\0', '\0', '\0'};
             for (int i = 0; i < 6 ; i++) {
-                char name = game->tile[index]->criteria[i]->player.name;
+                char name = tiles[index]->getCriteria(i)->getPlayer()->getName();
                 if (name != students[currentTurn].getName()) {
                     stealFrom[i] = name;
                 }
@@ -294,8 +296,8 @@ int main(int argc, char* argv[]) {
         else {
             //Step 3: Else, enerate resources for the tile
             for(int i = 0; i < 19; i++) {
-                if(game->tile[i].value == diceRoll) {
-                    game->tile[i].notifyObservers();
+                if(tiles[i]->getRollingValue() == diceRoll) {
+                    tiles[i]->notifyObservers();
                 }
             }
         }
@@ -343,8 +345,8 @@ int main(int argc, char* argv[]) {
                 cin >> take;
                 for (int i = 0; i < NUM_PLAYERS; i++) {
                     if (turnOrder[i] == target) {
-                        students[currentTurn].trade(students[i], give, take);
-                        break;
+                        students[currentTurn].trade(&students[i], give, take);
+                       break;
                     }
                 }
             }
@@ -366,7 +368,7 @@ int main(int argc, char* argv[]) {
                     saveStream << "c ";
                     for (int j = 0; j < 53; j++) {
                         if (students[i].getCriteria()[j] != nullptr) {
-                            saveStream << j << " " << students[i].getCriteria()[j]->type << " ";
+                            saveStream << j << " " << students[i].getCriteria()[j]->getType() << " ";
                         }
                     }
                     saveStream << endl;
@@ -374,8 +376,8 @@ int main(int argc, char* argv[]) {
                 int resourceType = 0;
                 int gooseTile = 0;
                 for (int i = 0; i < 19; i++) {
-                    string resourceType = game.getTiles()[i].resourceType;
-                    if (game.getTiles()[i].getGeese()) {
+                    string resourceType = tiles[i]->getResource();
+                    if (tiles[i]->getGeese()) {
                         gooseTile = i;
                     }
                     int resourceInt = 0;
@@ -390,7 +392,7 @@ int main(int argc, char* argv[]) {
                     } else if (resourceType == "TUTORIAL") {
                         resourceInt = 4;
                     }
-                    saveStream << resourceType << " " << game->tile[i].value << " ";
+                    saveStream << resourceType << " " << tiles[i]->getRollingValue() << " ";
                 }
                 saveStream << endl;
                 saveStream << gooseTile << endl;
