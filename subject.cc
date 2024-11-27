@@ -18,7 +18,7 @@ void Subject::detach( Observer* o ) {
 
 void Subject::notifyObservers() {
     for(auto &o: observers) {
-        o->notify();
+        o->notify(resource);
     }
 }
 std::vector<Observer*> Subject::getObservers() {
