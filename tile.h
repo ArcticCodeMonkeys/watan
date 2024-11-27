@@ -11,7 +11,6 @@ class Tile: public Subject {
     Criterion * criteria[6];
     Goal * goals[6];
     bool geese;
-    std::unique_ptr<Dice> dice;
 
     public:
         Tile(int rollingValue, string resource, bool geese);
