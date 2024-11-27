@@ -12,7 +12,6 @@ const int NUM_PLAYERS = 4;
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    //Stage 1: Load States
     Board game;
     Player students[NUM_PLAYERS];
     char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
@@ -20,6 +19,8 @@ int main(int argc, char* argv[]) {
         students[i].setName(turnOrder[i]);
     }
     int currentTurn = 0;
+
+    // command line arguments handling
     string command = "";
     string boardFile = "";
     string gameFile = "";
@@ -38,12 +39,10 @@ int main(int argc, char* argv[]) {
             boardFile = argv[i + 1];
         }
     }
-    if (givenSeed) {
-        srand(seed);
-    }
-    else {
-        srand(time(NULL));
-    }
+    
+    {givenSeed? srand(seed) : srand(time(NULL));}
+
+    // loading game from file
     if (gameFile != "") {
         ifstream fileStream{gameFile};
         string line;
@@ -131,8 +130,8 @@ int main(int argc, char* argv[]) {
         int geeseTile = stoi(line);
         game = Board(total_resources, goalOwners, criterionOwners, typeArray, tile, geeseTile);
     }
+    // load board
     else if (boardFile != "") {
-        // load board
         ifstream fileStream{gameFile};
         string line;
         getline(fileStream, line);
@@ -152,12 +151,12 @@ int main(int argc, char* argv[]) {
         }
         game = Board(tile);
     }
+    // load random board
     else {
-        // load random board
         game = Board();
     }
 
-    //Stage 2: Setup
+    //Stage 2: Initial house and road assignment
     for(int i = 0; i < NUM_PLAYERS; i++) {
         cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
         int index;
@@ -171,9 +170,13 @@ int main(int argc, char* argv[]) {
         students[i].completeCriterion(index);
     }
     
+
+
     //Stage 3: The Game
     bool gameLoop = true;
     while(gameLoop) {
+        
+        
         //Step 1: Set the Dice
         cout << "Student " << students[currentTurn].getName() << "'s Turn" << endl;
         cout << students[currentTurn];
@@ -191,8 +194,10 @@ int main(int argc, char* argv[]) {
                 cout << "Invalid Command; try either roll, load x, or fair." << endl;
             }
         }
+        
+        
         //Step 2: Roll the Dice
-        Tile** tiles = game.getTiles();
+        Tile ** tiles = game.getTiles();
         int diceRoll = students[currentTurn].rollDice();
         if(diceRoll == 7) {
             //GOOSE!
@@ -294,14 +299,14 @@ int main(int argc, char* argv[]) {
             }
         }
         else {
-            //Step 3: Else, enerate resources for the tile
             for(int i = 0; i < 19; i++) {
                 if(tiles[i]->getRollingValue() == diceRoll) {
                     tiles[i]->notifyObservers();
                 }
             }
         }
-        //Step 4: Action Time
+        
+        //Step 3: Action Time
         string command;
         while(cin >> command) {
             if (command == "next") {
@@ -373,7 +378,6 @@ int main(int argc, char* argv[]) {
                     }
                     saveStream << endl;
                 }
-                int resourceType = 0;
                 int gooseTile = 0;
                 for (int i = 0; i < 19; i++) {
                     string resourceType = tiles[i]->getResource();
@@ -395,7 +399,7 @@ int main(int argc, char* argv[]) {
                     else if (resourceType == "NETFLIX") {
                         resourceInt = 5;
                     }
-                    saveStream << resourceType << " " << tiles[i]->getRollingValue() << " ";
+                    saveStream << resourceInt << " " << tiles[i]->getRollingValue() << " ";
                 }
                 saveStream << endl;
                 saveStream << gooseTile << endl;

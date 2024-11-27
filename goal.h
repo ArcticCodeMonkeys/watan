@@ -8,12 +8,11 @@ class Goal {
     //need to add an index parameter which begins at -1
     Player *player;
     int index;
-    Goal *adjacents[3];
+    vector<Goal*> adjacents;
     public:
-        
         Player* getPlayer();
         void setPlayer(Player* p);
-        Goal* getAdjacent(int index);
+        vector<Goal*> getAdjacents();
         Goal();
         string printOwner();
 };

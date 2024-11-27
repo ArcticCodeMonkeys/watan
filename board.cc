@@ -60,7 +60,43 @@ void Board::tileLinking() {
             tiles[i]->setGoals(k, goals[goalMap[i][k]]);
         }
     }
+    for (int j = 0; j < TILE_COUNT; ++j) {
+        for (int k = 0; k < 6; ++k) {
+            int val = goalMap[j][k];
+            if (j == 5) {
+                goals[val]->getAdjacents().emplace_back(goals[goalMap[j][0]]);
+            }
+            else {
+                goals[val]->getAdjacents().emplace_back(goals[goalMap[j][k+1]]);
+            }
+            if (j == 0) {
+                goals[val]->getAdjacents().emplace_back(goals[goalMap[j][5]]);
+            }
+            else {
+                goals[val]->getAdjacents().emplace_back(goals[goalMap[j][k-1]]);
+            }
+        }
+    }
+
+    for (int j = 0; j < TILE_COUNT; ++j) {
+        for (int k = 0; k < 6; ++k) {
+            int val = criteriaMap[j][k];
+            if (j == 5) {
+                criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][0]]);
+            }
+            else {
+                criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][k+1]]);
+            }
+            if (j == 0) {
+                criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][5]]);
+            }
+            else {
+                criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][k-1]]);
+            }
+        }
+    }
 }
+
 Board::Board() {
     for (int i = 0; i < TILE_COUNT; ++i) {
         tiles[i] = new Tile();
@@ -68,6 +104,7 @@ Board::Board() {
     for (int i = 0; i < GOAL_COUNT; ++i) {
         goals[i] = new Goal();
     }
+    
     for (int i = 0; i < CRITERIA_COUNT; ++i) {
         criteria[i] = new Criterion();
     }

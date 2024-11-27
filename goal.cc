@@ -10,8 +10,8 @@ void Goal::setPlayer(Player* p) {
     player = p;
 }
     
-Goal* Goal::getAdjacent(int index) {
-    return adjacents[index];
+vector<Goal*> Goal::getAdjacents() {
+    return adjacents;
 }
 
 

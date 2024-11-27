@@ -12,13 +12,13 @@ class Criterion: public Observer {
     Type type;
     int index;
     Player *player;
-    Goal *adjacents[3];
-    Criterion *neighbors[3];
+    vector<Goal*> adjacents;
+    vector<Criterion*> neighbors;
     Tile *tile [3];
     public:
         Criterion(int index);
-        Criterion* getNeighbors(int index);
-        Goal* getAdjacents(int index);
+        vector<Criterion*> getNeighbors();
+        vector<Goal*> getAdjacents();
         Player* getPlayer();
         string printOwner();
         void printType();

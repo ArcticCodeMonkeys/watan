@@ -38,10 +38,12 @@ class Player {
         void setGoals(vector<Goal*> goals);
         void setDice(int value);
         int rollDice();
-        std::ostream &operator<<(std::ostream &out);
+        
         int getvictoryPoints();
         void setvictoryPoints(int points);
 };
+
+std::ostream &operator<<(std::ostream &out, const Player &player);
 
 
 #endif

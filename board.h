@@ -2,6 +2,7 @@
 #define BOARD_H
 #include <iostream>
 #include <map>
+#include <vector>
 
 class Tile;
 class Goal;

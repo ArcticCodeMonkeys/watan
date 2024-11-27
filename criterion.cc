@@ -17,12 +17,12 @@ Criterion::Criterion(): index(-1), type(Type::EMPTY) {
     }
 }
 
-Criterion* Criterion::getNeighbors(int index) {
-    return neighbors[index];
+vector<Criterion*> Criterion::getNeighbors() {
+    return neighbors;
 }
 
-Goal* Criterion::getAdjacents(int index) {
-    return adjacents[index];
+vector<Goal*> Criterion::getAdjacents() {
+    return adjacents;
 }
 
 string Criterion::printOwner() {
