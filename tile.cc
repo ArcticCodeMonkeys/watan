@@ -5,7 +5,8 @@ using namespace std;
 
 Tile::Tile(int rollingValue, string resource, bool geese): rollingValue{rollingValue}, resource{resource}, geese{geese} {}
 
-Tile::Tile() {
+Tile::Tile(int seed = 0) {
+    
     rollingValue = 0;
     resource = "";
     geese = false;
