@@ -47,16 +47,9 @@ string Tile::printResource() {
     return output_string;
 }
 
-std::unique_ptr<Dice> Tile::getDice() {
-    return std::move(dice);
-}
 
 Criterion *Tile::getCriteria(int index) {
     return criteria[index];
-}
-
-void Tile::setDice(std::unique_ptr<Dice> dice) {
-    this->dice = std::move(dice);
 }
 
 Goal* Tile::getGoal(int index) {

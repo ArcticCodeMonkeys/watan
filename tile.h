@@ -19,12 +19,10 @@ class Tile: public Subject {
         void notifyObservers();
         void setCriteria(int index, Criterion *c);
         void setGeese(bool geese);
-        void setDice(std::unique_ptr<Dice> dice);
         Criterion* getCriteria(int index);
         bool getGeese();
         int getRollingValue();
         string getResource();
-        std::unique_ptr<Dice> getDice();
         Goal * getGoal(int index);
         void setGoals(int index, Goal *g);
         string printResource();
