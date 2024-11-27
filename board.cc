@@ -94,6 +94,27 @@ void Board::tileLinking() {
             }
         }
     }
+    for (int i = 0; i < CRITERIA_COUNT; i++) {
+        for (int j = 0; j < 3; j++) {
+            for (int k = 0; k < 6; k++) {
+                if (criteria[i]->getTiles()[j]->getCriteria(k) == criteria[i]) {
+                    if (k == 0) {
+                        criteria[i]->getAdjacents().emplace_back(criteria[i]->getTiles()[j]->getGoal(5));
+                    }
+                    else {
+                        criteria[i]->getAdjacents().emplace_back(criteria[i]->getTiles()[j]->getGoal(k-1));
+                    }
+                    if (k == 5) {
+                        criteria[i]->getAdjacents().emplace_back(criteria[i]->getTiles()[j]->getGoal(0));
+                    }
+                    else {
+                        criteria[i]->getAdjacents().emplace_back(criteria[i]->getTiles()[j]->getGoal(k+1));
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }
 
 Board::Board() {
@@ -123,7 +144,6 @@ Board::Board() {
         criteria[i] = new Criterion();
     }
     tileLinking();
-    
 }
 
 Board::Board(map<string, int> hands[], Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile) {

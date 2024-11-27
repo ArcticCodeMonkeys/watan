@@ -28,5 +28,6 @@ class Criterion: public Observer {
         Criterion();
         void notify(string resource);
         friend std::ostream &operator<<(std::ostream &out, const Criterion &criterion);
+        Tile ** getTiles();
 };
 #endif
