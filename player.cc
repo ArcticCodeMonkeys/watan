@@ -104,8 +104,8 @@ void Player::takeResources(string resource, int count) {
     resources[resource] -= count;
 }
 
-std::ostream &operator<<(std::ostream &outl, const Player &player) {
-    out << player.getName() << " has " << victoryPoints <<  " victory points, " << resources["CAFFEINE"] << " caffeines, " << resources["LABS"] << " labs, " << resources["LECTURES"] << " lectures, " << resources["TUTORIALS"] << " tutorials, and " << resources["STUDIES"] << " studies." << endl;
+std::ostream &Player::operator<<(std::ostream &out) {
+    out << name << " has " << victoryPoints <<  " victory points, " << resources["CAFFEINE"] << " caffeines, " << resources["LABS"] << " labs, " << resources["LECTURES"] << " lectures, " << resources["TUTORIALS"] << " tutorials, and " << resources["STUDIES"] << " studies." << endl;
 }
 
 void Player::printCriteria() {
@@ -159,3 +159,10 @@ int Player::rollDice() {
     return dice->rollDice();
 }
 
+int Player::getvictoryPoints() {
+    return victoryPoints;
+}
+
+void Player::setvictoryPoints(int points) {
+    victoryPoints = points;
+}
