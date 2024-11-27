@@ -6,6 +6,7 @@
 #include <sstream>
 #include "player.h"
 #include "board.h"
+#include "tile.h"
 const int NUM_PLAYERS = 4;
 using namespace std;
 
@@ -180,16 +181,17 @@ int main(int argc, char* argv[]) {
             if(rollCommand == "roll") {
                 break;
             } else if (rollCommand == "load") {
-                students[currentTurn].setUseLoadedDice(true);
-                students[currentTurn].getLDice().fixedVal << cin;
+                int fixedVal;
+                cin >> fixedVal;
+                students[currentTurn].setDice(fixedVal);
             } else if (rollCommand == "fair") {
-                students[currentTurn].setUseLoadedDice(false);
+                students[currentTurn].setDice(-1);
             } else {
                 cout << "Invalid Command; try either roll, load x, or fair." << endl;
             }
         }
         //Step 2: Roll the Dice
-        int diceRoll = students[currentTurn].getLDice().rollDice();
+        int diceRoll = students[currentTurn].rollDice();
         if(diceRoll == 7) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
@@ -233,7 +235,7 @@ int main(int argc, char* argv[]) {
             cout << "Choose where to place the GEESE." << endl;
             int index;
             cin >> index;
-
+            Tile* tiles[] = game.getTiles();
             if(!(game.getTiles()[index].goosed)) {
                 for(int i = 0; i < 19; i++) {
                     if(game.getTiles()[i].goosed) {
@@ -242,14 +244,14 @@ int main(int argc, char* argv[]) {
                 }
                 game.getTiles()[index].goosed = true;
             }
-            char stealFrom [6];
+            char stealFrom [6] = {'\0', '\0', '\0', '\0', '\0', '\0'};
             for (int i = 0; i < 6 ; i++) {
                 char name = game->tile[index]->criteria[i]->player.name;
                 if (name != students[currentTurn].getName()) {
                     stealFrom[i] = name;
                 }
             }
-            if (stealFrom[0] == "") {
+            if (stealFrom[0] == '\0') {
                 cout << "Student " << students[currentTurn].getName() << " has no students to steal from." << endl;
             }
             else {

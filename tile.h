@@ -2,7 +2,6 @@
 #define TILE_H
 #include "subject.h"
 class Criterion;
-class Dice;
 
 class Tile: public Subject {
     //need to add an index parameter which begins at -1
@@ -11,7 +10,6 @@ class Tile: public Subject {
     Criterion * criteria[6];
     Goal * goals[6];
     bool geese;
-    std::unique_ptr<Dice> dice;
 
     public:
         Tile(int rollingValue, string resource, bool geese);

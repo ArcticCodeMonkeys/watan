@@ -35,6 +35,8 @@ class Player {
         void setCriteria(vector<Criterion*> criteria);
         vector<Goal*> getGoals();
         void setGoals(vector<Goal*> goals);
+        void setDice(int value);
+        int rollDice();
 };
 
 std::ostream &operator<<(std::ostream &out, const Player &player);

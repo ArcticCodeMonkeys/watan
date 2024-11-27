@@ -143,3 +143,15 @@ vector<Goal*> Player::getGoals() {
 void Player::setGoals(vector<Goal*> goals) {
     this->goals = goals;
 }
+
+void Player::setDice(int value) {
+    if(value == -1) {
+        dice = Dice::createFairDice();
+    } else {
+        dice = Dice::createLoadedDice(value);
+    }
+}
+int Player::rollDice() {
+    return dice->rollDice();
+}
+
