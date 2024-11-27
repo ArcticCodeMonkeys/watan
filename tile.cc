@@ -59,8 +59,8 @@ void Tile::setDice(std::unique_ptr<Dice> dice) {
     this->dice = std::move(dice);
 }
 
-Goal **Tile::getGoals(int index) {
-    return goals;
+Goal* Tile::getGoal(int index) {
+    return goals[index];
 }
 
 void Tile::setGoals(int index, Goal *g) {

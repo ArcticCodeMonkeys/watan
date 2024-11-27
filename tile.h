@@ -25,7 +25,7 @@ class Tile: public Subject {
         int getRollingValue();
         string getResource();
         std::unique_ptr<Dice> getDice();
-        Goal ** getGoals(int index);
+        Goal * getGoal(int index);
         void setGoals(int index, Goal *g);
         string printResource();
 };
