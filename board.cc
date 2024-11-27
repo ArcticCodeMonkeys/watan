@@ -81,7 +81,7 @@ friend std::ostream& operator<<(std::ostream& out, const Board& board) {
         cout << "      /            \\     " << endl;
         cout << "    " << board.tiles[i]->getGoal(1)->printOwner() << "              " << board.tiles[i]->getGoal(2)->printOwner() << "    " << endl;
         cout << "   /         " << i << "        \\  " << endl;
-        cout << "|" << board.tiles[i]->getCriteria(3)->printOwner() << "|" << board.tiles->printResource() << "|" << board.tiles[i]->getCriteria(4)->printOwner() << "|" << endl;
+        cout << "|" << board.tiles[i]->getCriteria(3)->printOwner() << "|" << board.tiles[i]->printResource() << "|" << board.tiles[i]->getCriteria(4)->printOwner() << "|" << endl;
         cout << "   \\        " << board.tiles[i]->getRollingValue() << "         /  " << endl;
         cout << "    " << board.tiles[i]->getGoal(3)->printOwner() << "              " << board.tiles[i]->getGoal(4)->printOwner() << "    " << endl;
         cout << "      \\			/      " << endl;
