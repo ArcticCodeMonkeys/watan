@@ -74,30 +74,34 @@ bool Player::achieveGoal(int index) {
         return true;
     }
 }
-void Player::trade(Player p, string ask, string give) {
+void Player::trade(Player *p, string ask, string give) {
     if(resources[give] == 0)  {
         cout << name << ", you do not have any " << give << "." << endl;
         return;
     }
-    if(p.resources[ask] == 0) {
-        cout << p.name << " does not have any " << ask << " to give." << endl;
+    if(p->getResources()[ask] == 0) {
+        cout << p->getName() << " does not have any " << ask << " to give." << endl;
         return;
     }
-    cout << name << " offers " << p.name << " one " << give << " for one " << ask << ". Does " << p.name << " accept this offer?" << endl;
+    cout << name << " offers " << p->getName() << " one " << give << " for one " << ask << ". Does " << p->getName() << " accept this offer?" << endl;
     char confirmation;
     cin >> confirmation;
     if(confirmation == 'Y') {
-        resources[give] -= 1;
-        p.resources[give] += 1;
-        resources[ask] += 1;
-        p.resources[ask] -= 1;
+        takeResources(give, 1);
+        p->addResources(give, 1);
+        addResources(ask, 1);
+        p->takeResources(ask, 1);
         return;
     }
-    cout << p.name << " declined the offer." << endl;
+    cout << p->getName() << " declined the offer." << endl;
 }
 
 void Player::addResources(string resource, int count) {
     resources[resource] += count;
+}
+
+void Player::takeResources(string resource, int count) {
+    resources[resource] -= count;
 }
 
 std::ostream &operator<<(std::ostream &outl, const Player &player) {
@@ -143,3 +147,15 @@ vector<Goal*> Player::getGoals() {
 void Player::setGoals(vector<Goal*> goals) {
     this->goals = goals;
 }
+
+void Player::setDice(int value) {
+    if(value == -1) {
+        dice = Dice::createFairDice();
+    } else {
+        dice = Dice::createLoadedDice(value);
+    }
+}
+int Player::rollDice() {
+    return dice->rollDice();
+}
+

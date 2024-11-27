@@ -2,7 +2,6 @@
 #define TILE_H
 #include "subject.h"
 class Criterion;
-class Dice;
 
 class Tile: public Subject {
     //need to add an index parameter which begins at -1

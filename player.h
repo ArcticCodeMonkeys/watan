@@ -24,8 +24,9 @@ class Player {
         bool completeCriterion(int index);
         bool improveCriterion(int index);
         bool achieveGoal(int index);
-        void trade(Player p, string ask, string give);
+        void trade(Player *p, string ask, string give);
         void addResources(string resource, int count);
+        void takeResources(string resource, int count);
         void printCriteria();
         void setName(char c);
         char getName();
@@ -35,6 +36,8 @@ class Player {
         void setCriteria(vector<Criterion*> criteria);
         vector<Goal*> getGoals();
         void setGoals(vector<Goal*> goals);
+        void setDice(int value);
+        int rollDice();
 };
 
 std::ostream &operator<<(std::ostream &out, const Player &player);
