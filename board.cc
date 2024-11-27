@@ -130,7 +130,7 @@ Board::Board() {
             valBag.erase(std::remove(valBag.begin(), valBag.end(), 7), valBag.end());
             tileBag.erase(std::remove(tileBag.begin(), tileBag.end(), "NETFLIX"), tileBag.end());
         } else {
-            tiles[i] = new Tile[rollVal, resource, false];
+            tiles[i] = new Tile(rollVal, resource, false);
             valBag.erase(valBag.begin() + index);
             tileBag.erase(tileBag.begin() + index);
         }

@@ -28,22 +28,37 @@ Player::Player() {
 }
 Player::~Player() {}
 bool Player::completeCriterion(int index) {
+    //check there is no criterion here already
+    if(criteria[index]->getType() != '\0') {
+        return false;
+    }
+    //check for any adjacent houses (therefore invalid placement)
     for(int i = 0; i < criteria[index]->getNeighbors().size(); i++) {
-        if(criteria[index]->getNeighbors(0)->getPlayer() !- nullptr) {
+        if(criteria[index]->getNeighbors()[i]->getPlayer() != nullptr) {
             return false;
         }
     }
-    if(criteria[index]->getType() == '\0' && criteria[index]->getPlayer() == nullptr && criteria[index]->getNeighbors(0)->getPlayer() == nullptr && criteria[index]->getNeighbors(1)->getPlayer() == nullptr && criteria[index]->getNeighbors(2)->getPlayer() == nullptr) {
-        if(resources["LAB"] > 0 && resources["LECTURE"] > 0 && resources["CAFFEINE"] > 0 && resources["TUTORIAL"] > 0) {
-            resources["LAB"] -= 1;
-            resources["LECTURE"] -= 1;
-            resources["CAFFEINE"] -=1;
-            resources["TUTORIAL"] -= 1;
-            criteria[index]->setType('A');
-            return true;
+    //check for at least one adjacent goal.
+    bool adjGoal = false;
+    for(int i = 0; i < criteria[index]->getAdjacents().size(); i++) {
+        if(criteria[index]->getAdjacents()[i]->getPlayer() == this) {
+            adjGoal = true;
+            break;
         }
+    }
+    if(!adjGoal) {
         return false;
     }
+    if(resources["LAB"] > 0 && resources["LECTURE"] > 0 && resources["CAFFEINE"] > 0 && resources["TUTORIAL"] > 0) {
+        resources["LAB"] -= 1;
+        resources["LECTURE"] -= 1;
+        resources["CAFFEINE"] -=1;
+        resources["TUTORIAL"] -= 1;
+        criteria[index]->setType('A');
+        return true;
+    }
+    //not enough resources
+    return false;
 }
 bool Player::improveCriterion(int index) {
     if(criteria[index]->getPlayer() != this) {
@@ -72,12 +87,25 @@ bool Player::improveCriterion(int index) {
     return false;
 }
 bool Player::achieveGoal(int index) {
-    if(goals[index]->getPlayer() == nullptr && (criteria[index]->getAdjacents(0)->getPlayer() == this || criteria[index]->getAdjacents(1)->getPlayer() == this || criteria[index]->getAdjacents(2)->getPlayer() == this) && resources["STUDY"] > 0 && resources["TUTORIAL"] > 0) {
+    //check for at least one adjacent road.
+    bool adjGoal = false;
+    for(int i = 0; i < goals[index]->getAdjacents().size(); i++) {
+        if(goals[index]->getAdjacents()[i]->getPlayer() == this) {
+            adjGoal = true;
+            break;
+        }
+    }
+    if(!adjGoal) {
+        return false;
+    }
+    //confirm enough resources and not occupied
+    if(goals[index]->getPlayer() == nullptr && resources["STUDY"] > 0 && resources["TUTORIAL"] > 0) {
         resources["STUDY"] -= 1;
         resources["TUTORIAL"] -= 1;
         goals[index]->setPlayer(this);
         return true;
     }
+    return false;
 }
 void Player::trade(Player *p, string ask, string give) {
     if(resources[give] == 0)  {
