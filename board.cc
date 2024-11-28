@@ -167,11 +167,11 @@ Board::Board() {
     }
     
     for (int i = 0; i < GOAL_COUNT; ++i) {
-        goals[i] = new Goal(i);
+        goals[i] = new Goal(i, nullptr);
     }
     
     for (int i = 0; i < CRITERIA_COUNT; ++i) {
-        criteria[i] = new Criterion(i);
+        criteria[i] = new Criterion(i, nullptr, 0);
     }
     
     tileLinking();
@@ -203,11 +203,11 @@ Board::Board(int tile[19][2]) {
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (resources[tile[i][0]] == "NETFLIX"));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
-        goals[i] = new Goal(i); //update
+        goals[i] = new Goal(i, nullptr); //update
     }
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
-        criteria[i] = new Criterion(i); //update
+        criteria[i] = new Criterion(i, nullptr, 0); //update
     }
     tileLinking();
 

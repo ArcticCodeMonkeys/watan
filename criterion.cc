@@ -1,6 +1,6 @@
 #include "criterion.h"
 
-Criterion::Criterion(int index, Player *p, int type = Type::EMPTY): index{index}, player{p}, type{(type == 0 ? Type::EMPTY : type == 1 ? Type::ASSIGNMENT : 
+Criterion::Criterion(int index, Player *p = nullptr, int type = 0): index{index}, player{p}, type{(type == 0 ? Type::EMPTY : type == 1 ? Type::ASSIGNMENT : 
 type == 2 ? Type::MIDTERM : Type::EXAM)} {}
 
 vector<Criterion*> Criterion::getNeighbors() {
