@@ -43,7 +43,7 @@ class Player {
         void setvictoryPoints(int points);
 };
 
-std::ostream &operator<<(std::ostream &out, const Player &player);
+std::ostream &operator<<(std::ostream &out, Player &player);
 
 
 #endif
