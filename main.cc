@@ -2,6 +2,8 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <random>
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include "player.h"
@@ -19,7 +21,7 @@ int main(int argc, char* argv[]) {
     cout << "Welcome to the Game of Goose!" << endl;
     Player students[NUM_PLAYERS];
     char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
-    string resourcesArr[6] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"};
+    string resourcesArr[6] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL" ,"NETFLIX"};
     for (int i = 0; i < NUM_PLAYERS; i++) {
         students[i].setName(turnOrder[i]);
     }
@@ -117,13 +119,11 @@ int main(int argc, char* argv[]) {
         while (iss >> readValue) {
             if (count_resource == count_roll) {
                 int resourceType = stoi(readValue);
-                cout << "rtype " << resourceType << endl;
                 tile[count_resource][0] = resourceType;
                 count_resource++;
             }
             else {
                 int rollingValue = stoi(readValue);
-                cout << "rval " << rollingValue << endl;
                 tile[count_roll][1] = rollingValue;
                 count_roll++;
             }
@@ -253,33 +253,104 @@ int main(int argc, char* argv[]) {
         int diceRoll = students[currentTurn].rollDice();
         if(diceRoll == 7) {
             //GOOSE!
-            for(int i = 0; i < NUM_PLAYERS; i++) {
+            /* for(int i = 0; i < NUM_PLAYERS; i++) {
                 int cardCount = 0;
+                int c = 0;
                 cout << students[i] << endl;
-                for(auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
-                    cardCount += it->second;
+                int cardCount_Arr[] = {0, 0, 0, 0, 0};
+                for(const auto &pair: students[i].getResources()) {
+                    cardCount += pair.second;
+                    if (c == 0) {
+                        cardCount_Arr[0] = pair.second;
+                    }
+                    else {
+                        cardCount_Arr[c] = cardCount_Arr[c - 1] + pair.second;
+                    }
+                    c++;
                 }
-                cout << "Reached here" << endl;
+                cout << "Student " << turnOrder[i] << " has " << cardCount << " resources." << endl;
+                cout << cardCount_Arr[0] << " " << cardCount_Arr[1] << " " << cardCount_Arr[2] << " " << cardCount_Arr[3] << " " << cardCount_Arr[4] << endl;
                 if(cardCount >= 10) {
+                    
                     int disappeared = cardCount / 2;
-                    map<string, int> lostResources;
-                    while (disappeared > 0) {
-                        int disappearType = rand() % 5;
-                        string disappearString = resourcesArr[disappearType];
-                        if (students[i].getResources()[disappearString] > 0) {
-                            students[i].getResources()[disappearString] -= 1;
-                            disappeared--;
-                            if (lostResources.find(disappearString) == lostResources.end()) {
-                                lostResources[disappearString] = 1;
-                            } else {
-                                lostResources[disappearString] += 1;
+                    int disappeared_copy = disappeared;
+                    while (disappeared_copy > 0) {
+                        int disappearIndex = rand() % cardCount;
+                        cout << "disappearIndex: " << disappearIndex << endl;
+                        for (int j = 0; j < 5; j++) {
+                            if (cardCount_Arr[j] >= disappearIndex) {
+                                cardCount_Arr[j] -= 1;
+                                disappeared_copy--;
+                                break;
                             }
                         }
+                        cout << disappeared_copy << endl;
                     }
-                    cout << "Student " << turnOrder[i] << "loses " << disappeared << " resources to the geese. They lose:" << endl;
-                    for(auto it = lostResources.begin(); it != lostResources.end(); ++it) {
-                        cout << it->second << " " << it->first << endl;
+                    map<string, int> stolen;
+                    for (int j = 0; j < disappeared; j++) {
+                        int index = rand() % cardCount - j; // Randomly choose an index in the range of total cards
+                        int cumulative = 0;
+                        for (int k = 0; k < 5; k++) { // Iterate through the 5 resource types
+                            cumulative += students[i].getResources()[resourcesArr[k]];
+                            if (index < cumulative) { // Check if the index falls in the current cumulative range
+                                stolen[resourcesArr[k]] += 1;       // Increment the stolen count for this resource
+                                break;
+                            }
+                        }
+
+                    map<string, int> lostResources;
+                    for (int j = 0; j < 5; j++) {
+                        lostResources[resourcesArr[j]] = students[i].getResources()[resourcesArr[j]] - cardCount_Arr[j];
+                        cout << resourcesArr[j] << " " << lostResources[resourcesArr[j]] << endl;
+                        students[i].takeResources(resourcesArr[j], lostResources[resourcesArr[j]]);
+                        students[i].getResources()[resourcesArr[j]] = cardCount_Arr[j];
                     }
+                    for(const auto &pair : lostResources) {
+                        cout << pair.second << " " << pair.first << endl;
+                    }
+                }
+            } */
+
+            for(int i = 0; i < NUM_PLAYERS; i++) {
+                cout << "Student" << students[i].getName()<< "resources before removing" << endl;
+                for (int j = 0; j < 6; j++) {
+                    cout << resourcesArr[j] << ": " << students[i].getResources()[resourcesArr[j]] << endl;
+                }
+                int cardCount = 0;
+                int cardCountArr []= {0, 0, 0, 0, 0, 0};
+                for (const auto& it : students[i].getResources()) {
+                    cardCount += it.second;
+                    for (int j = 0; j < 6; j++) {
+                        if (it.first == resourcesArr[j]) {
+                            cardCountArr[j] = it.second;
+                        }
+                    }
+                }
+                if (cardCount >= 10) {
+                    int discardCount = cardCount / 2;
+                    int stolen = 0;
+                    while (stolen < discardCount) {
+                        int randomCard = rand() % cardCount;
+                        for (int j = 0; j < 6; j++) {
+                            if (randomCard < cardCountArr[j]) {
+                                cardCountArr[j]--;
+                                stolen++;
+                                break;
+                            }
+                            randomCard -= cardCountArr[j];
+                        }
+                    }
+                    map<string, int> lostResources;
+                    for (int j = 0; j < 6; j++) {
+                        lostResources[resourcesArr[j]] = students[i].getResources()[resourcesArr[j]] - cardCountArr[j];
+                        students[i].takeResources(resourcesArr[j], lostResources[resourcesArr[j]]);
+                    }
+                    
+                }
+                
+                cout << "Student " << students[i].getName() << " resources after removing" << endl;
+                for (int j = 0; j < 6; j++) {
+                    cout << resourcesArr[j] << ": " << students[i].getResources()[resourcesArr[j]] << endl;
                 }
             }
             cout << "Choose where to place the GEESE." << endl;

@@ -33,8 +33,8 @@ string Tile::getResource() {
 }
 
 string Tile::printResource() {
-    int remaining_spaces = 11 - resource.length();
-    string output_string = "       " + resource;
+    int remaining_spaces = 12 - resource.length();
+    string output_string = "      " + resource;
     for (int i = 0; i < remaining_spaces; i++) {
         output_string += " ";
     }

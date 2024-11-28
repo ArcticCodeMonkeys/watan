@@ -30,7 +30,7 @@ Player::~Player() {}
 bool Player::completeCriterion(Criterion *purchase, bool free) {
     
     //check there is no criterion here already
-    if(purchase->getType() != '\0') {
+    if(purchase->getPlayer() != nullptr) {
         cout << "Invalid Placement, already purchased" << endl;
         return false;
     }
@@ -164,8 +164,8 @@ std::ostream &operator<<(std::ostream &out, Player &player) {
         << player.getResources().at("CAFFEINE") << " caffeines, "
         << player.getResources().at("LAB") << " labs, "
         << player.getResources().at("LECTURE") << " lectures, "
-        << player.getResources().at("TUTORIAL") << " tutorials, and "
-        << player.getResources().at("STUDY") << " studies.\n";
+        << player.getResources().at("STUDY") << " studies, and "
+        << player.getResources().at("TUTORIAL") << " tutorials.\n";
     return out;
 }
 
