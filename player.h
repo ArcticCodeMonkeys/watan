@@ -21,9 +21,9 @@ class Player {
         Player(std::vector<Criterion*> criteria, std::vector<Goal*> goals, map<string, int> resources, char name);
         Player();
         ~Player();
-        bool completeCriterion(int index);
+        bool completeCriterion(Criterion* purchase, bool free);
         bool improveCriterion(int index);
-        bool achieveGoal(int index);
+        bool achieveGoal(Goal* purchase);
         void trade(Player *p, string ask, string give);
         void addResources(string resource, int count);
         void takeResources(string resource, int count);

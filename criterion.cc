@@ -1,9 +1,6 @@
 #include "criterion.h"
 
-Criterion::Criterion(int index): type(Type::ASSIGNMENT), index(index)  {}
-
-Criterion::Criterion(): type(Type::EMPTY), index(-1) {
-}
+Criterion::Criterion(int index): type(Type::EMPTY), index(index)  {}
 
 vector<Criterion*> Criterion::getNeighbors() {
     return neighbors;
@@ -26,6 +23,7 @@ string Criterion::printOwner() {
         }
     }
 }
+
 
 Player* Criterion::getPlayer() {
     return player;
@@ -97,4 +95,12 @@ void Criterion::setTile(int index, Tile *t) {
 
 void Criterion::addTile(Tile *t) {
     tiles.emplace_back(t);
+}
+
+void Criterion::setPlayer(Player *p) {
+    player = p;
+}
+
+void Criterion::addNeighbor(Criterion *c) {
+    neighbors.emplace_back(c);
 }

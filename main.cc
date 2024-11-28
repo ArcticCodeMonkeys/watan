@@ -155,18 +155,22 @@ int main(int argc, char* argv[]) {
     }
     // otherwise random board is loaded
 
-    //Stage 2: Initial house and road assignment
+    //Stage 2: Initial Assignment purchasing
     for(int i = 0; i < NUM_PLAYERS; i++) {
         cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
         int index;
         cin >> index;
-        students[i].completeCriterion(index);
+        if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
+            i--;
+        }
     }
     for(int i = NUM_PLAYERS - 1; i >= 0; i--) {
         cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
         int index;
         cin >> index;
-        students[i].completeCriterion(index);
+        if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
+            i--;
+        }
     }
     
 
@@ -174,13 +178,12 @@ int main(int argc, char* argv[]) {
     //Stage 3: The Game
     bool gameLoop = true;
     while(gameLoop) {
-        
-        
         //Step 1: Set the Dice
         cout << "Student " << students[currentTurn].getName() << "'s Turn" << endl;
         //cout << students[currentTurn]; SOMETHING THAT SHOULD BE DONE
         string rollCommand;
         while(getline(cin, rollCommand)) {
+            cout << rollCommand << endl;
             if(rollCommand == "roll") {
                 break;
             } else if (rollCommand == "load") {
@@ -194,11 +197,12 @@ int main(int argc, char* argv[]) {
             }
         }
         
-        
         //Step 2: Roll the Dice
+        cout << "bouta roll some dice" << endl;
         Tile ** tiles = game.getTiles();
         int diceRoll = students[currentTurn].rollDice();
         if(diceRoll == 7) {
+            cout << "goose" << endl;
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
                 int cardCount = 0;
@@ -298,13 +302,14 @@ int main(int argc, char* argv[]) {
             }
         }
         else {
+            cout << "didnt goose" << endl;
             for(int i = 0; i < 19; i++) {
                 if(tiles[i]->getRollingValue() == diceRoll) {
                     tiles[i]->notifyObservers();
                 }
             }
         }
-        
+        cout << "Rolled a " << diceRoll << endl;
         //Step 3: Action Time
         string command;
         while(cin >> command) {
@@ -321,19 +326,19 @@ int main(int argc, char* argv[]) {
                 }
             }
             else if (command == "criteria") {
-                for(auto it = students[currentTurn].getCriteria().begin(); it != students[currentTurn].getCriteria().end(); ++it) {
-                    cout << *it;
+                for(int i = 0; i < students[currentTurn].getCriteria().size(); i++) {   
+                    cout << students[currentTurn].getCriteria()[i]->getIndex() << " " << students[currentTurn].getCriteria()[i]->getType() << endl;
                 }
             }
             else if (command == "achieve") {
                 int index;
                 cin >> index;
-                students[currentTurn].achieveGoal(index);
+                students[currentTurn].achieveGoal(game.getGoals()[index]);
             }
             else if (command == "complete") {
                 int index;
                 cin >> index;
-                students[currentTurn].completeCriterion(index);
+                students[currentTurn].completeCriterion(game.getCriteria()[index], false);
             }
             else if (command == "improve") {
                 int index;
@@ -408,10 +413,9 @@ int main(int argc, char* argv[]) {
                 << "board " << endl
                 << "status " << endl
                 << "criteria " << endl
-                << "achieve " << endl
-                << "<goal> " << endl
-                << "complete <criterion> " << endl
-                << "improve <criterion> " << endl
+                << "achieve <goal#>" << endl
+                << "complete <criterion#> " << endl
+                << "improve <criterion#> " << endl
                 << "trade <colour> <give> <take> " << endl
                 << "next " << endl 
                 << "save <file> " << endl

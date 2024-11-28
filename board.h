@@ -24,6 +24,8 @@ class Board {
         friend std::ostream &operator<<(std::ostream &out, const Board &board);
         void saveBoard();
         Tile** getTiles();
+        Criterion** getCriteria();
+        Goal** getGoals();
         //void loadBoard(bool random, int seed = 0, std::string boardFile = "");
         //void loadGame(bool random, int seed = 0, std::string gameFile = "");
 };

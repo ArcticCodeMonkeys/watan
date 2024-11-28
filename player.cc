@@ -27,37 +27,48 @@ Player::Player() {
     dice = Dice::createFairDice();
 }
 Player::~Player() {}
-bool Player::completeCriterion(int index, bool free) {
+bool Player::completeCriterion(Criterion *purchase, bool free) {
+    
     //check there is no criterion here already
-    if(criteria[index]->getType() != '\0') {
+    if(purchase->getType() != '\0') {
+        cout << "Invalid Placement, already purchased" << endl;
         return false;
     }
     //check for any adjacent houses (therefore invalid placement)
-    for(int i = 0; i < criteria[index]->getNeighbors().size(); i++) {
-        if(criteria[index]->getNeighbors()[i]->getPlayer() != nullptr) {
+    for(int i = 0; i < purchase->getNeighbors().size(); i++) {
+        if(purchase->getNeighbors()[i]->getPlayer() != nullptr) {
+            cout << "Invalid Placement, " << purchase->getNeighbors()[i]->getPlayer()->getName() << " has already purchased the Criterion at " << purchase->getNeighbors()[i]->getIndex() << endl;
             return false;
         }
     }
     //check for at least one adjacent goal.
+
     bool adjGoal = false;
-    for(int i = 0; i < criteria[index]->getAdjacents().size(); i++) {
-        if(criteria[index]->getAdjacents()[i]->getPlayer() == this) {
+    for(int i = 0; i < purchase->getAdjacents().size(); i++) {
+        if(purchase->getAdjacents()[i]->getPlayer() == this) {
             adjGoal = true;
             break;
         }
     }
-    if(!adjGoal) {
+    if(!adjGoal && !free) {
+        cout << "Invalid Placement, No Adjacent Goal" << endl;
         return false;
     }
     if((resources["LAB"] > 0 && resources["LECTURE"] > 0 && resources["CAFFEINE"] > 0 && resources["TUTORIAL"] > 0) || free) {
-        resources["LAB"] -= 1;
-        resources["LECTURE"] -= 1;
-        resources["CAFFEINE"] -=1;
-        resources["TUTORIAL"] -= 1;
-        criteria[index]->setType('A');
+        if(!free) {
+            resources["LAB"] -= 1;
+            resources["LECTURE"] -= 1;
+            resources["CAFFEINE"] -=1;
+            resources["TUTORIAL"] -= 1;
+        }
+        purchase->setType('A');
+        purchase->setPlayer(this);
+        criteria.emplace_back((purchase));
+        victoryPoints++;
         return true;
     }
     //not enough resources
+    cout << "Invalid Placement, not enough resources" << endl;
     return false;
 }
 bool Player::improveCriterion(int index) {
@@ -69,6 +80,7 @@ bool Player::improveCriterion(int index) {
             resources["LECTURE"] -= 2;
             resources["STUDY"] -= 3;
             criteria[index]->setType('M');
+            victoryPoints++;
             return true;
         }
         return false;
@@ -80,17 +92,18 @@ bool Player::improveCriterion(int index) {
             resources["TUTORIAL"] -= 1;
             resources["STUDY"] -= 2;
             criteria[index]->setType('E');
+            victoryPoints++;
             return true;
         }
         return false;
     }
     return false;
 }
-bool Player::achieveGoal(int index) {
+bool Player::achieveGoal(Goal* purchase) {
     //check for at least one adjacent road.
     bool adjGoal = false;
-    for(int i = 0; i < goals[index]->getAdjacents().size(); i++) {
-        if(goals[index]->getAdjacents()[i]->getPlayer() == this) {
+    for(int i = 0; i < purchase->getAdjacents().size(); i++) {
+        if(purchase->getAdjacents()[i]->getPlayer() == this) {
             adjGoal = true;
             break;
         }
@@ -99,10 +112,11 @@ bool Player::achieveGoal(int index) {
         return false;
     }
     //confirm enough resources and not occupied
-    if(goals[index]->getPlayer() == nullptr && resources["STUDY"] > 0 && resources["TUTORIAL"] > 0) {
+    if(purchase->getPlayer() == nullptr && resources["STUDY"] > 0 && resources["TUTORIAL"] > 0) {
         resources["STUDY"] -= 1;
         resources["TUTORIAL"] -= 1;
-        goals[index]->setPlayer(this);
+        purchase->setPlayer(this);
+        goals.emplace_back(purchase);
         return true;
     }
     return false;

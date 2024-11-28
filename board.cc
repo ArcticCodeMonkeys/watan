@@ -85,18 +85,8 @@ void Board::tileLinking() {
     for (int j = 0; j < TILE_COUNT; ++j) {
         for (int k = 0; k < 6; ++k) {
             int val = criteriaMap[j][k];
-            if (k == 5) {
-                criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][0]]);
-            }
-            else {
-                criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][k+1]]);
-            }
-            if (k == 0) {
-                criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][5]]);
-            }
-            else {
-                criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][k-1]]);
-            }
+            criteria[val]->addNeighbor(criteria[criteriaMap[j][(k + 1) % 6]]);
+            criteria[val]->addNeighbor(criteria[criteriaMap[j][(k - 1 + 6) % 6]]);
         }
     }
     for (int i = 0; i < CRITERIA_COUNT; i++) {
@@ -104,8 +94,7 @@ void Board::tileLinking() {
             for (int k = 0; k < 6; k++) {
                 if (criteria[i]->getTiles()[j]->getCriteria(k) == criteria[i]) {
                     criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal(k % 6));
-                    criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal((k - 1) % 6));
-                    break;
+                    criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal((k - 1 + 6) % 6));
                 }
             }
         }
@@ -136,11 +125,11 @@ Board::Board() {
     }
     
     for (int i = 0; i < GOAL_COUNT; ++i) {
-        goals[i] = new Goal();
+        goals[i] = new Goal(i);
     }
     
     for (int i = 0; i < CRITERIA_COUNT; ++i) {
-        criteria[i] = new Criterion();
+        criteria[i] = new Criterion(i);
     }
     
     tileLinking();
@@ -152,11 +141,11 @@ Board::Board(map<string, int> hands[], Player *goalOwners[], Player *criteriaOwn
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (i == geeseTile));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
-        goals[i] = new Goal(); //update
+        goals[i] = new Goal(i); //update
     }
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
-        criteria[i] = new Criterion(); //update
+        criteria[i] = new Criterion(i); //update
     }
     tileLinking();
 
@@ -168,11 +157,11 @@ Board::Board(int tile[19][2]) {
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (resources[tile[i][0]] == "NETFLIX"));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
-        goals[i] = new Goal(); //update
+        goals[i] = new Goal(i); //update
     }
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
-        criteria[i] = new Criterion(); //update
+        criteria[i] = new Criterion(i); //update
     }
     tileLinking();
 
@@ -188,12 +177,21 @@ std::ostream& operator<<(std::ostream& out, const Board& board) {
         out << "|" << board.tiles[i]->getCriteria(3)->printOwner() << "|" << board.tiles[i]->printResource() << "|" << board.tiles[i]->getCriteria(4)->printOwner() << "|" << endl;
         out << "   \\        " << board.tiles[i]->getRollingValue() << "         /  " << endl;
         out << "    " << board.tiles[i]->getGoal(3)->printOwner() << "              " << board.tiles[i]->getGoal(4)->printOwner() << "    " << endl;
-        out << "      \\			/      " << endl;
+        out << "      \\            /      " << endl;
         out << "      |" << board.tiles[i]->getCriteria(4)->printOwner() << "|--" << board.tiles[i]->getGoal(5)->printOwner() << "--|" << board.tiles[i]->getCriteria(5)->printOwner() << "|      " << endl;
+        out << endl;
     }
     return out;
 }
 
 Tile ** Board::getTiles() {
     return tiles;
+}
+
+Criterion ** Board::getCriteria() {
+    return criteria;
+}
+
+Goal ** Board::getGoals() {
+    return goals;
 }

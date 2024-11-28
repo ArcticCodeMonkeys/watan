@@ -15,7 +15,7 @@ class Goal {
         Player* getPlayer();
         void setPlayer(Player* p);
         vector<Goal*> getAdjacents();
-        Goal();
+        Goal(int idx);
         string printOwner();
 };
 #endif
