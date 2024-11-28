@@ -27,7 +27,7 @@ Player::Player() {
     dice = Dice::createFairDice();
 }
 Player::~Player() {}
-bool Player::completeCriterion(int index) {
+bool Player::completeCriterion(int index, bool free) {
     //check there is no criterion here already
     if(criteria[index]->getType() != '\0') {
         return false;
@@ -49,7 +49,7 @@ bool Player::completeCriterion(int index) {
     if(!adjGoal) {
         return false;
     }
-    if(resources["LAB"] > 0 && resources["LECTURE"] > 0 && resources["CAFFEINE"] > 0 && resources["TUTORIAL"] > 0) {
+    if((resources["LAB"] > 0 && resources["LECTURE"] > 0 && resources["CAFFEINE"] > 0 && resources["TUTORIAL"] > 0) || free) {
         resources["LAB"] -= 1;
         resources["LECTURE"] -= 1;
         resources["CAFFEINE"] -=1;

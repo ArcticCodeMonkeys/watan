@@ -99,9 +99,8 @@ void Board::tileLinking() {
             }
         }
     }
-    cout << "Tile linking complete" << endl;
     for (int i = 0; i < CRITERIA_COUNT; i++) {
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < criteria[i]->getTiles().size(); j++) {
             for (int k = 0; k < 6; k++) {
                 if (criteria[i]->getTiles()[j]->getCriteria(k) == criteria[i]) {
                     criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal(k % 6));
@@ -111,7 +110,6 @@ void Board::tileLinking() {
             }
         }
     }
-    
     
 }
 

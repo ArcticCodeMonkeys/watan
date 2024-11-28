@@ -153,10 +153,7 @@ int main(int argc, char* argv[]) {
         }
         game = Board(tile);
     }
-    // load random board
-    else {
-        game = Board();
-    }
+    // otherwise random board is loaded
 
     //Stage 2: Initial house and road assignment
     for(int i = 0; i < NUM_PLAYERS; i++) {
