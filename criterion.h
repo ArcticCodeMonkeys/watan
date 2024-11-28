@@ -12,7 +12,6 @@ class Goal;
 class Tile;
 
 class Criterion: public Observer {
-    //need to add an index parameter which begins at -1
     enum class Type {EMPTY, ASSIGNMENT, MIDTERM, EXAM};
     Type type;
     int index;

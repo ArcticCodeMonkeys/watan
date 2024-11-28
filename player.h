@@ -23,7 +23,7 @@ class Player {
         ~Player();
         bool completeCriterion(Criterion* purchase, bool free);
         bool improveCriterion(int index);
-        bool achieveGoal(Goal* purchase);
+        bool achieveGoal(Goal* purchase, bool free);
         void trade(Player *p, string ask, string give);
         void addResources(string resource, int count);
         void takeResources(string resource, int count);

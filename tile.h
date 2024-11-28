@@ -24,5 +24,7 @@ class Tile: public Subject {
         Goal * getGoal(int index);
         void setGoals(int index, Goal *g);
         string printResource();
+        string printRollingValue();
+        string printIndex(int index);
 };
 #endif

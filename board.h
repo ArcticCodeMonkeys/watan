@@ -14,8 +14,8 @@ class Player;
 
 class Board {
     Tile *tiles[19];
-    Goal *goals[71];
-    Criterion *criteria[53];
+    Goal *goals[72];
+    Criterion *criteria[54];
     public:
         Board();
         Board(map<string, int> hands [], Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile);

@@ -99,7 +99,7 @@ bool Player::improveCriterion(int index) {
     }
     return false;
 }
-bool Player::achieveGoal(Goal* purchase) {
+bool Player::achieveGoal(Goal* purchase, bool free) {
     //check for at least one adjacent road.
     bool adjGoal = false;
     for(int i = 0; i < purchase->getAdjacents().size(); i++) {
@@ -109,6 +109,7 @@ bool Player::achieveGoal(Goal* purchase) {
         }
     }
     if(!adjGoal) {
+        
         return false;
     }
     //confirm enough resources and not occupied

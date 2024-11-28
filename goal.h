@@ -7,7 +7,6 @@ using namespace std;
 class Player;
 
 class Goal {
-    //need to add an index parameter which begins at -1
     Player *player;
     int index;
     vector<Goal*> adjacents;
@@ -15,6 +14,8 @@ class Goal {
         Player* getPlayer();
         void setPlayer(Player* p);
         vector<Goal*> getAdjacents();
+        void addAdjacent(Goal* g);
+        int getIndex();
         Goal(int idx);
         string printOwner();
 };

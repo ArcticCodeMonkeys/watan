@@ -33,7 +33,7 @@ string Tile::getResource() {
 }
 
 string Tile::printResource() {
-    int remaining_spaces = 12 - resource.length();
+    int remaining_spaces = 11 - resource.length();
     string output_string = "       " + resource;
     for (int i = 0; i < remaining_spaces; i++) {
         output_string += " ";
@@ -52,4 +52,22 @@ Goal* Tile::getGoal(int index) {
 
 void Tile::setGoals(int index, Goal *g) {
     goals[index] = g;
+}
+
+string Tile::printRollingValue() {
+    string output_string = "";
+    if (rollingValue < 10) {
+        output_string += " ";
+    }
+    output_string += to_string(rollingValue);
+    return output_string;
+}
+
+string Tile::printIndex(int index) {
+    string output_string = "";
+    if (index < 10) {
+        output_string += " ";
+    }
+    output_string += to_string(index);
+    return output_string;
 }

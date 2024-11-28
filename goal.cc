@@ -1,7 +1,6 @@
 #include "goal.h"
 #include "player.h"
 
-
 Player* Goal::getPlayer() {
     return player;
 }
@@ -14,11 +13,15 @@ vector<Goal*> Goal::getAdjacents() {
     return adjacents;
 }
 
+void Goal::addAdjacent(Goal* g) {
+    adjacents.emplace_back(g);
+}
 
-Goal::Goal(int idx): player{nullptr}, index{idx}, adjacents{nullptr} {
-    for (int i = 0; i < 3; i++) {
-        adjacents[i] = nullptr;
-    }
+int Goal::getIndex() {
+    return index;
+}
+
+Goal::Goal(int idx): index{idx} {
 }
 
 string Goal::printOwner() {

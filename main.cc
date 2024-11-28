@@ -9,6 +9,8 @@
 #include "tile.h"
 #include "criterion.h"
 const int NUM_PLAYERS = 4;
+const int GOAL_COUNT = 54;
+const int CRITERIA_COUNT = 72;
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -53,9 +55,9 @@ int main(int argc, char* argv[]) {
 
         // load players
         map<string, int> total_resources [NUM_PLAYERS];
-        Player *goalOwners [71]; 
-        Player *criterionOwners [53];
-        int typeArray [53];
+        Player *goalOwners [GOAL_COUNT]; 
+        Player *criterionOwners [CRITERIA_COUNT];
+        int typeArray [CRITERIA_COUNT];
         // loop through players, storing data
         for (int i = 0; i < NUM_PLAYERS; i++) {
             getline(fileStream, line);
@@ -182,8 +184,7 @@ int main(int argc, char* argv[]) {
         cout << "Student " << students[currentTurn].getName() << "'s Turn" << endl;
         //cout << students[currentTurn]; SOMETHING THAT SHOULD BE DONE
         string rollCommand;
-        while(getline(cin, rollCommand)) {
-            cout << rollCommand << endl;
+        while(cin >> rollCommand) {
             if(rollCommand == "roll") {
                 break;
             } else if (rollCommand == "load") {
@@ -333,7 +334,7 @@ int main(int argc, char* argv[]) {
             else if (command == "achieve") {
                 int index;
                 cin >> index;
-                students[currentTurn].achieveGoal(game.getGoals()[index]);
+                students[currentTurn].achieveGoal(game.getGoals()[index], false);
             }
             else if (command == "complete") {
                 int index;
@@ -369,13 +370,13 @@ int main(int argc, char* argv[]) {
                         saveStream << it->second << " ";
                     }
                     saveStream << "g ";
-                    for (int j = 0; j < 71; j++) {
+                    for (int j = 0; j < GOAL_COUNT; j++) {
                         if (students[i].getGoals()[j] != nullptr) {
                             saveStream << j << " ";
                         }
                     }
                     saveStream << "c ";
-                    for (int j = 0; j < 53; j++) {
+                    for (int j = 0; j < CRITERIA_COUNT; j++) {
                         if (students[i].getCriteria()[j] != nullptr) {
                             saveStream << j << " " << students[i].getCriteria()[j]->getType() << " ";
                         }
