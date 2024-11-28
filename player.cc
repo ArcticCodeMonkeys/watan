@@ -101,6 +101,11 @@ bool Player::improveCriterion(int index) {
 }
 bool Player::achieveGoal(Goal* purchase, bool free) {
     //check for at least one adjacent road.
+    if(free) {
+        purchase->setPlayer(this);
+        goals.emplace_back(purchase);
+        return true;
+    }
     bool adjGoal = false;
     for(int i = 0; i < purchase->getAdjacents().size(); i++) {
         if(purchase->getAdjacents()[i]->getPlayer() == this) {
@@ -109,7 +114,6 @@ bool Player::achieveGoal(Goal* purchase, bool free) {
         }
     }
     if(!adjGoal) {
-        
         return false;
     }
     //confirm enough resources and not occupied
@@ -156,9 +160,9 @@ std::ostream &operator<<(std::ostream &out, Player &player) {
     out << player.getName() << " has " << player.getvictoryPoints() << " victory points, "
         << player.getResources().at("CAFFEINE") << " caffeines, "
         << player.getResources().at("LAB") << " labs, "
-        << player.getResources().at("LECTURES") << " lectures, "
-        << player.getResources().at("TUTORIALS") << " tutorials, and "
-        << player.getResources().at("STUDIES") << " studies.\n";
+        << player.getResources().at("LECTURE") << " lectures, "
+        << player.getResources().at("TUTORIAL") << " tutorials, and "
+        << player.getResources().at("STUDY") << " studies.\n";
     return out;
 }
 
