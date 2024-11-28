@@ -1,16 +1,8 @@
 #include "criterion.h"
 
-Criterion::Criterion(int index): type(Type::ASSIGNMENT), index(index)  {
-    for (int i = 0; i < 3; i++) {
-        adjacents[i] = nullptr;
-        tile[i] = nullptr;
-    }
-}
+Criterion::Criterion(int index): type(Type::ASSIGNMENT), index(index)  {}
 
 Criterion::Criterion(): type(Type::EMPTY), index(-1) {
-    for (int i = 0; i < 3; i++) {
-        tile[i] = nullptr;
-    }
 }
 
 vector<Criterion*> Criterion::getNeighbors() {
@@ -91,6 +83,18 @@ int Criterion::getIndex() {
     return index;
 }
 
-Tile ** Criterion::getTiles() {
-    return tile;
+vector<Tile*> Criterion::getTiles() {
+    return tiles;
+}
+
+void Criterion::addAdjacent(Goal *goal) {
+    adjacents.emplace_back(goal);
+}
+
+void Criterion::setTile(int index, Tile *t) {
+    tiles[index] = t;
+}
+
+void Criterion::addTile(Tile *t) {
+    tiles.emplace_back(t);
 }

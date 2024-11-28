@@ -19,11 +19,12 @@ class Criterion: public Observer {
     Player *player;
     vector<Goal*> adjacents;
     vector<Criterion*> neighbors;
-    Tile *tile [3];
+    vector<Tile*> tiles;
     public:
         Criterion(int index);
         vector<Criterion*> getNeighbors();
         vector<Goal*> getAdjacents();
+        void addAdjacent(Goal *goal);
         Player* getPlayer();
         string printOwner();
         void printType();
@@ -33,6 +34,8 @@ class Criterion: public Observer {
         Criterion();
         void notify(string resource);
         friend std::ostream &operator<<(std::ostream &out, const Criterion &criterion);
-        Tile ** getTiles();
+        vector<Tile*> getTiles();
+        void setTile(int index, Tile *t);
+        void addTile(Tile *t);
 };
 #endif

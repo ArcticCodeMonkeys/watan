@@ -54,6 +54,7 @@ void Board::tileLinking() {
     for (int i = 0; i < TILE_COUNT; ++i) {
         for (int k = 0; k < 6; ++k) {
             tiles[i]->setCriteria(k, criteria[criteriaMap[i][k]]);
+            criteria[criteriaMap[i][k]]->addTile(tiles[i]);
         }
     }
     
@@ -84,13 +85,13 @@ void Board::tileLinking() {
     for (int j = 0; j < TILE_COUNT; ++j) {
         for (int k = 0; k < 6; ++k) {
             int val = criteriaMap[j][k];
-            if (j == 5) {
+            if (k == 5) {
                 criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][0]]);
             }
             else {
                 criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][k+1]]);
             }
-            if (j == 0) {
+            if (k == 0) {
                 criteria[val]->getNeighbors().emplace_back(criteria[criteriaMap[j][5]]);
             }
             else {
@@ -98,28 +99,20 @@ void Board::tileLinking() {
             }
         }
     }
-    cout << "Reached here" << endl;
+    cout << "Tile linking complete" << endl;
     for (int i = 0; i < CRITERIA_COUNT; i++) {
         for (int j = 0; j < 3; j++) {
             for (int k = 0; k < 6; k++) {
                 if (criteria[i]->getTiles()[j]->getCriteria(k) == criteria[i]) {
-                    if (k == 0) {
-                        criteria[i]->getAdjacents().emplace_back(criteria[i]->getTiles()[j]->getGoal(5));
-                    }
-                    else {
-                        criteria[i]->getAdjacents().emplace_back(criteria[i]->getTiles()[j]->getGoal(k-1));
-                    }
-                    if (k == 5) {
-                        criteria[i]->getAdjacents().emplace_back(criteria[i]->getTiles()[j]->getGoal(0));
-                    }
-                    else {
-                        criteria[i]->getAdjacents().emplace_back(criteria[i]->getTiles()[j]->getGoal(k+1));
-                    }
+                    criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal(k % 6));
+                    criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal((k - 1) % 6));
                     break;
                 }
             }
         }
     }
+    
+    
 }
 
 Board::Board() {
