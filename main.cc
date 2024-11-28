@@ -64,7 +64,6 @@ int main(int argc, char* argv[]) {
         // loop through players, storing data
         for (int i = 0; i < NUM_PLAYERS; i++) {
             string l;
-        
             if(!getline(fileStream, l))  {
                 cout << "Could not read file" << endl;
                 return 0;
@@ -117,13 +116,11 @@ int main(int argc, char* argv[]) {
         while (iss >> readValue) {
             if (count_resource == count_roll) {
                 int resourceType = stoi(readValue);
-                cout << "rtype " << resourceType << endl;
                 tile[count_resource][0] = resourceType;
                 count_resource++;
             }
             else {
                 int rollingValue = stoi(readValue);
-                cout << "rval " << rollingValue << endl;
                 tile[count_roll][1] = rollingValue;
                 count_roll++;
             }
@@ -161,6 +158,7 @@ int main(int argc, char* argv[]) {
         for(int i = 0; i < NUM_PLAYERS; i++) {
             cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
             int index;
+            cout << "> ";
             cin >> index;
             if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
                 i--;
@@ -177,6 +175,7 @@ int main(int argc, char* argv[]) {
                 }
                 int goalIndex;
                 cout << endl;
+                cout << "> ";
                 cin >> goalIndex;
                 for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
                     if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
@@ -193,6 +192,7 @@ int main(int argc, char* argv[]) {
         for(int i = NUM_PLAYERS - 1; i >= 0; i--) {
             cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
             int index;
+            cout << "> ";
             cin >> index;
             if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
                 i++;
@@ -209,6 +209,7 @@ int main(int argc, char* argv[]) {
                 }
                 int goalIndex;
                 cout << endl;
+                cout << "> ";
                 cin >> goalIndex;
                 for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
                     if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
@@ -233,7 +234,10 @@ int main(int argc, char* argv[]) {
         cout << "Student " << students[currentTurn].getName() << "'s Turn" << endl;
         cout << students[currentTurn];
         string rollCommand;
-        while(cin >> rollCommand) {
+        
+        while(true) {
+            cout << "> ";
+            cin >> rollCommand;
             if(rollCommand == "roll") {
                 break;
             } else if (rollCommand == "load") {
@@ -251,39 +255,54 @@ int main(int argc, char* argv[]) {
         cout << "bouta roll some dice" << endl;
         Tile ** tiles = game.getTiles();
         int diceRoll = students[currentTurn].rollDice();
+        
         if(diceRoll == 7) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
-                int cardCount = 0;
-                cout << students[i] << endl;
-                for(auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
-                    cardCount += it->second;
+                for (int j = 0; j < 6; j++) {
+                    cout << resourcesArr[j] << ": " << students[i].getResources()[resourcesArr[j]] << endl;
                 }
-                cout << "Reached here" << endl;
-                if(cardCount >= 10) {
-                    int disappeared = cardCount / 2;
-                    map<string, int> lostResources;
-                    while (disappeared > 0) {
-                        int disappearType = rand() % 5;
-                        string disappearString = resourcesArr[disappearType];
-                        if (students[i].getResources()[disappearString] > 0) {
-                            students[i].getResources()[disappearString] -= 1;
-                            disappeared--;
-                            if (lostResources.find(disappearString) == lostResources.end()) {
-                                lostResources[disappearString] = 1;
-                            } else {
-                                lostResources[disappearString] += 1;
-                            }
+                int cardCount = 0;
+                int cardCountArr []= {0, 0, 0, 0, 0, 0};
+                for (const auto& it : students[i].getResources()) {
+                    cardCount += it.second;
+                    for (int j = 0; j < 6; j++) {
+                        if (it.first == resourcesArr[j]) {
+                            cardCountArr[j] = it.second;
                         }
                     }
-                    cout << "Student " << turnOrder[i] << "loses " << disappeared << " resources to the geese. They lose:" << endl;
-                    for(auto it = lostResources.begin(); it != lostResources.end(); ++it) {
-                        cout << it->second << " " << it->first << endl;
+                }
+                if (cardCount >= 10) {
+                    int discardCount = cardCount / 2;
+                    int stolen = 0;
+                    while (stolen < discardCount) {
+                        int randomCard = rand() % cardCount;
+                        for (int j = 0; j < 6; j++) {
+                            if (randomCard < cardCountArr[j]) {
+                                cardCountArr[j]--;
+                                stolen++;
+                                break;
+                            }
+                            randomCard -= cardCountArr[j];
+                        }
                     }
+                    map<string, int> lostResources;
+                    for (int j = 0; j < 6; j++) {
+                        lostResources[resourcesArr[j]] = students[i].getResources()[resourcesArr[j]] - cardCountArr[j];
+                        students[i].takeResources(resourcesArr[j], lostResources[resourcesArr[j]]);
+                    }
+                    
+                }
+                
+                cout << "Student " << students[i].getName() << " has lost resources." << endl;
+                for (int j = 0; j < 6; j++) {
+                    cout << resourcesArr[j] << ": " << students[i].getResources()[resourcesArr[j]] << endl;
                 }
             }
+            
             cout << "Choose where to place the GEESE." << endl;
             int index;
+            cout << "> ";
             cin >> index;
             
             if(!(tiles[index]->getGeese())) {
@@ -318,6 +337,7 @@ int main(int argc, char* argv[]) {
                 }
             }
             char charCommand;
+            cout << "> ";
             cin >> charCommand;
             for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (turnOrder[i] == charCommand) {
@@ -352,7 +372,9 @@ int main(int argc, char* argv[]) {
         cout << "Rolled a " << diceRoll << endl;
         //Step 3: Action Time
         string command;
-        while(cin >> command) {
+        while(true) {
+            cout << "> ";
+            cin >> command;
             if (command == "next") {
                 currentTurn = (currentTurn + 1) % 4;
                 break;
