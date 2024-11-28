@@ -153,7 +153,12 @@ void Player::takeResources(string resource, int count) {
 }
 
 std::ostream &operator<<(std::ostream &out, Player &player) {
-    out << player.getName() << " has " << player.getvictoryPoints() <<  " victory points, " << player.getResources()["CAFFEINE"] << " caffeines, " << player.getResources()["LABS"] << " labs, " << player.getResources()["LECTURES"] << " lectures, " << player.getResources()["TUTORIALS"] << " tutorials, and " << player.getResources()["STUDIES"] << " studies." << endl;
+    out << player.getName() << " has " << player.getvictoryPoints() << " victory points, "
+        << player.getResources().at("CAFFEINE") << " caffeines, "
+        << player.getResources().at("LAB") << " labs, "
+        << player.getResources().at("LECTURES") << " lectures, "
+        << player.getResources().at("TUTORIALS") << " tutorials, and "
+        << player.getResources().at("STUDIES") << " studies.\n";
     return out;
 }
 
