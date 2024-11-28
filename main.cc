@@ -9,8 +9,8 @@
 #include "tile.h"
 #include "criterion.h"
 const int NUM_PLAYERS = 4;
-const int GOAL_COUNT = 54;
-const int CRITERIA_COUNT = 72;
+const int GOAL_COUNT = 72;
+const int CRITERIA_COUNT = 54;
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -50,29 +50,38 @@ int main(int argc, char* argv[]) {
     // loading game from file
     if (gameFile != "") {
         ifstream fileStream{gameFile};
+        if(!fileStream) {
+            cout << "Could not locate file" << endl;
+            return 0;
+        }
         string line;
         getline(fileStream, line);
         currentTurn = stoi(line);
-
         // load players
         map<string, int> total_resources [NUM_PLAYERS];
-        Player *goalOwners [GOAL_COUNT]; 
-        Player *criterionOwners [CRITERIA_COUNT];
+        Player *goalOwners[GOAL_COUNT] = {nullptr}; 
+        Player *criterionOwners [CRITERIA_COUNT] = {nullptr};
         int typeArray [CRITERIA_COUNT];
         // loop through players, storing data
         for (int i = 0; i < NUM_PLAYERS; i++) {
-            getline(fileStream, line);
-            istringstream iss{line};
+            string l;
+        
+            if(!getline(fileStream, l))  {
+                cout << "Could not read file" << endl;
+                return 0;
+            }
+            istringstream iss{l};
             string readValue;
             int count = 0;
             // read resources
             map<string, int> resources;
             while (count < 5 && iss >> readValue) {
-                
+                resources[resourcesArr[count]] = stoi(readValue);
                 count++;
             }
+            
             total_resources[i] = resources;
-
+            
             // read goals
             iss >> readValue; // skip "g"
             while (iss >> readValue) {
@@ -97,6 +106,7 @@ int main(int argc, char* argv[]) {
                     int criterionType = stoi(readValue);
                     typeArray[prevRead] = criterionType;
                 }
+                count++;
             }
         }
 
@@ -104,17 +114,24 @@ int main(int argc, char* argv[]) {
         getline(fileStream, line);
         istringstream iss{line};
         string readValue;
+        string readResource;
         int tile [19][2];
-        int count = 0;
+        int count_resource = 0;
+        int count_roll = 0;
         while (iss >> readValue) {
-            if (count % 2 == 0) {
+            if (count_resource == count_roll) {
                 int resourceType = stoi(readValue);
-                tile[count][0] = resourceType;
+                cout << "rtype " << resourceType << endl;
+                tile[count_resource][0] = resourceType;
+                count_resource++;
             }
             else {
                 int rollingValue = stoi(readValue);
-                tile[count][1] = rollingValue;
+                cout << "rval " << rollingValue << endl;
+                tile[count_roll][1] = rollingValue;
+                count_roll++;
             }
+            
         }
         // geese tile number
         getline(fileStream, line);
@@ -141,71 +158,72 @@ int main(int argc, char* argv[]) {
             }
         }
         game = Board(tile);
-    }
-    // otherwise random board is loaded
+    } else {
+        // otherwise random board is loaded
 
-    //Stage 2: Initial Assignment purchasing
-    for(int i = 0; i < NUM_PLAYERS; i++) {
-        cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
-        int index;
-        cin >> index;
-        if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
-            i--;
-            continue;
+        //Stage 2: Initial Assignment purchasing
+        for(int i = 0; i < NUM_PLAYERS; i++) {
+            cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
+            int index;
+            cin >> index;
+            if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
+                i--;
+                continue;
+            }
+            bool adj = false;
+            while(!adj) {
+                cout << "Student " << turnOrder[i] << ", achieve an adjacent Goal on either ";
+                for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
+                    cout << game.getCriteria()[index]->getAdjacents()[i]->getIndex();
+                    if(i < game.getCriteria()[index]->getAdjacents().size() - 1) {
+                        cout << " or ";
+                    }
+                }
+                int goalIndex;
+                cout << endl;
+                cin >> goalIndex;
+                for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
+                    if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
+                        adj = true;
+                        break;
+                    }
+                }
+                if(adj && students[currentTurn].achieveGoal(game.getGoals()[goalIndex], true)) {
+                } else {
+                    cout << "That is not a valid placement, try again" << endl;
+                }
+            }
         }
-        bool adj = false;
-        while(!adj) {
-            cout << "Student " << turnOrder[i] << ", achieve an adjacent Goal on either ";
-            for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
-                cout << game.getCriteria()[index]->getAdjacents()[i]->getIndex();
-                if(i < game.getCriteria()[index]->getAdjacents().size() - 1) {
-                    cout << " or ";
+        for(int i = NUM_PLAYERS - 1; i >= 0; i--) {
+            cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
+            int index;
+            cin >> index;
+            if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
+                i++;
+                continue;
+            }
+            bool adj = false;
+            while(!adj) {
+                cout << "Student " << turnOrder[i] << ", achieve an adjacent Goal on either ";
+                for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
+                    cout << game.getCriteria()[index]->getAdjacents()[i]->getIndex();
+                    if(i < game.getCriteria()[index]->getAdjacents().size() - 1) {
+                        cout << " or ";
+                    }
                 }
-            }
-            int goalIndex;
-            cout << endl;
-            cin >> goalIndex;
-            for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
-                if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
-                    adj = true;
-                    break;
+                int goalIndex;
+                cout << endl;
+                cin >> goalIndex;
+                for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
+                    if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
+                        adj = true;
+                        break;
+                    }
                 }
-            }
-            if(adj && students[currentTurn].achieveGoal(game.getGoals()[goalIndex], true)) {
-            } else {
-                cout << "That is not a valid placement, try again" << endl;
-            }
-        }
-    }
-    for(int i = NUM_PLAYERS - 1; i >= 0; i--) {
-        cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
-        int index;
-        cin >> index;
-        if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
-            i++;
-            continue;
-        }
-        bool adj = false;
-        while(!adj) {
-            cout << "Student " << turnOrder[i] << ", achieve an adjacent Goal on either ";
-            for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
-                cout << game.getCriteria()[index]->getAdjacents()[i]->getIndex();
-                if(i < game.getCriteria()[index]->getAdjacents().size() - 1) {
-                    cout << " or ";
+                if(adj && students[currentTurn].achieveGoal(game.getGoals()[goalIndex], true)) {
+                } else {
+                    cout << "That is not a valid placement, try again" << endl;
                 }
-            }
-            int goalIndex;
-            cout << endl;
-            cin >> goalIndex;
-            for(int i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
-                if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
-                    adj = true;
-                    break;
-                }
-            }
-            if(adj && students[currentTurn].achieveGoal(game.getGoals()[goalIndex], true)) {
-            } else {
-                cout << "That is not a valid placement, try again" << endl;
             }
         }
     }
@@ -241,7 +259,7 @@ int main(int argc, char* argv[]) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
                 int cardCount = 0;
-                cout << i << NUM_PLAYERS << endl;
+                cout << students[i] << endl;
                 for(auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
                     cardCount += it->second;
                 }

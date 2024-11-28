@@ -1,6 +1,8 @@
 #include "goal.h"
 #include "player.h"
 
+Goal::Goal(int idx, Player* p = nullptr): index{idx}, player{p} {}
+
 Player* Goal::getPlayer() {
     return player;
 }
@@ -19,9 +21,6 @@ void Goal::addAdjacent(Goal* g) {
 
 int Goal::getIndex() {
     return index;
-}
-
-Goal::Goal(int idx): index{idx} {
 }
 
 string Goal::printOwner() {

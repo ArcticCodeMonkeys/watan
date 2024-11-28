@@ -178,16 +178,20 @@ Board::Board() {
 }
 
 Board::Board(map<string, int> hands[], Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile) {
-    string resources[] = {"CAFFIENE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"}; 
+    string resources[] = {"CAFFIENE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"};
+    cout << geeseTile << endl;
+    for (int i = 0; i < TILE_COUNT; i++) {
+        cout << tile[i][0] << " " << tile[i][1] << endl;
+    }
     for (int i = 0; i < TILE_COUNT; i++) {
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (i == geeseTile));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
-        goals[i] = new Goal(i); //update
+        goals[i] = new Goal(i, goalOwners[i]); //update
     }
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
-        criteria[i] = new Criterion(i); //update
+        criteria[i] = new Criterion(i, criteriaOwners[i], typeArray[i]); //update
     }
     tileLinking();
 
