@@ -2,6 +2,8 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <random>
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include "player.h"
@@ -19,7 +21,7 @@ int main(int argc, char* argv[]) {
     cout << "Welcome to the Game of Goose!" << endl;
     Player students[NUM_PLAYERS];
     char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
-    string resourcesArr[6] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"};
+    string resourcesArr[6] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL" ,"NETFLIX"};
     for (int i = 0; i < NUM_PLAYERS; i++) {
         students[i].setName(turnOrder[i]);
     }
@@ -258,6 +260,7 @@ int main(int argc, char* argv[]) {
         
         if(diceRoll == 7) {
             //GOOSE!
+            /* for(int i = 0; i < NUM_PLAYERS; i++) {
             for(int i = 0; i < NUM_PLAYERS; i++) {
                 for (int j = 0; j < 6; j++) {
                     cout << resourcesArr[j] << ": " << students[i].getResources()[resourcesArr[j]] << endl;
