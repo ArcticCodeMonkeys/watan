@@ -40,6 +40,7 @@ class Player {
         int rollDice();
         
         int getvictoryPoints();
+        void addVictoryPoints(int amt);
         void setvictoryPoints(int points);
 };
 

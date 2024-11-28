@@ -109,6 +109,8 @@ void Board::tileLinking() {
     for (int j = 0; j < TILE_COUNT; ++j) {
         for (int k = 0; k < 6; ++k) {
             int val = goalMap[j][k];
+            goals[val]->getAdjacents().emplace_back(goals[goalMap[j][(k - 1 + 6)%6]]);
+            goals[val]->getAdjacents().emplace_back(goals[goalMap[j][(k + 1)%6]]);
             if (j == 5) {
                 goals[val]->getAdjacents().emplace_back(goals[goalMap[j][0]]);
             }
@@ -177,7 +179,7 @@ Board::Board() {
     tileLinking();
 }
 
-Board::Board(map<string, int> hands[], Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile) {
+Board::Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile) {
     string resources[] = {"CAFFIENE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"};
     cout << geeseTile << endl;
     for (int i = 0; i < TILE_COUNT; i++) {
@@ -192,6 +194,9 @@ Board::Board(map<string, int> hands[], Player *goalOwners[], Player *criteriaOwn
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
         criteria[i] = new Criterion(i, criteriaOwners[i], typeArray[i]); //update
+        if(criteriaOwners[i]) {
+            criteriaOwners[i]->addVictoryPoints(typeArray[i]);
+        }
     }
     tileLinking();
 

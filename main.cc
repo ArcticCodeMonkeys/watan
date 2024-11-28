@@ -58,7 +58,6 @@ int main(int argc, char* argv[]) {
         getline(fileStream, line);
         currentTurn = stoi(line);
         // load players
-        map<string, int> total_resources [NUM_PLAYERS];
         Player *goalOwners[GOAL_COUNT] = {nullptr}; 
         Player *criterionOwners [CRITERIA_COUNT] = {nullptr};
         int typeArray [CRITERIA_COUNT];
@@ -74,13 +73,10 @@ int main(int argc, char* argv[]) {
             string readValue;
             int count = 0;
             // read resources
-            map<string, int> resources;
             while (count < 5 && iss >> readValue) {
-                resources[resourcesArr[count]] = stoi(readValue);
+                students[i].addResources(resourcesArr[count], stoi(readValue));
                 count++;
             }
-            
-            total_resources[i] = resources;
             
             // read goals
             iss >> readValue; // skip "g"
@@ -136,7 +132,7 @@ int main(int argc, char* argv[]) {
         // geese tile number
         getline(fileStream, line);
         int geeseTile = stoi(line);
-        game = Board(total_resources, goalOwners, criterionOwners, typeArray, tile, geeseTile);
+        game = Board(goalOwners, criterionOwners, typeArray, tile, geeseTile);
     }
     // load board
     else if (boardFile != "") {
@@ -366,7 +362,7 @@ int main(int argc, char* argv[]) {
             }
             else if (command == "status") {
                 for(int i = 0; i < NUM_PLAYERS; i++) {
-                    //cout << students[i]; SOMETHING THAT SHOULD BE DONE
+                    cout << students[i];
                 }
             }
             else if (command == "criteria") {

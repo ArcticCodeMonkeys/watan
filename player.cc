@@ -108,12 +108,14 @@ bool Player::achieveGoal(Goal* purchase, bool free) {
     }
     bool adjGoal = false;
     for(int i = 0; i < purchase->getAdjacents().size(); i++) {
+        cout << purchase->getAdjacents()[i]->getPlayer()->getName() << endl;
         if(purchase->getAdjacents()[i]->getPlayer() == this) {
             adjGoal = true;
             break;
         }
     }
     if(!adjGoal) {
+        cout << "invalid placement, you have no adjacent roads here" << endl;
         return false;
     }
     //confirm enough resources and not occupied
@@ -124,6 +126,7 @@ bool Player::achieveGoal(Goal* purchase, bool free) {
         goals.emplace_back(purchase);
         return true;
     }
+    cout << "Not enough resources" << endl;
     return false;
 }
 void Player::trade(Player *p, string ask, string give) {
@@ -221,6 +224,9 @@ int Player::getvictoryPoints() {
     return victoryPoints;
 }
 
+void Player::addVictoryPoints(int amt) {
+    victoryPoints += amt;
+}
 void Player::setvictoryPoints(int points) {
     victoryPoints = points;
 }
