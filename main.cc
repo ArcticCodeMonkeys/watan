@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
     cout << "Welcome to the Game of Goose!" << endl;
     Player students[NUM_PLAYERS];
     char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
+    string resourcesArr[6] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"};
     for (int i = 0; i < NUM_PLAYERS; i++) {
         students[i].setName(turnOrder[i]);
     }
@@ -67,21 +68,7 @@ int main(int argc, char* argv[]) {
             // read resources
             map<string, int> resources;
             while (count < 5 && iss >> readValue) {
-                if (count == 0) {
-                    resources["CAFFEINE"] = stoi(readValue);
-                }
-                else if (count == 1) {
-                    resources["LAB"] = stoi(readValue);
-                }
-                else if (count == 2) {
-                    resources["LECTURE"] = stoi(readValue);
-                }
-                else if (count == 3) {
-                    resources["STUDY"] = stoi(readValue);
-                }
-                else if (count == 4) {
-                    resources["TUTORIALS"] = stoi(readValue);
-                }
+                
                 count++;
             }
             total_resources[i] = resources;
@@ -171,7 +158,7 @@ int main(int argc, char* argv[]) {
         int index;
         cin >> index;
         if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
-            i--;
+            i++;
         }
     }
     
@@ -203,30 +190,20 @@ int main(int argc, char* argv[]) {
         Tile ** tiles = game.getTiles();
         int diceRoll = students[currentTurn].rollDice();
         if(diceRoll == 7) {
-            cout << "goose" << endl;
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
                 int cardCount = 0;
+                cout << i << NUM_PLAYERS << endl;
                 for(auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
                     cardCount += it->second;
                 }
+                cout << "Reached here" << endl;
                 if(cardCount >= 10) {
                     int disappeared = cardCount / 2;
                     map<string, int> lostResources;
                     while (disappeared > 0) {
                         int disappearType = rand() % 5;
-                        string disappearString;
-                        if (disappearType == 0) {
-                            disappearString = "CAFFEINE";
-                        } else if (disappearType == 1) {
-                            disappearString = "LAB";
-                        } else if (disappearType == 2) {
-                            disappearString = "LECTURE";
-                        } else if (disappearType == 3) {
-                            disappearString = "STUDY";
-                        } else if (disappearType == 4) {
-                            disappearString = "TUTORIAL";
-                        }
+                        string disappearString = resourcesArr[disappearType];
                         if (students[i].getResources()[disappearString] > 0) {
                             students[i].getResources()[disappearString] -= 1;
                             disappeared--;
@@ -390,19 +367,10 @@ int main(int argc, char* argv[]) {
                         gooseTile = i;
                     }
                     int resourceInt = 0;
-                    if (resourceType == "CAFFEINE") {
-                        resourceInt = 0;
-                    } else if (resourceType == "LAB") {
-                        resourceInt = 1;
-                    } else if (resourceType == "LECTURE") {
-                        resourceInt = 2;
-                    } else if (resourceType == "STUDY") {
-                        resourceInt = 3;
-                    } else if (resourceType == "TUTORIAL") {
-                        resourceInt = 4;
-                    }
-                    else if (resourceType == "NETFLIX") {
-                        resourceInt = 5;
+                    for (int i = 0; i < 6; i++) {
+                        if (resourceType == resourcesArr[i]) {
+                            resourceInt = i;
+                        }
                     }
                     saveStream << resourceInt << " " << tiles[i]->getRollingValue() << " ";
                 }
