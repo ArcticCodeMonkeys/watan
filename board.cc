@@ -2,9 +2,11 @@
 #include "tile.h"
 #include "goal.h"
 #include "criterion.h"
+#include "player.h"
 const int TILE_COUNT = 19;
 const int GOAL_COUNT = 71;
 const int CRITERIA_COUNT = 53;
+
 
 void Board::tileLinking() {
     int criteriaMap[TILE_COUNT][6] = {
@@ -54,11 +56,13 @@ void Board::tileLinking() {
             tiles[i]->setCriteria(k, criteria[criteriaMap[i][k]]);
         }
     }
+    
     for (int i = 0; i < TILE_COUNT; ++i) {
         for (int k = 0; k < 6; ++k) {
             tiles[i]->setGoals(k, goals[goalMap[i][k]]);
         }
     }
+    
     for (int j = 0; j < TILE_COUNT; ++j) {
         for (int k = 0; k < 6; ++k) {
             int val = goalMap[j][k];
@@ -76,7 +80,7 @@ void Board::tileLinking() {
             }
         }
     }
-
+    
     for (int j = 0; j < TILE_COUNT; ++j) {
         for (int k = 0; k < 6; ++k) {
             int val = criteriaMap[j][k];
@@ -94,6 +98,7 @@ void Board::tileLinking() {
             }
         }
     }
+    cout << "Reached here" << endl;
     for (int i = 0; i < CRITERIA_COUNT; i++) {
         for (int j = 0; j < 3; j++) {
             for (int k = 0; k < 6; k++) {
@@ -118,9 +123,11 @@ void Board::tileLinking() {
 }
 
 Board::Board() {
+    
     vector<string> tileBag = {"TUTORIAL", "TUTORIAL", "TUTORIAL", "STUDY", "STUDY", "STUDY", "CAFFEINE", "CAFFEINE", "CAFFEINE", "CAFFEINE", "LAB", "LAB", "LAB", "LAB", "LECTURE", "LECTURE", "LECTURE", "LECTURE", "NETFLIX" };
     vector<int> valBag = {2, 12, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 7};
     int leftInBag = 19;
+    
     for(int i = 0; i < 19; i++) {
         int index = rand() % leftInBag;
         int rollVal = valBag[index];
@@ -136,6 +143,7 @@ Board::Board() {
         }
         leftInBag--;
     }
+    
     for (int i = 0; i < GOAL_COUNT; ++i) {
         goals[i] = new Goal();
     }
@@ -143,6 +151,7 @@ Board::Board() {
     for (int i = 0; i < CRITERIA_COUNT; ++i) {
         criteria[i] = new Criterion();
     }
+    
     tileLinking();
 }
 
@@ -181,16 +190,17 @@ Board::Board(int tile[19][2]) {
 
 std::ostream& operator<<(std::ostream& out, const Board& board) {
     for(int i = 0; i < TILE_COUNT; i++) {
-        cout << "      |" << board.tiles[i]->getCriteria(0)->printOwner() << "|--" << board.tiles[i]->getGoal(0)->printOwner() << "--|" << board.tiles[i]->getCriteria(1)->printOwner() << "|      " << endl;
-        cout << "      /            \\     " << endl;
-        cout << "    " << board.tiles[i]->getGoal(1)->printOwner() << "              " << board.tiles[i]->getGoal(2)->printOwner() << "    " << endl;
-        cout << "   /         " << i << "        \\  " << endl;
-        cout << "|" << board.tiles[i]->getCriteria(3)->printOwner() << "|" << board.tiles[i]->printResource() << "|" << board.tiles[i]->getCriteria(4)->printOwner() << "|" << endl;
-        cout << "   \\        " << board.tiles[i]->getRollingValue() << "         /  " << endl;
-        cout << "    " << board.tiles[i]->getGoal(3)->printOwner() << "              " << board.tiles[i]->getGoal(4)->printOwner() << "    " << endl;
-        cout << "      \\			/      " << endl;
-        cout << "      |" << board.tiles[i]->getCriteria(4)->printOwner() << "|--" << board.tiles[i]->getGoal(5)->printOwner() << "--|" << board.tiles[i]->getCriteria(5)->printOwner() << "|      " << endl;
+        out << "      |" << board.tiles[i]->getCriteria(0)->printOwner() << "|--" << board.tiles[i]->getGoal(0)->printOwner() << "--|" << board.tiles[i]->getCriteria(1)->printOwner() << "|      " << endl;
+        out << "      /            \\     " << endl;
+        out << "    " << board.tiles[i]->getGoal(1)->printOwner() << "              " << board.tiles[i]->getGoal(2)->printOwner() << "    " << endl;
+        out << "   /         " << i << "        \\  " << endl;
+        out << "|" << board.tiles[i]->getCriteria(3)->printOwner() << "|" << board.tiles[i]->printResource() << "|" << board.tiles[i]->getCriteria(4)->printOwner() << "|" << endl;
+        out << "   \\        " << board.tiles[i]->getRollingValue() << "         /  " << endl;
+        out << "    " << board.tiles[i]->getGoal(3)->printOwner() << "              " << board.tiles[i]->getGoal(4)->printOwner() << "    " << endl;
+        out << "      \\			/      " << endl;
+        out << "      |" << board.tiles[i]->getCriteria(4)->printOwner() << "|--" << board.tiles[i]->getGoal(5)->printOwner() << "--|" << board.tiles[i]->getCriteria(5)->printOwner() << "|      " << endl;
     }
+    return out;
 }
 
 Tile ** Board::getTiles() {

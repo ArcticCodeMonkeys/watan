@@ -12,7 +12,7 @@ void Tile::notifyObservers() {
 }
 
 void Tile::setCriteria(int index, Criterion *c) {
-    attach(c);
+    //attach(c); SOMETHING THAT SHOULD BE DONE
     criteria[index] = c;
 }
 

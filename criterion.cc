@@ -1,18 +1,14 @@
 #include "criterion.h"
-#include "goal.h"
-#include "tile.h"
-#include "player.h"
 
-Criterion::Criterion(int index): index(index), type(Type::ASSIGNMENT) {
+Criterion::Criterion(int index): type(Type::ASSIGNMENT), index(index)  {
     for (int i = 0; i < 3; i++) {
         adjacents[i] = nullptr;
         tile[i] = nullptr;
     }
 }
 
-Criterion::Criterion(): index(-1), type(Type::EMPTY) {
+Criterion::Criterion(): type(Type::EMPTY), index(-1) {
     for (int i = 0; i < 3; i++) {
-        adjacents[i] = nullptr;
         tile[i] = nullptr;
     }
 }
@@ -93,4 +89,8 @@ void Criterion::notify(string resource) {
 }
 int Criterion::getIndex() {
     return index;
+}
+
+Tile ** Criterion::getTiles() {
+    return tile;
 }

@@ -2,6 +2,11 @@
 #define CRITERION_H
 #include <iostream>
 #include "observer.h"
+#include <vector>
+#include <string>
+#include "goal.h"
+#include "tile.h"
+#include "player.h"
 class Player;
 class Goal;
 class Tile;

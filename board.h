@@ -4,10 +4,13 @@
 #include <map>
 #include <algorithm>
 #include <vector>
+#include <string>
+using namespace std;
 
 class Tile;
 class Goal;
 class Criterion;
+class Player;
 
 class Board {
     Tile *tiles[19];

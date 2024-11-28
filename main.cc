@@ -12,7 +12,9 @@ const int NUM_PLAYERS = 4;
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    
     Board game;
+    cout << "Welcome to the Game of Goose!" << endl;
     Player students[NUM_PLAYERS];
     char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
     for (int i = 0; i < NUM_PLAYERS; i++) {
@@ -179,7 +181,7 @@ int main(int argc, char* argv[]) {
         
         //Step 1: Set the Dice
         cout << "Student " << students[currentTurn].getName() << "'s Turn" << endl;
-        cout << students[currentTurn];
+        //cout << students[currentTurn]; SOMETHING THAT SHOULD BE DONE
         string rollCommand;
         while(getline(cin, rollCommand)) {
             if(rollCommand == "roll") {
@@ -318,7 +320,7 @@ int main(int argc, char* argv[]) {
             }
             else if (command == "status") {
                 for(int i = 0; i < NUM_PLAYERS; i++) {
-                    cout << students[i];
+                    //cout << students[i]; SOMETHING THAT SHOULD BE DONE
                 }
             }
             else if (command == "criteria") {
