@@ -100,6 +100,11 @@ bool Player::improveCriterion(int index) {
     return false;
 }
 bool Player::achieveGoal(Goal* purchase, bool free) {
+
+    if(purchase->getPlayer() != nullptr) {
+        cout << "Invalid Placement, already purchased";
+        return false;
+    }
     //check for at least one adjacent road.
     if(free) {
         purchase->setPlayer(this);

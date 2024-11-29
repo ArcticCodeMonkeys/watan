@@ -302,45 +302,48 @@ int main(int argc, char* argv[]) {
                 }
                 tiles[index]->setGeese(true);
             }
+            cout << "Reached here" << endl;
             char stealFrom [6] = {'\0', '\0', '\0', '\0', '\0', '\0'};
+            bool stealFromPossible = false;
             for (int i = 0; i < 6 ; i++) {
-                char name = tiles[index]->getCriteria(i)->getPlayer()->getName();
-                if (name != students[currentTurn].getName()) {
-                    stealFrom[i] = name;
+                if (tiles[index]->getCriteria(i)->getPlayer() != nullptr) {
+                    stealFromPossible = true;
+                    char name = tiles[index]->getCriteria(i)->getPlayer()->getName();
+                    if (name != students[currentTurn].getName()) {
+                        stealFrom[i] = name;
+                    }
                 }
             }
-            if (stealFrom[0] == '\0') {
+            cout << "Steal from: " << stealFrom << endl;
+            if (!stealFromPossible) {
                 cout << "Student " << students[currentTurn].getName() << " has no students to steal from." << endl;
             }
             else {
                 cout << "Student " << students[currentTurn].getName() << "can choose to steal from ";
-                for (int j = 0; j < NUM_PLAYERS; j++) {
-                    if (students[j].getName() != students[currentTurn].getName()) {
-                        for (int i = 0; i < 6; i++) {
-                            if (students[j].getName() == stealFrom[i]) {
-                                cout << students[j].getName() << ", ";
-                                break;
-                            }
-                        }
+                for (int i = 0; i < 6; i++) {
+                    if (stealFrom[i] != '\0') {
+                        cout << "Student " << stealFrom[i] << ", ";
                     }
                 }
             }
+            cout << endl;
+            cout << "Would you like to steal from a student? Type the Student's name to steal from them." << endl;
             char charCommand;
             cin >> charCommand;
             for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (turnOrder[i] == charCommand) {
                     int cardCount = 0;
-                    for(auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
-                        cardCount += it->second;
+                    for(const auto& pair : students[i].getResources()) {
+                        cardCount += pair.second;
                     }
                     int randomCard = rand() % cardCount;
                     int cardType = 0;
-                    for (auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
-                        int val = it->second;
-                        if (cardType + val > randomCard) {
-                            students[i].getResources()[it->first] -= 1;
-                            students[currentTurn].getResources()[it->first] += 1;
-                            cout << "Student " << students[currentTurn].getName() << " steals " << it->first << " from " << turnOrder[i] << endl;
+                    for (const auto& pair: students[i].getResources() ) {
+                        int val = pair.second;
+                        if (cardType + val >= randomCard) {
+                            students[i].takeResources(pair.first, 1);
+                            students[currentTurn].addResources(pair.first, 1);
+                            cout << "Student " << students[currentTurn].getName() << " steals " << pair.first << " from " << turnOrder[i] << endl;
                             break;
                         }
                         cardType += val;
@@ -414,21 +417,23 @@ int main(int argc, char* argv[]) {
                 saveStream << currentTurn << endl;
                 cout << "got here" << endl;
                 for(int i = 0; i < NUM_PLAYERS; i++) {
-                    for (auto it = students[i].getResources().begin(); it != students[i].getResources().end(); ++it) {
-                        saveStream << it->second << " ";
+                    for (int k = 0; k < 5; k++) {
+                        saveStream << students[i].getResources()[resourcesArr[k]] << " ";
                     }
+                    cout << "got here" << endl;
                     saveStream << "g ";
-                    for (int j = 0; j < GOAL_COUNT; j++) {
-                        if (students[i].getGoals()[j] != nullptr) {
-                            saveStream << j << " ";
-                        }
+                    for (int j = 0; j < students[i].getGoals().size(); j++) {
+                        cout << students[i].getGoals()[j]->getIndex() << " ";
+                        saveStream << students[i].getGoals()[j]->getIndex() << " ";
                     }
+                    cout << endl;
+                    cout << "got here" << endl;
                     saveStream << "c ";
-                    for (int j = 0; j < CRITERIA_COUNT; j++) {
-                        if (students[i].getCriteria()[j] != nullptr) {
-                            saveStream << j << " " << students[i].getCriteria()[j]->getType() << " ";
-                        }
+                    for (int j = 0; j < students[i].getCriteria().size(); j++) {
+                        char type = students[i].getCriteria()[j]->getType();
+                        saveStream << students[i].getCriteria()[j]->getIndex() << " " << (type == '\0' ? 0 : type == 'A' ? 1 : type == 'M' ? 2 : 3) << " ";
                     }
+                    cout << "got here" << endl;
                     saveStream << endl;
                 }
                 int gooseTile = 0;
@@ -437,6 +442,7 @@ int main(int argc, char* argv[]) {
                     if (tiles[i]->getGeese()) {
                         gooseTile = i;
                     }
+                    cout << "got here" << endl;
                     int resourceInt = 0;
                     for (int i = 0; i < 6; i++) {
                         if (resourceType == resourcesArr[i]) {
@@ -445,6 +451,7 @@ int main(int argc, char* argv[]) {
                     }
                     saveStream << resourceInt << " " << tiles[i]->getRollingValue() << " ";
                 }
+                cout << "got here" << endl;
                 saveStream << endl;
                 saveStream << gooseTile << endl;
             }

@@ -131,13 +131,16 @@ Board::Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], in
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (i == geeseTile));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
-        goals[i] = new Goal(i, goalOwners[i]); //update
+        goals[i] = new Goal(i, nullptr); //update
+        if(goalOwners[i]) {
+            goalOwners[i]->achieveGoal(goals[i], true);
+        }
     }
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
-        criteria[i] = new Criterion(i, criteriaOwners[i], typeArray[i]); //update
+        criteria[i] = new Criterion(i, nullptr, typeArray[i]); //update
         if(criteriaOwners[i]) {
-            criteriaOwners[i]->addVictoryPoints(typeArray[i]);
+            criteriaOwners[i]->completeCriterion(criteria[i], true);
         }
     }
     tileLinking();
