@@ -50,8 +50,11 @@ void gameLoop(int argc, char *argv[]) {
                 boardFile = argv[i + 1];
             }
         }
-
-        {givenSeed? srand(seed) : srand(time(NULL));}
+        if (givenSeed) {
+            srand(seed);
+        } else {
+            srand(time(NULL));
+        }
 
         // loading game from file
         if (gameFile != "") {
@@ -60,6 +63,7 @@ void gameLoop(int argc, char *argv[]) {
                 cout << "Could not locate file" << endl;
                 return;
             }
+            
             string line;
             getline(fileStream, line);
             currentTurn = stoi(line);
