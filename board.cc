@@ -80,7 +80,7 @@ void Board::tileLinking() {
         }
     }
     for (int i = 0; i < CRITERIA_COUNT; i++) {
-        for (int j = 0; j < criteria[i]->getTiles().size(); j++) {
+        for (size_t j = 0; j < criteria[i]->getTiles().size(); j++) {
             for (int k = 0; k < 6; k++) {
                 if (criteria[i]->getTiles()[j]->getCriteria(k) == criteria[i]) {
                     criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal(k % 6));
@@ -89,7 +89,24 @@ void Board::tileLinking() {
             }
         }
     }
+    for (int i = 0; i < CRITERIA_COUNT; i++) {
+        vector <Goal *> adj{};
+        for (size_t j = 0; j < criteria[i]->getAdjacents().size(); j++) {
+            bool seen = false;
+            for(size_t k = 0; k < adj.size(); k++) {
+                if(adj[k] == criteria[i]->getAdjacents()[j]) {
+                    seen = true;
+                }
+            }
+            if(!seen) {
+                adj.emplace_back(criteria[i]->getAdjacents()[j]);
+            }
+        }
+        criteria[i]->setAdjacents(adj);
+
+    }
     
+
 }
 
 Board::Board() {
@@ -126,18 +143,26 @@ Board::Board() {
 }
 
 Board::Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile) {
-    string resources[] = {"CAFFIENE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"};
+    string resources[] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"};
     for (int i = 0; i < TILE_COUNT; i++) {
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (i == geeseTile));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
-        goals[i] = new Goal(i, goalOwners[i]); //update
+        goals[i] = new Goal(i, nullptr); //update
+        if(goalOwners[i]) {
+            goalOwners[i]->achieveGoal(goals[i], true);
+            goals[i]->setPlayer(goalOwners[i]);
+        }
+        
     }
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
-        criteria[i] = new Criterion(i, criteriaOwners[i], typeArray[i]); //update
+        criteria[i] = new Criterion(i, nullptr, typeArray[i]); //update
         if(criteriaOwners[i]) {
-            criteriaOwners[i]->addVictoryPoints(typeArray[i]);
+            criteriaOwners[i]->completeCriterion(criteria[i], true);
+            criteria[i]->setType(typeArray[i] == 0 ? '\0' : typeArray[i] == 1 ? 'A' : typeArray[i] == 2 ? 'M': 'E');
+            criteriaOwners[i]->addVictoryPoints(typeArray[i]-1);
+            criteria[i]->setPlayer(criteriaOwners[i]);
         }
     }
     tileLinking();
@@ -145,7 +170,7 @@ Board::Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], in
 }
 
 Board::Board(int tile[19][2]) {
-    string resources[] = {"CAFFIENE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"}; 
+    string resources[] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"}; 
     for (int i = 0; i < TILE_COUNT; i++) {
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (resources[tile[i][0]] == "NETFLIX"));
     }

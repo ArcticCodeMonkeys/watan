@@ -25,6 +25,7 @@ class Criterion: public Observer {
         void addNeighbor(Criterion *c);
         vector<Goal*> getAdjacents();
         void addAdjacent(Goal *goal);
+        void setAdjacents(vector<Goal*> goals);
         Player* getPlayer();
         void setPlayer(Player *p);
         string printOwner();
@@ -33,7 +34,7 @@ class Criterion: public Observer {
         void setType(char t);
         int getIndex();
         Criterion();
-        void notify(string resource);
+        void notify(string resource) override;
         friend std::ostream &operator<<(std::ostream &out, const Criterion &criterion);
         vector<Tile*> getTiles();
         void setTile(int index, Tile *t);

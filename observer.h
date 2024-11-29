@@ -6,7 +6,7 @@ using namespace std;
 class Observer {
   string resource;
  public:
-  virtual void notify(string resource) = 0;
+  virtual void notify(string notify) = 0;
   virtual ~Observer() = default;
 };
 

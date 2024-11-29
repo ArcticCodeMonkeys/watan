@@ -67,15 +67,17 @@ void Criterion::setType(char t) {
     
 }
 
-void Criterion::notify(string resource) {
+void Criterion::notify(std::string resource) {
     if (player != nullptr) {
-        if (type == Criterion::Type::ASSIGNMENT) {
-            player->addResources(resource, 1);
-        } else if (type == Criterion::Type::MIDTERM) {
-            player->addResources(resource, 2);
-        } else if (type == Criterion::Type::EXAM) {
-            player->addResources(resource, 3);
+        int resourceAmount = 0;
+        if (type == Type::ASSIGNMENT) {
+            resourceAmount = 1;
+        } else if (type == Type::MIDTERM) {
+            resourceAmount = 2;
+        } else if (type == Type::EXAM) {
+            resourceAmount = 3;
         }
+        player->addResources(resource, resourceAmount);
     }
 }
 int Criterion::getIndex() {
@@ -104,4 +106,8 @@ void Criterion::setPlayer(Player *p) {
 
 void Criterion::addNeighbor(Criterion *c) {
     neighbors.emplace_back(c);
+}
+
+void Criterion::setAdjacents(vector<Goal*> goals) {
+    adjacents = goals;
 }

@@ -1,7 +1,7 @@
 #include "goal.h"
 #include "player.h"
 
-Goal::Goal(int idx, Player* p = nullptr): index{idx}, player{p} {}
+Goal::Goal(int idx, Player* p = nullptr): player{p}, index{idx}{}
 
 Player* Goal::getPlayer() {
     return player;
