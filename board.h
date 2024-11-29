@@ -20,6 +20,7 @@ class Board {
         Board();
         Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], int tile[19][2], int geeseTile);
         Board(int tile[19][2]);
+        ~Board();
         void tileLinking();
         friend std::ostream &operator<<(std::ostream &out, const Board &board);
         void saveBoard();

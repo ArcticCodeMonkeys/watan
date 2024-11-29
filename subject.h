@@ -13,7 +13,7 @@ class Subject {
   void detach( Observer* o );
   void notifyObservers();
   std::vector<Observer*> getObservers();
-  virtual ~Subject() = default;
+  virtual ~Subject();
 };
 
 #endif

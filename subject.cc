@@ -9,11 +9,10 @@ void Subject::attach( Observer* o ) {
 void Subject::detach( Observer* o ) {
     for (auto it = observers.begin(); it != observers.end(); ++it) {
         if(*it == o) {
-        observers.erase(it);
-        break;
+            observers.erase(it);
+            break;
         }
     }
-    delete o;
 }
 
 void Subject::notifyObservers() {
@@ -23,4 +22,10 @@ void Subject::notifyObservers() {
 }
 std::vector<Observer*> Subject::getObservers() {
     return observers;
+}
+
+Subject::~Subject() {
+    for(auto &o: observers) {
+        delete o;
+    }
 }

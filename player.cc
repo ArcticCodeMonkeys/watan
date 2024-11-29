@@ -4,6 +4,7 @@
 #include "tile.h"
 #include "dice.h"
 
+map<char, string> nameArr = {{'B', "Blue"}, {'R', "Red"}, {'O', "Orange"}, {'Y', "Yellow"}};
 
 Player::Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name): criteria{criteria}, goals{goals}, resources{resources}, name{name}, victoryPoints{0}, dice{Dice::createFairDice()} {
     for(auto it = criteria.begin(); it != criteria.end(); ++it) {
@@ -26,7 +27,6 @@ Player::Player() {
     victoryPoints = 0;
     dice = Dice::createFairDice();
 }
-Player::~Player() {}
 bool Player::completeCriterion(Criterion *purchase, bool free) {
     
     //check there is no criterion here already
@@ -37,7 +37,7 @@ bool Player::completeCriterion(Criterion *purchase, bool free) {
     //check for any adjacent houses (therefore invalid placement)
     for(size_t i = 0; i < purchase->getNeighbors().size(); i++) {
         if(purchase->getNeighbors()[i]->getPlayer() != nullptr) {
-            cout << "Invalid Placement, " << purchase->getNeighbors()[i]->getPlayer()->getName() << " has already purchased the Criterion at " << purchase->getNeighbors()[i]->getIndex() << endl;
+            cout << "Invalid Placement, " << nameArr[purchase->getNeighbors()[i]->getPlayer()->getName()] << " has already purchased the Criterion at " << purchase->getNeighbors()[i]->getIndex() << endl;
             return false;
         }
     }
@@ -113,14 +113,13 @@ bool Player::achieveGoal(Goal* purchase, bool free) {
     }
     bool adjGoal = false;
     for(size_t i = 0; i < purchase->getAdjacents().size(); i++) {
-        cout << purchase->getAdjacents()[i]->getPlayer()->getName() << endl;
         if(purchase->getAdjacents()[i]->getPlayer() == this) {
             adjGoal = true;
             break;
         }
     }
     if(!adjGoal) {
-        cout << "invalid placement, you have no adjacent roads here" << endl;
+        cout << "Invalid Placement, you have no adjacent roads here" << endl;
         return false;
     }
     //confirm enough resources and not occupied
@@ -136,14 +135,14 @@ bool Player::achieveGoal(Goal* purchase, bool free) {
 }
 void Player::trade(Player *p, string ask, string give) {
     if(resources[give] == 0)  {
-        cout << name << ", you do not have any " << give << "." << endl;
+        cout << nameArr[name] << ", you do not have any " << give << "." << endl;
         return;
     }
     if(p->getResources()[ask] == 0) {
-        cout << p->getName() << " does not have any " << ask << " to give." << endl;
+        cout << nameArr[p->getName()] << " does not have any " << ask << " to give." << endl;
         return;
     }
-    cout << name << " offers " << p->getName() << " one " << give << " for one " << ask << ". Does " << p->getName() << " accept this offer? (y/n)" << endl;
+    cout << nameArr[name] << " offers " << nameArr[p->getName()] << " one " << give << " for one " << ask << ". Does " << nameArr[p->getName()] << " accept this offer? (y/n)" << endl;
     char confirmation;
     cout << "> ";
     cin >> confirmation;
@@ -154,7 +153,7 @@ void Player::trade(Player *p, string ask, string give) {
         p->takeResources(ask, 1);
         return;
     }
-    cout << p->getName() << " declined the offer." << endl;
+    cout << nameArr[p->getName()] << " declined the offer." << endl;
 }
 
 void Player::addResources(string resource, int count) {
@@ -166,7 +165,7 @@ void Player::takeResources(string resource, int count) {
 }
 
 std::ostream &operator<<(std::ostream &out, Player &player) {
-    out << player.getName() << " has " << player.getvictoryPoints() << " victory points, "
+    out << nameArr[player.getName()] << " has " << player.getvictoryPoints() << " victory points, "
         << player.getResources().at("CAFFEINE") << " caffeines, "
         << player.getResources().at("LAB") << " labs, "
         << player.getResources().at("LECTURE") << " lectures, "
@@ -176,7 +175,7 @@ std::ostream &operator<<(std::ostream &out, Player &player) {
 }
 
 void Player::printCriteria() {
-    cout << getName() << " has completed: " << endl;
+    cout << nameArr[getName()]<< " has completed: " << endl;
     for(size_t i = 0; i < getCriteria().size(); i++) {
         cout << getCriteria()[i]->getIndex() << " " << getCriteria()[i]->getType() << endl;
     }
@@ -234,4 +233,14 @@ void Player::addVictoryPoints(int amt) {
 }
 void Player::setvictoryPoints(int points) {
     victoryPoints = points;
+}
+
+Player::~Player() {
+    for(size_t i = 0; i < criteria.size(); i++) {
+        criteria[i] = nullptr;
+    }
+    for(size_t i = 0; i < goals.size(); i++) {
+        goals[i] = nullptr;
+    }
+    dice.reset();
 }

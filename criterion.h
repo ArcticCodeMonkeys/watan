@@ -21,6 +21,7 @@ class Criterion: public Observer {
     vector<Tile*> tiles;
     public:
         Criterion(int index, Player *p, int type);
+        ~Criterion();
         vector<Criterion*> getNeighbors();
         void addNeighbor(Criterion *c);
         vector<Goal*> getAdjacents();

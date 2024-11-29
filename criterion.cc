@@ -11,6 +11,19 @@ vector<Goal*> Criterion::getAdjacents() {
     return adjacents;
 }
 
+Criterion::~Criterion() {
+    player = nullptr;
+    for (size_t i = 0; i < tiles.size(); i++) {
+        tiles[i] = nullptr;
+    }
+    for (size_t i = 0; i < neighbors.size(); i++) {
+        neighbors[i] = nullptr;
+    }
+    for (size_t i = 0; i < adjacents.size(); i++) {
+        adjacents[i] = nullptr;
+    }
+}
+
 string Criterion::printOwner() {
     if (player != nullptr) {
         char name = player->getName();
