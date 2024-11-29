@@ -1,5 +1,6 @@
 #include "goal.h"
 #include "player.h"
+#include "criterion.h"
 
 Goal::Goal(int idx, Player* p = nullptr): player{p}, index{idx}{}
 
@@ -19,6 +20,14 @@ void Goal::addAdjacent(Goal* g) {
     adjacents.emplace_back(g);
 }
 
+vector<Criterion *> Goal::getNeighbors() {
+    return neighbors;
+}
+
+void Goal::addNeighbor(Criterion* c) {
+    neighbors.emplace_back(c);
+}
+
 int Goal::getIndex() {
     return index;
 }
@@ -27,6 +36,9 @@ Goal::~Goal() {
     player = nullptr;
     for (size_t i = 0; i < adjacents.size(); ++i) {
         adjacents[i] = nullptr;
+    }
+    for (size_t i = 0; i < neighbors.size(); ++i) {
+        neighbors[i] = nullptr;
     }
 }
 
@@ -41,4 +53,8 @@ string Goal::printOwner() {
             return to_string(index);
         }
     }
+}
+
+void Goal::setAdjacents(vector<Goal*> adj) {
+    adjacents = adj;
 }

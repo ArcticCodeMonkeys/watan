@@ -20,7 +20,7 @@ void Board::tileLinking() {
         {15, 16, 22, 28, 27, 21},
         {18, 19, 25, 31, 30, 24},
         {20, 21, 27, 33, 32, 26},
-        {22, 23, 29, 35, 24, 28},
+        {22, 23, 29, 35, 34, 28},
         {25, 26, 32, 38, 37, 31},
         {27, 28, 34, 40, 39, 33},
         {30, 31, 37, 43, 42, 36},
@@ -64,13 +64,14 @@ void Board::tileLinking() {
         }
     }
     
-    for (int j = 0; j < TILE_COUNT; ++j) {
+    /*for (int j = 0; j < TILE_COUNT; ++j) {
         for (int k = 0; k < 6; ++k) {
             int val = goalMap[j][k];
             goals[val]->addAdjacent(goals[goalMap[j][(k - 1 + 6)%6]]);
             goals[val]->addAdjacent(goals[goalMap[j][(k + 1)%6]]);
         }
-    }
+    }*/
+    
     
     for (int j = 0; j < TILE_COUNT; ++j) {
         for (int k = 0; k < 6; ++k) {
@@ -85,6 +86,8 @@ void Board::tileLinking() {
                 if (criteria[i]->getTiles()[j]->getCriteria(k) == criteria[i]) {
                     criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal(k % 6));
                     criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal((k - 1 + 6) % 6));
+                    criteria[i]->getTiles()[j]->getGoal(k % 6)->addNeighbor(criteria[i]);
+                    criteria[i]->getTiles()[j]->getGoal((k - 1 + 6) % 6)->addNeighbor(criteria[i]);
                 }
             }
         }
@@ -106,6 +109,34 @@ void Board::tileLinking() {
 
     }
     
+    for (int i = 0; i < TILE_COUNT; i++) {
+        for (int j = 0; j < 6; j++) {
+            for (int k = 0; k < goals[goalMap[i][j]]->getNeighbors().size(); k++) {
+                for (int l = 0; l < goals[goalMap[i][j]]->getNeighbors()[k]->getAdjacents().size(); l++) {
+                    if (goals[goalMap[i][j]]->getNeighbors()[k]->getAdjacents()[l] != goals[goalMap[i][j]]) {
+                        goals[goalMap[i][j]]->addAdjacent(goals[goalMap[i][j]]->getNeighbors()[k]->getAdjacents()[l]);
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < GOAL_COUNT; i++) {
+        vector <Goal *> adj{};
+        for (size_t j = 0; j < goals[i]->getAdjacents().size(); j++) {
+            bool seen = false;
+            for(size_t k = 0; k < adj.size(); k++) {
+                if(adj[k] == goals[i]->getAdjacents()[j]) {
+                    seen = true;
+                }
+            }
+            if(!seen) {
+                adj.emplace_back(goals[i]->getAdjacents()[j]);
+            }
+        }
+        goals[i]->setAdjacents(adj);
+
+    }
 
 }
 
@@ -188,12 +219,15 @@ Board::Board(int tile[19][2]) {
 Board::~Board() {
     for (int i = 0; i < TILE_COUNT; i++) {
         delete tiles[i];
+        tiles[i] = nullptr;
     }
     for (int i = 0; i < GOAL_COUNT; i++) {
         delete goals[i];
+        goals[i] = nullptr;
     }
     for (int i = 0; i < CRITERIA_COUNT; i++) {
         delete criteria[i];
+        criteria[i] = nullptr;
     }
 }
 

@@ -7,7 +7,7 @@ Tile::Tile(int rollingValue, string resource, bool geese): rollingValue{rollingV
 
 void Tile::notifyObservers() {
     for (int i = 0; i < 6; ++i) {
-        if (criteria[i] != nullptr) {
+        if (criteria[i] != nullptr && !geese) {
             criteria[i]->notify(resource);  // Notify each Criterion on the Tile
         }
     }

@@ -17,10 +17,11 @@ using namespace std;
 
 void gameLoop(int argc, char *argv[]) {
     try {
-        Board *game = nullptr;
+        Board* game;
         cout << "Welcome to the Game of Goose!" << endl;
         Player students[NUM_PLAYERS];
         char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
+        map<char, string> nameArr = {{'B', "Blue"}, {'R', "Red"}, {'O', "Orange"}, {'Y', "Yellow"}};
         string resourcesArr[6] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL" ,"NETFLIX"};
         for (int i = 0; i < NUM_PLAYERS; i++) {
             students[i].setName(turnOrder[i]);
@@ -34,6 +35,9 @@ void gameLoop(int argc, char *argv[]) {
         int seed = 0;
         bool givenSeed = false;
         for (int i = 1; i < argc; i += 2) {
+            if(argv == nullptr) {
+                break;
+            }
             command = argv[i];
             if (command == "-load") {
                 gameFile = argv[i + 1];
@@ -131,7 +135,7 @@ void gameLoop(int argc, char *argv[]) {
             // geese tile number
             getline(fileStream, line);
             int geeseTile = stoi(line);
-            game = Board(goalOwners, criterionOwners, typeArray, tile, geeseTile);
+            game = new Board(goalOwners, criterionOwners, typeArray, tile, geeseTile);
         }
         // load board
         else if (boardFile != "") {
@@ -152,13 +156,13 @@ void gameLoop(int argc, char *argv[]) {
                     tile[count][1] = rollingValue;
                 }
             }
-            game = Board(tile);
+            game = new Board(tile);
         } else {
             // otherwise random board is loaded
-
+            game = new Board();
             //Stage 2: Initial Assignment purchasing
             for(int i = 0; i < NUM_PLAYERS; i++) {
-                cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
+                cout << "Student " << nameArr[students[i].getName()] << ", where do you want to complete an Assignment?" << endl;
                 int index = - 1;
                 do {
                     cout << "> ";
@@ -168,87 +172,113 @@ void gameLoop(int argc, char *argv[]) {
                         cin.ignore();
                         index = -1;
                     }
-                    if (index > 72 || index < 0) {
+                    if (index > CRITERIA_COUNT || index < 0) {
                         cout << "Invalid index, try again" << endl;
                     }
                 } while(index > 72 || index < 0);
-                if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
+                if(!students[i].completeCriterion(game->getCriteria()[index], true)) {
                     i--;
                     continue;
                 }
                 bool adj = false;
                 while(!adj) {
-                    cout << "Student " << turnOrder[i] << ", achieve an adjacent Goal on either ";
-                    for(size_t i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
-                        cout << game.getCriteria()[index]->getAdjacents()[i]->getIndex();
-                        if(i < game.getCriteria()[index]->getAdjacents().size() - 1) {
+                    cout << "Student " << nameArr[students[i].getName()]  << ", achieve an adjacent Goal on either ";
+                    for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
+                        cout << game->getCriteria()[index]->getAdjacents()[i]->getIndex();
+                        if(i < game->getCriteria()[index]->getAdjacents().size() - 1) {
                             cout << " or ";
                         }
                     }
-                    int goalIndex;
+                    int goalIndex = -1;
                     cout << endl;
-                    cout << "> ";
-                    cin >> goalIndex;
-                    for(size_t i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
-                        if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
+                    do {
+                        cout << "> ";
+                        cin >> goalIndex;
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore();
+                            goalIndex = -1;
+                        }
+                        if (goalIndex > 72 || goalIndex < 0) {
+                            cout << "Invalid index, try again" << endl;
+                        }
+                    } while(goalIndex > 72 || goalIndex < 0);
+                    for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
+                        if(game->getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
                             adj = true;
                             break;
                         }
                     }
-                    if(adj && students[currentTurn].achieveGoal(game.getGoals()[goalIndex], true)) {
+                    if(adj && students[currentTurn].achieveGoal(game->getGoals()[goalIndex], true)) {
                     } else {
                         cout << "That is not a valid placement, try again" << endl;
                     }
                 }
             }
             for(int i = NUM_PLAYERS - 1; i >= 0; i--) {
-                cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
-                int index;
-                cout << "> ";
-                cin >> index;
-                if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
+                cout << "Student " << nameArr[students[i].getName()]  << ", where do you want to complete an Assignment?" << endl;
+                int index = - 1;
+                do {
+                    cout << "> ";
+                    cin >> index;
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore();
+                        index = -1;
+                    }
+                    if (index > CRITERIA_COUNT || index < 0) {
+                        cout << "Invalid index, try again" << endl;
+                    }
+                } while(index > CRITERIA_COUNT || index < 0);
+                if(!students[i].completeCriterion(game->getCriteria()[index], true)) {
                     i++;
                     continue;
                 }
                 bool adj = false;
                 while(!adj) {
-                    cout << "Student " << turnOrder[i] << ", achieve an adjacent Goal on either ";
-                    for(size_t i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
-                        cout << game.getCriteria()[index]->getAdjacents()[i]->getIndex();
-                        if(i < game.getCriteria()[index]->getAdjacents().size() - 1) {
+                    cout << "Student " << nameArr[students[i].getName()]  << ", achieve an adjacent Goal on either ";
+                    for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
+                        cout << game->getCriteria()[index]->getAdjacents()[i]->getIndex();
+                        if(i < game->getCriteria()[index]->getAdjacents().size() - 1) {
                             cout << " or ";
                         }
                     }
-                    int goalIndex;
+                    int goalIndex = -1;
                     cout << endl;
-                    cout << "> ";
-                    cin >> goalIndex;
-                    for(size_t i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
-                        if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
+                    do {
+                        cout << "> ";
+                        cin >> goalIndex;
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore();
+                            goalIndex = -1;
+                        }
+                    if (goalIndex > GOAL_COUNT || goalIndex < 0) {
+                        cout << "Invalid index, try again" << endl;
+                    }
+                } while(index > CRITERIA_COUNT || index < 0);
+                    for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
+                        if(game->getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
                             adj = true;
                             break;
                         }
                     }
-                    if(adj && students[currentTurn].achieveGoal(game.getGoals()[goalIndex], true)) {
+                    if(adj && students[currentTurn].achieveGoal(game->getGoals()[goalIndex], true)) {
                     } else {
                         cout << "That is not a valid placement, try again" << endl;
                     }
                 }
             }
         }
-
-
-
         //Stage 3: The Game
         bool gameLoop = true;
         while(gameLoop) {
             //Step 1: Set the Dice
-            cout << "Student " << students[currentTurn].getName() << "'s Turn" << endl;
+            cout << "Student " << nameArr[students[currentTurn].getName()] << "'s Turn" << endl;
             cout << students[currentTurn];
             string rollCommand;
-            while(true) {
-                cout << "> ";
-                cin >> rollCommand;
+            cout << "> ";
+            while(cin >> rollCommand) {
                 if(rollCommand == "roll") {
                     break;
                 } else if (rollCommand == "load") {
@@ -260,9 +290,10 @@ void gameLoop(int argc, char *argv[]) {
                 } else {
                     cout << "Invalid Command; try either roll, load x, or fair." << endl;
                 }
+                cout << "> ";
             }
             //Step 2: Roll the Dice
-            Tile ** tiles = game.getTiles();
+            Tile ** tiles = game->getTiles();
             int diceRoll = students[currentTurn].rollDice();
             cout << "Rolled a " << diceRoll << endl;
             if(diceRoll == 7) {
@@ -293,7 +324,7 @@ void gameLoop(int argc, char *argv[]) {
                             }
                         }
                         map<string, int> lostResources;
-                        cout << "Student " << students[i].getName() << " lost " << discardCount << " resources to the geese. They lose:" << endl;
+                        cout << "Student " << nameArr[students[i].getName()] << " lost " << discardCount << " resources to the geese. They lose:" << endl;
                         for (int j = 0; j < 5; j++) {
                             lostResources[resourcesArr[j]] = students[i].getResources()[resourcesArr[j]] - cardCountArr[j];
                             students[i].takeResources(resourcesArr[j], lostResources[resourcesArr[j]]);
@@ -304,8 +335,18 @@ void gameLoop(int argc, char *argv[]) {
                 }
                 cout << "Choose where to place the GEESE." << endl;
                 int index;
-                cout << "> ";
-                cin >> index;
+                do {
+                    cout << "> ";
+                    cin >> index;
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore();
+                        index = -1;
+                    }
+                    if (index > 18 || index < 0) {
+                        cout << "Invalid goose index, try again" << endl;
+                    }
+                } while(index > 18 || index < 0);
                 
                 if(!(tiles[index]->getGeese())) {
                     for(int i = 0; i < 19; i++) {
@@ -315,58 +356,68 @@ void gameLoop(int argc, char *argv[]) {
                     }
                     tiles[index]->setGeese(true);
                 }
-                char stealFrom [6] = {'\0', '\0', '\0', '\0', '\0', '\0'};
+                map<char, bool> canSteal = {{'B', false}, {'R', false}, {'O', false}, {'Y', false}};
                 bool stealFromPossible = false;
                 for (int i = 0; i < 6 ; i++) {
-                    if (tiles[index]->getCriteria(i)->getPlayer() != nullptr) {
+                    if (tiles[index]->getCriteria(i)->getPlayer() != nullptr && tiles[index]->getCriteria(i)->getPlayer()->getName() != students[currentTurn].getName()) {
                         stealFromPossible = true;
                         char name = tiles[index]->getCriteria(i)->getPlayer()->getName();
                         if (name != students[currentTurn].getName()) {
-                            stealFrom[i] = name;
+                            canSteal[name] = true;
                         }
                     }
                 }
-                cout << "Steal from: " << stealFrom << endl;
                 if (!stealFromPossible) {
-                    cout << "Student " << students[currentTurn].getName() << " has no students to steal from." << endl;
+                    cout << "Student " << nameArr[students[currentTurn].getName()] << " has no students to steal from." << endl;
                 }
                 else {
-                    cout << "Student " << students[currentTurn].getName() << " can choose to steal from:" << endl;
-                    for (int i = 0; i < 6; i++) {
-                        if (stealFrom[i] != '\0') {
-                            cout << "Student " << stealFrom[i] << endl;
+                    cout << "Student " << nameArr[students[currentTurn].getName()] << " can choose to steal from:" << endl;
+                    for (auto &pair : canSteal) {
+                        if (pair.second) {
+                            cout << nameArr[pair.first] << endl;
                         }
                     }
-                }
-                cout << "Type the Student's name to steal from them." << endl;
-                char charCommand;
-                cout << "> ";
-                cin >> charCommand;
-                for (int i = 0; i < NUM_PLAYERS; i++) {
-                    if (turnOrder[i] == charCommand) {
-                        int cardCount = 0;
-                        for(const auto& pair : students[i].getResources()) {
-                            cardCount += pair.second;
+                    cout << "Type the Student's name to steal from them." << endl;
+                    char charCommand;
+                    do {
+                        cout << "> ";
+                        cin >> charCommand;
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore();
+                            charCommand = '\0';
                         }
-                        int randomCard = rand() % cardCount;
-                        int cardType = 0;
-                        for (const auto& pair: students[i].getResources() ) {
-                            int val = pair.second;
-                            if (cardType + val >= randomCard) {
-                                students[i].takeResources(pair.first, 1);
-                                students[currentTurn].addResources(pair.first, 1);
-                                cout << "Student " << students[currentTurn].getName() << " steals " << pair.first << " from " << turnOrder[i] << endl;
-                                break;
+                        if(charCommand == '\0' || !canSteal[charCommand]) {
+                            cout << "Invalid player chosen" << endl;
+                        }
+                    } while(!canSteal[charCommand]);
+
+                    for (int i = 0; i < NUM_PLAYERS; i++) {
+                        if (turnOrder[i] == charCommand) {
+                            int cardCount = 0;
+                            for(const auto& pair : students[i].getResources()) {
+                                cardCount += pair.second;
                             }
-                            cardType += val;
+                            int randomCard = rand() % cardCount;
+                            int cardType = 0;
+                            for (const auto& pair: students[i].getResources() ) {
+                                int val = pair.second;
+                                if (cardType + val >= randomCard) {
+                                    students[i].takeResources(pair.first, 1);
+                                    students[currentTurn].addResources(pair.first, 1);
+                                    cout << "Student " << nameArr[students[currentTurn].getName()]  << " steals " << pair.first << " from " << nameArr[students[i].getName()]  << endl;
+                                    break;
+                                }
+                                cardType += val;
+                            }
+                            break;
                         }
-                        break;
                     }
-                }
+                }  
             }
             else {
                 for(int i = 0; i < 19; i++) {
-                    if(tiles[i]->getRollingValue() == diceRoll) {
+                    if(tiles[i]->getRollingValue() == diceRoll && !tiles[i]->getGeese()) {
                         tiles[i]->notifyObservers();
                     }
                 }
@@ -380,7 +431,7 @@ void gameLoop(int argc, char *argv[]) {
                     break;
                 }
                 else if (command == "board") {
-                    cout << game;
+                    cout << (*game);
                 }
                 else if (command == "status") {
                     for(int i = 0; i < NUM_PLAYERS; i++) {
@@ -395,17 +446,17 @@ void gameLoop(int argc, char *argv[]) {
                 else if (command == "achieve") {
                     int index;
                     cin >> index;
-                    students[currentTurn].achieveGoal(game.getGoals()[index], false);
+                    students[currentTurn].achieveGoal(game->getGoals()[index], false);
                 }
                 else if (command == "complete") {
                     int index;
                     cin >> index;
-                    students[currentTurn].completeCriterion(game.getCriteria()[index], false);
+                    students[currentTurn].completeCriterion(game->getCriteria()[index], false);
                 }
                 else if (command == "improve") {
                     int index;
                     cin >> index;
-                    students[currentTurn].improveCriterion(game.getCriteria()[index], false);
+                    students[currentTurn].improveCriterion(game->getCriteria()[index], false);
                 }
                 else if (command == "trade") {
                     char target;
@@ -470,29 +521,30 @@ void gameLoop(int argc, char *argv[]) {
                     << "next " << endl 
                     << "save <file> " << endl
                     << "help" << endl;
-                }
-                else {
+                } else {
                     cout << "Invalid Command; type help for a list of commands." << endl;
                 }
                 for(int i = 0; i < NUM_PLAYERS; i++) {
                     if(students[i].getvictoryPoints() >= 10) {
-                        cout << "Student " << students[i].getName() << " has won with " << students[i].getvictoryPoints() << endl;
+                        cout << "Student " << nameArr[students[i].getName()] << " has won with " << students[i].getvictoryPoints() << endl;
+                        delete game;
+                        game = nullptr;
                         return;
                     }
                 }
+                cout << "> ";
             }
         }
-        } catch (exception e) {
-            cout << "An error occurred, exiting game." << endl;
-        }
+    } catch (const string &e) {
+        cout << e << endl;
+    }
 }
-
+        
 int main(int argc, char* argv[]) {
     bool play = true;
     while(play) {
         gameLoop(argc, argv);
         argc = 0;
-        argv = nullptr;
         cout << "Would you like to play again? (y/n)" << endl;
         cout << "> ";
         char confirmation;
@@ -503,4 +555,3 @@ int main(int argc, char* argv[]) {
     }
     cout << "Thank you for playing Watan!" << endl;
 }
-
