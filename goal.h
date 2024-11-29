@@ -5,6 +5,7 @@ using namespace std;
 #include <string>
 
 class Player;
+class Criterion;
 
 class Goal {
     Player *player;

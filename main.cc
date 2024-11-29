@@ -15,6 +15,89 @@ const int GOAL_COUNT = 72;
 const int CRITERIA_COUNT = 54;
 using namespace std;
 
+Board* loadGame(string gameFile, Player students[], int currentTurn, string resourcesArr[]) {
+    ifstream fileStream{gameFile};
+    if(!fileStream) {
+        cout << "Could not locate file" << endl;
+        return nullptr;
+    }
+    string line;
+    getline(fileStream, line);
+    currentTurn = stoi(line);
+    // load players
+    Player *goalOwners[GOAL_COUNT] = {nullptr}; 
+    Player *criterionOwners [CRITERIA_COUNT] = {nullptr};
+    int typeArray [CRITERIA_COUNT] = {0};
+    // loop through players, storing data
+    for (int i = 0; i < NUM_PLAYERS; i++) {
+        string l;
+        if(!getline(fileStream, l))  {
+            cout << "Could not read file" << endl;
+            return nullptr;
+        }
+        istringstream iss{l};
+        string readValue;
+        int count = 0;
+        // read resources
+        while (count < 5 && iss >> readValue) {
+            students[i].addResources(resourcesArr[count], stoi(readValue));
+            count++;
+        }
+        
+        // read goals
+        iss >> readValue; // skip "g"
+        while (iss >> readValue) {
+            if (readValue == "c") {
+                break;
+            }
+            else {
+                int goalIndex = stoi(readValue);
+                goalOwners[goalIndex] = &students[i];
+            }
+        }
+        // read criteria
+        count = 0;
+        int prevRead = 0;
+        while (iss >> readValue) {
+            if (count % 2 == 0) {
+                int criterionIndex = stoi(readValue);
+                criterionOwners[criterionIndex] = &students[i];
+                prevRead = criterionIndex;
+            }
+            else {
+                int criterionType = stoi(readValue);
+                typeArray[prevRead] = criterionType;
+            }
+            count++;
+        }
+    }
+
+    // load board
+    getline(fileStream, line);
+    istringstream iss{line};
+    string readValue;
+    string readResource;
+    int tile [19][2] = {0};
+    int count_resource = 0;
+    int count_roll = 0;
+    while (iss >> readValue) {
+        if (count_resource == count_roll) {
+            int resourceType = stoi(readValue);
+            tile[count_resource][0] = resourceType;
+            count_resource++;
+        }
+        else {
+            int rollingValue = stoi(readValue);
+            tile[count_roll][1] = rollingValue;
+            count_roll++;
+        } 
+    }
+    // geese tile number
+    getline(fileStream, line);
+    int geeseTile = stoi(line);
+    return new Board(goalOwners, criterionOwners, typeArray, tile, geeseTile);
+}
+
 void gameLoop(int argc, char *argv[]) {
     try {
         Board* game;
@@ -58,221 +141,144 @@ void gameLoop(int argc, char *argv[]) {
 
         // loading game from file
         if (gameFile != "") {
-            ifstream fileStream{gameFile};
-            if(!fileStream) {
-                cout << "Could not locate file" << endl;
-                return;
-            }
-            
-            string line;
-            getline(fileStream, line);
-            currentTurn = stoi(line);
-            // load players
-            Player *goalOwners[GOAL_COUNT] = {nullptr}; 
-            Player *criterionOwners [CRITERIA_COUNT] = {nullptr};
-            int typeArray [CRITERIA_COUNT] = {0};
-            // loop through players, storing data
-            for (int i = 0; i < NUM_PLAYERS; i++) {
-                string l;
-                if(!getline(fileStream, l))  {
-                    cout << "Could not read file" << endl;
-                    return;
-                }
-                istringstream iss{l};
-                string readValue;
-                int count = 0;
-                // read resources
-                while (count < 5 && iss >> readValue) {
-                    students[i].addResources(resourcesArr[count], stoi(readValue));
-                    count++;
-                }
-                
-                // read goals
-                iss >> readValue; // skip "g"
-                while (iss >> readValue) {
-                    if (readValue == "c") {
-                        break;
-                    }
-                    else {
-                        int goalIndex = stoi(readValue);
-                        goalOwners[goalIndex] = &students[i];
-                    }
-                }
-                // read criteria
-                count = 0;
-                int prevRead = 0;
-                while (iss >> readValue) {
-                    if (count % 2 == 0) {
-                        int criterionIndex = stoi(readValue);
-                        criterionOwners[criterionIndex] = &students[i];
-                        prevRead = criterionIndex;
-                    }
-                    else {
-                        int criterionType = stoi(readValue);
-                        typeArray[prevRead] = criterionType;
-                    }
-                    count++;
-                }
-            }
-
-            // load board
-            getline(fileStream, line);
-            istringstream iss{line};
-            string readValue;
-            string readResource;
-            int tile [19][2] = {0};
-            int count_resource = 0;
-            int count_roll = 0;
-            while (iss >> readValue) {
-                if (count_resource == count_roll) {
-                    int resourceType = stoi(readValue);
-                    tile[count_resource][0] = resourceType;
-                    count_resource++;
-                }
-                else {
-                    int rollingValue = stoi(readValue);
-                    tile[count_roll][1] = rollingValue;
-                    count_roll++;
-                } 
-            }
-            // geese tile number
-            getline(fileStream, line);
-            int geeseTile = stoi(line);
-            game = new Board(goalOwners, criterionOwners, typeArray, tile, geeseTile);
+           game = loadGame(gameFile, students, currentTurn, resourcesArr);
         }
         // load board
-        else if (boardFile != "") {
-            ifstream fileStream{boardFile};
-            string line;
-            getline(fileStream, line);
-            istringstream iss{line};
-            string readValue;
-            string readResource;
-            int tile [19][2] = {0};
-            int count_resource = 0;
-            int count_roll = 0;
-            while (iss >> readValue) {
-                if (count_resource == count_roll) {
-                    int resourceType = stoi(readValue);
-                    tile[count_resource][0] = resourceType;
-                    count_resource++;
-                }
-                else {
-                    int rollingValue = stoi(readValue);
-                    tile[count_roll][1] = rollingValue;
-                    count_roll++;
-                } 
-            }
-            game = new Board(tile);
-        } else {
-            game = new Board(); 
-        }
-        //Stage 2: Initial Assignment purchasing
-        for(int i = 0; i < NUM_PLAYERS; i++) {
-            cout << "Student " << nameArr[students[i].getName()] << ", where do you want to complete an Assignment?" << endl;
-            int index = - 1;
-            do {
-                cout << "> ";
-                cin >> index;
-                if (cin.fail()) {
-                    cin.clear();
-                    cin.ignore();
-                    index = -1;
-                }
-                if (index > CRITERIA_COUNT || index < 0) {
-                    cout << "Invalid index, try again" << endl;
-                }
-            } while(index > 72 || index < 0);
-            if(!students[i].completeCriterion(game->getCriteria()[index], true)) {
-                i--;
-                continue;
-            }
-            bool adj = false;
-            while(!adj) {
-                cout << "Student " << nameArr[students[i].getName()]  << ", achieve an adjacent Goal on either ";
-                for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
-                    cout << game->getCriteria()[index]->getAdjacents()[i]->getIndex();
-                    if(i < game->getCriteria()[index]->getAdjacents().size() - 1) {
-                        cout << " or ";
+        else { 
+            if (boardFile != "") {
+                ifstream fileStream{boardFile};
+                string line;
+                getline(fileStream, line);
+                istringstream iss{line};
+                string readValue;
+                string readResource;
+                int tile [19][2] = {0};
+                int count_resource = 0;
+                int count_roll = 0;
+                while (iss >> readValue) {
+                    if (count_resource == count_roll) {
+                        int resourceType = stoi(readValue);
+                        tile[count_resource][0] = resourceType;
+                        count_resource++;
                     }
+                    else {
+                        int rollingValue = stoi(readValue);
+                        tile[count_roll][1] = rollingValue;
+                        count_roll++;
+                    } 
                 }
-                int goalIndex = -1;
-                cout << endl;
+                game = new Board(tile); 
+            } 
+            else { 
+                game = new Board();
+            }
+            //Stage 2: Initial Assignment purchasing
+            for(int i = 0; i < NUM_PLAYERS; i++) {
+                cout << "Student " << nameArr[students[i].getName()] << ", where do you want to complete an Assignment?" << endl;
+                int index = - 1;
                 do {
                     cout << "> ";
-                    cin >> goalIndex;
+                    cin >> index;
                     if (cin.fail()) {
                         cin.clear();
                         cin.ignore();
-                        goalIndex = -1;
+                        index = -1;
                     }
-                    if (goalIndex > 72 || goalIndex < 0) {
+                    if (index > CRITERIA_COUNT || index < 0) {
                         cout << "Invalid index, try again" << endl;
                     }
-                } while(goalIndex > 72 || goalIndex < 0);
-                for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
-                    if(game->getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
-                        adj = true;
-                        break;
+                } while(index > 72 || index < 0);
+                if(!students[i].completeCriterion(game->getCriteria()[index], true)) {
+                    i--;
+                    continue;
+                }
+                bool adj = false;
+                while(!adj) {
+                    cout << "Student " << nameArr[students[i].getName()]  << ", achieve an adjacent Goal on either ";
+                    for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
+                        cout << game->getCriteria()[index]->getAdjacents()[i]->getIndex();
+                        if(i < game->getCriteria()[index]->getAdjacents().size() - 1) {
+                            cout << " or ";
+                        }
+                    }
+                    int goalIndex = -1;
+                    cout << endl;
+                    do {
+                        cout << "> ";
+                        cin >> goalIndex;
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore();
+                            goalIndex = -1;
+                        }
+                        if (goalIndex > 72 || goalIndex < 0) {
+                            cout << "Invalid index, try again" << endl;
+                        }
+                    } while(goalIndex > 72 || goalIndex < 0);
+                    for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
+                        if(game->getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
+                            adj = true;
+                            break;
+                        }
+                    }
+                    if(adj && students[currentTurn].achieveGoal(game->getGoals()[goalIndex], true)) {
+                    } else {
+                        cout << "That is not a valid placement, try again" << endl;
                     }
                 }
-                if(adj && students[currentTurn].achieveGoal(game->getGoals()[goalIndex], true)) {
-                } else {
-                    cout << "That is not a valid placement, try again" << endl;
-                }
             }
-        }
-        for(int i = NUM_PLAYERS - 1; i >= 0; i--) {
-            cout << "Student " << nameArr[students[i].getName()]  << ", where do you want to complete an Assignment?" << endl;
-            int index = - 1;
-            do {
-                cout << "> ";
-                cin >> index;
-                if (cin.fail()) {
-                    cin.clear();
-                    cin.ignore();
-                    index = -1;
-                }
-                if (index > CRITERIA_COUNT || index < 0) {
-                    cout << "Invalid index, try again" << endl;
-                }
-            } while(index > CRITERIA_COUNT || index < 0);
-            if(!students[i].completeCriterion(game->getCriteria()[index], true)) {
-                i++;
-                continue;
-            }
-            bool adj = false;
-            while(!adj) {
-                cout << "Student " << nameArr[students[i].getName()]  << ", achieve an adjacent Goal on either ";
-                for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
-                    cout << game->getCriteria()[index]->getAdjacents()[i]->getIndex();
-                    if(i < game->getCriteria()[index]->getAdjacents().size() - 1) {
-                        cout << " or ";
-                    }
-                }
-                int goalIndex = -1;
-                cout << endl;
+            for(int i = NUM_PLAYERS - 1; i >= 0; i--) {
+                cout << "Student " << nameArr[students[i].getName()]  << ", where do you want to complete an Assignment?" << endl;
+                int index = - 1;
                 do {
                     cout << "> ";
-                    cin >> goalIndex;
+                    cin >> index;
                     if (cin.fail()) {
                         cin.clear();
                         cin.ignore();
-                        goalIndex = -1;
+                        index = -1;
                     }
-                if (goalIndex > GOAL_COUNT || goalIndex < 0) {
-                    cout << "Invalid index, try again" << endl;
-                }
-            } while(index > CRITERIA_COUNT || index < 0);
-                for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
-                    if(game->getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
-                        adj = true;
-                        break;
+                    if (index > CRITERIA_COUNT || index < 0) {
+                        cout << "Invalid index, try again" << endl;
                     }
+                } while(index > CRITERIA_COUNT || index < 0);
+                if(!students[i].completeCriterion(game->getCriteria()[index], true)) {
+                    i++;
+                    continue;
                 }
-                if(adj && students[currentTurn].achieveGoal(game->getGoals()[goalIndex], true)) {
-                } else {
-                    cout << "That is not a valid placement, try again" << endl;
+                bool adj = false;
+                while(!adj) {
+                    cout << "Student " << nameArr[students[i].getName()]  << ", achieve an adjacent Goal on either ";
+                    for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
+                        cout << game->getCriteria()[index]->getAdjacents()[i]->getIndex();
+                        if(i < game->getCriteria()[index]->getAdjacents().size() - 1) {
+                            cout << " or ";
+                        }
+                    }
+                    int goalIndex = -1;
+                    cout << endl;
+                    do {
+                        cout << "> ";
+                        cin >> goalIndex;
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore();
+                            goalIndex = -1;
+                        }
+                    if (goalIndex > GOAL_COUNT || goalIndex < 0) {
+                        cout << "Invalid index, try again" << endl;
+                    }
+                } while(index > CRITERIA_COUNT || index < 0);
+                    for(size_t i = 0; i < game->getCriteria()[index]->getAdjacents().size(); i++) {
+                        if(game->getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
+                            adj = true;
+                            break;
+                        }
+                    }
+                    if(adj && students[currentTurn].achieveGoal(game->getGoals()[goalIndex], true)) {
+                    } else {
+                        cout << "That is not a valid placement, try again" << endl;
+                    }
                 }
             }
         }
@@ -288,9 +294,21 @@ void gameLoop(int argc, char *argv[]) {
                 if(rollCommand == "roll") {
                     break;
                 } else if (rollCommand == "load") {
-                    int fixedVal;
-                    cin >> fixedVal;
-                    students[currentTurn].setDice(fixedVal);
+                    do {
+                        cin >> rollCommand;
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore();
+                            rollCommand = "";
+                        }
+                        else {
+                            int fixedVal = stoi(rollCommand);
+                            if (fixedVal < 2 || fixedVal > 12) {
+                                cout << "Invalid Command; try either roll, load x, or fair." << endl;
+                            }
+                            students[currentTurn].setDice(fixedVal);
+                        }
+                    } while(rollCommand == "");
                 } else if (rollCommand == "fair") {
                     students[currentTurn].setDice(-1);
                 } else {
