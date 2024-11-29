@@ -260,7 +260,6 @@ int main(int argc, char* argv[]) {
         
         if(diceRoll == 7) {
             //GOOSE!
-            /* for(int i = 0; i < NUM_PLAYERS; i++) {
             for(int i = 0; i < NUM_PLAYERS; i++) {
                 for (int j = 0; j < 6; j++) {
                     cout << resourcesArr[j] << ": " << students[i].getResources()[resourcesArr[j]] << endl;
@@ -307,7 +306,6 @@ int main(int argc, char* argv[]) {
             int index;
             cout << "> ";
             cin >> index;
-            
             if(!(tiles[index]->getGeese())) {
                 for(int i = 0; i < 19; i++) {
                     if(tiles[i]->getGeese()) {
