@@ -98,7 +98,7 @@ Board* loadGame(string gameFile, Player students[], int currentTurn, string reso
     return new Board(goalOwners, criterionOwners, typeArray, tile, geeseTile);
 }
 
-void gameLoop(int argc, char *argv[]) {
+void gameLoop(string gameFile, string boardFile) {
     try {
         Board* game;
         cout << "Welcome to the Game of Goose!" << endl;
@@ -110,34 +110,6 @@ void gameLoop(int argc, char *argv[]) {
             students[i].setName(turnOrder[i]);
         }
         int currentTurn = 0;
-
-        // command line arguments handling
-        string command = "";
-        string boardFile = "";
-        string gameFile = "";
-        int seed = 0;
-        bool givenSeed = false;
-        for (int i = 1; i < argc; i += 2) {
-            if(argv == nullptr) {
-                break;
-            }
-            command = argv[i];
-            if (command == "-load") {
-                gameFile = argv[i + 1];
-            }
-            else if (command == "-seed") {
-                seed = stoi(argv[i + 1]);
-                givenSeed = true;
-            }
-            else if (command == "-board") {
-                boardFile = argv[i + 1];
-            }
-        }
-        if (givenSeed) {
-            srand(seed);
-        } else {
-            srand(time(NULL));
-        }
 
         // loading game from file
         if (gameFile != "") {
@@ -574,9 +546,35 @@ void gameLoop(int argc, char *argv[]) {
         
 int main(int argc, char* argv[]) {
     bool play = true;
+    // command line arguments handling
+    string command = "";
+    string boardFile = "";
+    string gameFile = "";
+    int seed = 0;
+    bool givenSeed = false;
+    for (int i = 1; i < argc; i += 2) {
+        if(argv == nullptr) {
+            break;
+        }
+        command = argv[i];
+        if (command == "-load") {
+            gameFile = argv[i + 1];
+        }
+        else if (command == "-seed") {
+            seed = stoi(argv[i + 1]);
+            givenSeed = true;
+        }
+        else if (command == "-board") {
+            boardFile = argv[i + 1];
+        }
+    }
+    if (givenSeed) {
+        srand(seed);
+    } else {
+        srand(time(NULL));
+    }
     while(play) {
-        gameLoop(argc, argv);
-        argc = 0;
+        gameLoop(gameFile, boardFile);;
         cout << "Would you like to play again? (y/n)" << endl;
         cout << "> ";
         char confirmation;
