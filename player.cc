@@ -156,6 +156,16 @@ void Player::trade(Player *p, string ask, string give) {
     cout << nameArr[p->getName()] << " declined the offer." << endl;
 }
 
+void Player::tradeBank(string give, string take) {
+    if(resources[give] < 4) {
+        cout << nameArr[name] << ", you do not have enough " << give << " to trade." << endl;
+        return;
+    }
+    takeResources(give, 4);
+    addResources(take, 1);
+}
+
+
 void Player::addResources(string resource, int count) {
     resources[resource] += count;
 }

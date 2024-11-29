@@ -13,7 +13,6 @@ class Goal {
     vector<Goal*> adjacents;
     vector<Criterion *> neighbors;
     public:
-        Goal(int idx);
         Goal(int idx, Player* p);
         ~Goal();
         Player* getPlayer();
