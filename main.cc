@@ -98,10 +98,10 @@ Board* loadGame(string gameFile, Player students[], int currentTurn, string reso
     return new Board(goalOwners, criterionOwners, typeArray, tile, geeseTile);
 }
 
-void gameLoop(string gameFile, string boardFile) {
+bool gameLoop(string gameFile, string boardFile) {
     try {
         Board* game;
-        cout << "Welcome to the Game of Goose!" << endl;
+        cout << "Welcome to the Game of Goose: Watan!" << endl;
         Player students[NUM_PLAYERS];
         char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
         map<char, string> nameArr = {{'B', "Blue"}, {'R', "Red"}, {'O', "Orange"}, {'Y', "Yellow"}};
@@ -115,7 +115,7 @@ void gameLoop(string gameFile, string boardFile) {
         if (gameFile != "") {
            game = loadGame(gameFile, students, currentTurn, resourcesArr);
         }
-        // load board
+        // loading board from file
         else { 
             if (boardFile != "") {
                 ifstream fileStream{boardFile};
@@ -151,7 +151,10 @@ void gameLoop(string gameFile, string boardFile) {
                 do {
                     cout << "> ";
                     cin >> index;
-                    if (cin.fail()) {
+                    if (cin.eof()) {
+                        return false;
+                    }
+                    else if (cin.fail()) {
                         cin.clear();
                         cin.ignore();
                         index = -1;
@@ -178,7 +181,10 @@ void gameLoop(string gameFile, string boardFile) {
                     do {
                         cout << "> ";
                         cin >> goalIndex;
-                        if (cin.fail()) {
+                        if (cin.eof()) {
+                            return false;
+                        }
+                        else if (cin.fail()) {
                             cin.clear();
                             cin.ignore();
                             goalIndex = -1;
@@ -205,7 +211,10 @@ void gameLoop(string gameFile, string boardFile) {
                 do {
                     cout << "> ";
                     cin >> index;
-                    if (cin.fail()) {
+                    if (cin.eof()) {
+                        return false;
+                    }
+                    else if (cin.fail()) {
                         cin.clear();
                         cin.ignore();
                         index = -1;
@@ -232,7 +241,10 @@ void gameLoop(string gameFile, string boardFile) {
                     do {
                         cout << "> ";
                         cin >> goalIndex;
-                        if (cin.fail()) {
+                        if (cin.eof()) {
+                            return false;
+                        }
+                        else if (cin.fail()) {
                             cin.clear();
                             cin.ignore();
                             goalIndex = -1;
@@ -263,12 +275,18 @@ void gameLoop(string gameFile, string boardFile) {
             string rollCommand;
             cout << "> ";
             while(cin >> rollCommand) {
-                if(rollCommand == "roll") {
+                if (cin.eof()) {
+                    return false;
+                }
+                else if(rollCommand == "roll") {
                     break;
                 } else if (rollCommand == "load") {
                     do {
                         cin >> rollCommand;
-                        if (cin.fail()) {
+                        if (cin.eof()) {
+                            return false;
+                        }
+                        else if (cin.fail()) {
                             cin.clear();
                             cin.ignore();
                             rollCommand = "";
@@ -334,7 +352,10 @@ void gameLoop(string gameFile, string boardFile) {
                 do {
                     cout << "> ";
                     cin >> index;
-                    if (cin.fail()) {
+                    if (cin.eof()) {
+                        return false;
+                    }
+                    else if (cin.fail()) {
                         cin.clear();
                         cin.ignore();
                         index = -1;
@@ -378,7 +399,10 @@ void gameLoop(string gameFile, string boardFile) {
                     do {
                         cout << "> ";
                         cin >> charCommand;
-                        if (cin.fail()) {
+                        if (cin.eof()) {
+                            return false;
+                        }
+                        else if (cin.fail()) {
                             cin.clear();
                             cin.ignore();
                             charCommand = '\0';
@@ -422,7 +446,10 @@ void gameLoop(string gameFile, string boardFile) {
             string command;
             cout << "> ";
             while(cin >> command) {
-                if (command == "next") {
+                if (cin.eof()) {
+                    return false;
+                }
+                else if (command == "next") {
                     currentTurn = (currentTurn + 1) % 4;
                     break;
                 }
@@ -533,7 +560,7 @@ void gameLoop(string gameFile, string boardFile) {
                         cout << "Student " << nameArr[students[i].getName()] << " has won with " << students[i].getvictoryPoints() << endl;
                         delete game;
                         game = nullptr;
-                        return;
+                        return true;
                     }
                 }
                 cout << "> ";
@@ -545,7 +572,6 @@ void gameLoop(string gameFile, string boardFile) {
 }
         
 int main(int argc, char* argv[]) {
-    bool play = true;
     // command line arguments handling
     string command = "";
     string boardFile = "";
@@ -573,7 +599,7 @@ int main(int argc, char* argv[]) {
     } else {
         srand(time(NULL));
     }
-    while(play) {
+    while(!cin.eof()) {
         gameLoop(gameFile, boardFile);;
         cout << "Would you like to play again? (y/n)" << endl;
         cout << "> ";
