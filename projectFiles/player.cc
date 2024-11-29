@@ -237,11 +237,9 @@ void Player::setvictoryPoints(int points) {
 
 Player::~Player() {
     for(size_t i = 0; i < criteria.size(); i++) {
-        criteria[i]->setPlayer(nullptr);
         criteria[i] = nullptr;
     }
     for(size_t i = 0; i < goals.size(); i++) {
-        goals[i]->setPlayer(nullptr);
         goals[i] = nullptr;
     }
     dice.reset();

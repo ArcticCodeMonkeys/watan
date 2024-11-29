@@ -188,12 +188,15 @@ Board::Board(int tile[19][2]) {
 Board::~Board() {
     for (int i = 0; i < TILE_COUNT; i++) {
         delete tiles[i];
+        tiles[i] = nullptr;
     }
     for (int i = 0; i < GOAL_COUNT; i++) {
         delete goals[i];
+        goals[i] = nullptr;
     }
     for (int i = 0; i < CRITERIA_COUNT; i++) {
         delete criteria[i];
+        criteria[i] = nullptr;
     }
 }
 
