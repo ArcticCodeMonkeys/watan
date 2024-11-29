@@ -148,7 +148,7 @@ Board::Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], in
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (i == geeseTile));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
-        goals[i] = new Goal(i, nullptr); //update
+        goals[i] = new Goal(i, nullptr);
         if(goalOwners[i]) {
             goalOwners[i]->achieveGoal(goals[i], true);
             goals[i]->setPlayer(goalOwners[i]);
@@ -157,7 +157,7 @@ Board::Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], in
     }
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
-        criteria[i] = new Criterion(i, nullptr, typeArray[i]); //update
+        criteria[i] = new Criterion(i, nullptr, typeArray[i]);
         if(criteriaOwners[i]) {
             criteriaOwners[i]->completeCriterion(criteria[i], true);
             criteria[i]->setType(typeArray[i] == 0 ? '\0' : typeArray[i] == 1 ? 'A' : typeArray[i] == 2 ? 'M': 'E');
@@ -175,32 +175,160 @@ Board::Board(int tile[19][2]) {
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (resources[tile[i][0]] == "NETFLIX"));
     }
     for (int i = 0; i < GOAL_COUNT; i++ ) {
-        goals[i] = new Goal(i, nullptr); //update
+        goals[i] = new Goal(i, nullptr);
     }
 
     for (int i = 0; i < CRITERIA_COUNT; i++ ) {
-        criteria[i] = new Criterion(i, nullptr, 0); //update
+        criteria[i] = new Criterion(i, nullptr, 0);
     }
     tileLinking();
 
 }
 
+
+string insertSpaces(int n) {
+    string spaces = "";
+    for (int i = 0; i < n; i++) {
+        spaces += " ";
+    }
+    return spaces;
+}
+
+string printSide(Criterion * corner1, Goal * edge, Criterion *corner2) {
+    string side = "|" + corner1->printOwner() + "|--" + edge->printOwner() + "--|" + corner2->printOwner() + "|";
+    return side;
+}
+
 std::ostream& operator<<(std::ostream& out, const Board& board) {
-    for(int i = 0; i < TILE_COUNT; i++) {
-        out << "      |" << board.tiles[i]->getCriteria(0)->printOwner() << "|--" << board.tiles[i]->getGoal(0)->printOwner() << "--|" << board.tiles[i]->getCriteria(1)->printOwner() << "|      " << endl;
-        out << "      /            \\     " << endl;
-        out << "    " << board.tiles[i]->getGoal(5)->printOwner() << "      " << board.tiles[i]->printIndex(i) << "      " << board.tiles[i]->getGoal(1)->printOwner() << "    " << endl;
-        out << "   /" << board.tiles[i]->printResource() << "\\  " << endl;
-        out << "|" << board.tiles[i]->getCriteria(5)->printOwner() << "|        " << board.tiles[i]->printRollingValue() << "        |" << board.tiles[i]->getCriteria(2)->printOwner() << "|" << endl;
-        out << "   \\      " << (board.tiles[i]->getGeese() ? "GEESE" : "     ") << "       /  " << endl;
-        out << "    " << board.tiles[i]->getGoal(4)->printOwner() << "              " << board.tiles[i]->getGoal(2)->printOwner() << "    " << endl;
-        out << "      \\            /      " << endl;
-        out << "      |" << board.tiles[i]->getCriteria(4)->printOwner() << "|--" << board.tiles[i]->getGoal(3)->printOwner() << "--|" << board.tiles[i]->getCriteria(3)->printOwner() << "|      " << endl;
-        out << endl;
+    for (int i = 0; i < 41; i++) {
+        switch (i) {
+            case 0:
+                out << insertSpaces(39) << printSide(board.criteria[0], board.goals[0], board.criteria[1]) << insertSpaces(37) <<  endl;
+                break;
+            case 1:
+                out << insertSpaces(39) << '/' << insertSpaces(12) << '\\' << insertSpaces(33) <<  endl;
+                break;
+            case 2:
+                out << insertSpaces(37) << board.goals[1]->printOwner() << insertSpaces(6) << " 0" << insertSpaces(5) << board.goals[2]->printOwner() << insertSpaces(36) <<  endl;
+                break;
+            case 3:
+                out << insertSpaces(37) << '/' << insertSpaces(5) << board.tiles[0]->printResource() << insertSpaces(3) << '\\' <<  endl;
+                break;
+            case 4:
+                out << insertSpaces(24) << printSide(board.criteria[2], board.goals[3], board.criteria[3]) << insertSpaces(7) << board.tiles[0]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[4], board.goals[4], board.criteria[5]) <<  endl;
+                break;
+            case 5:
+                out << insertSpaces(24) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[0]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' <<  endl;
+                break;
+            case 6:
+                out << insertSpaces(22) << board.goals[5]->printOwner() << insertSpaces(6) << " 1" << insertSpaces(5) << board.goals[6]->printOwner() << insertSpaces(13) << board.goals[7]->printOwner() << insertSpaces(6) << " 2" << insertSpaces(5) << board.goals[8]->printOwner() <<  endl;
+                break;
+            case 7:
+                out << insertSpaces(22) << '/' << insertSpaces(5) << board.tiles[1]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[2]->printResource() << insertSpaces(3) << '\\' <<  endl;
+                break;
+            case 8:
+                out << insertSpaces(9) << printSide(board.criteria[6], board.goals[9], board.criteria[7]) << insertSpaces(7) << board.tiles[1]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[8], board.goals[10], board.criteria[9]) << insertSpaces(7) << board.tiles[2]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[10], board.goals[11], board.criteria[11]) <<  endl;
+                break;
+            case 9:
+                out << insertSpaces(9) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[1]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[2]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' <<  endl;
+                break;
+            case 10:
+                out << insertSpaces(7) << board.goals[12]->printOwner() << insertSpaces(6) << " 3" << insertSpaces(5) << board.goals[13]->printOwner() << insertSpaces(13) << board.goals[14]->printOwner() << insertSpaces(6) << " 4" << insertSpaces(5) << board.goals[15]->printOwner() << insertSpaces(13) << board.goals[16]->printOwner() << insertSpaces(6) << " 5" << insertSpaces(5) << board.goals[17]->printOwner() <<  endl;
+                break;
+            case 11:
+                out << insertSpaces(7) << '/' << insertSpaces(5) << board.tiles[3]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[4]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[5]->printResource() << insertSpaces(3) << '\\' <<  endl;
+                break;
+            case 12:
+                out << insertSpaces(4) << '|' << board.criteria[12]->printOwner() << '|' << insertSpaces(7) << board.tiles[3]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[13], board.goals[18], board.criteria[14]) << insertSpaces(7) << board.tiles[4]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[15], board.goals[19], board.criteria[16]) << insertSpaces(7) << board.tiles[5]->printRollingValue() << insertSpaces(7) << '|' << board.criteria[17]->printOwner() << '|' <<  endl;
+                break;
+            case 13:
+                out << insertSpaces(7) << '\\' << insertSpaces(5) << board.tiles[3]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[4]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[5]->printGeese() << insertSpaces(6) << '/' <<  endl;
+                break;        
+            case 14:
+                out << insertSpaces(7) << board.goals[20]->printOwner() << insertSpaces(13) << board.goals[21]->printOwner() << insertSpaces(6) << " 6" << insertSpaces(5) << board.goals[22]->printOwner() << insertSpaces(13) << board.goals[23]->printOwner() << insertSpaces(6) << " 7" << insertSpaces(5) << board.goals[24]->printOwner() << insertSpaces(13) << board.goals[25]->printOwner() <<  endl;
+                break;
+            case 15:
+                out << insertSpaces(9) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[6]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[7]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' <<  endl;
+                break;
+            case 16:
+                out << insertSpaces(9) << printSide(board.criteria[18], board.goals[26], board.criteria[19]) << insertSpaces(7) << board.tiles[6]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[20], board.goals[27], board.criteria[21]) << insertSpaces(7) << board.tiles[7]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[22], board.goals[28], board.criteria[23]) <<  endl;
+                break;
+            case 17:
+                out << insertSpaces(9) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[6]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[7]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' <<  endl;
+                break;
+            case 18:
+                out << insertSpaces(7) << board.goals[29]->printOwner() << insertSpaces(6) << " 8" << insertSpaces(5) << board.goals[30]->printOwner() << insertSpaces(13) << board.goals[31]->printOwner() << insertSpaces(6) << " 9" << insertSpaces(5) << board.goals[32]->printOwner() << insertSpaces(13) << board.goals[33]->printOwner() << insertSpaces(6) << "10" << insertSpaces(5) << board.goals[34]->printOwner() <<  endl;
+                break;
+            case 19:
+                out << insertSpaces(7) << '/' << insertSpaces(5) << board.tiles[8]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[9]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[10]->printResource() << insertSpaces(3) << '\\' <<  endl;
+                break;
+            case 20:
+                out << insertSpaces(4) << '|' << board.criteria[24]->printOwner() << '|' << insertSpaces(7) << board.tiles[8]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[25], board.goals[35], board.criteria[26]) << insertSpaces(7) << board.tiles[9]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[27], board.goals[36], board.criteria[28]) << insertSpaces(7) << board.tiles[10]->printRollingValue() << insertSpaces(7) << '|' << board.criteria[29]->printOwner() << '|' <<  endl;
+                break;
+            case 21:
+                out << insertSpaces(7) << '\\' << insertSpaces(5) << board.tiles[8]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[9]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[10]->printGeese() << insertSpaces(6) << '/' <<  endl;
+                break;
+            case 22:
+                out << insertSpaces(7) << board.goals[37]->printOwner() << insertSpaces(13) << board.goals[38]->printOwner() << insertSpaces(6) << "11" << insertSpaces(5) << board.goals[39]->printOwner() << insertSpaces(13) << board.goals[40]->printOwner() << insertSpaces(6) << "12" << insertSpaces(5) << board.goals[41]->printOwner() << insertSpaces(13) << board.goals[42]->printOwner() <<  endl;
+                break;
+            case 23:
+                out << insertSpaces(9) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[11]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[12]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' <<  endl;
+                break;
+            case 24:
+                out << insertSpaces(9) << printSide(board.criteria[30], board.goals[43], board.criteria[31]) << insertSpaces(7) << board.tiles[11]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[32], board.goals[44], board.criteria[33]) << insertSpaces(7) << board.tiles[12]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[34], board.goals[45], board.criteria[35]) <<  endl;
+                break;
+            case 25:
+                out << insertSpaces(9) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[11]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[12]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' <<  endl;
+                break;
+            case 26:
+                out << insertSpaces(7) << board.goals[46]->printOwner() << insertSpaces(6) << "13" << insertSpaces(5) << board.goals[47]->printOwner() << insertSpaces(13) << board.goals[48]->printOwner() << insertSpaces(6) << "14" << insertSpaces(5) << board.goals[49]->printOwner() << insertSpaces(13) << board.goals[50]->printOwner() << insertSpaces(6) << "15" << insertSpaces(5) << board.goals[51]->printOwner() <<  endl;
+                break;
+            case 27:
+                out << insertSpaces(7) << '/' << insertSpaces(5) << board.tiles[13]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[14]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[15]->printResource() << insertSpaces(3) << '\\' <<  endl;
+                break;
+            case 28:
+                out << insertSpaces(4) << '|' << board.criteria[36]->printOwner() << '|' << insertSpaces(7) << board.tiles[13]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[37], board.goals[52], board.criteria[38]) << insertSpaces(7) << board.tiles[14]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[39], board.goals[53], board.criteria[40]) << insertSpaces(7) << board.tiles[15]->printRollingValue() << insertSpaces(7) << '|' << board.criteria[41]->printOwner() << '|' <<  endl;
+                break;
+            case 29:
+                out << insertSpaces(7) << '\\' << insertSpaces(5) << board.tiles[13]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[14]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[15]->printGeese() << insertSpaces(6) << '/' <<  endl;
+                break;
+            case 30:
+                out << insertSpaces(7) << board.goals[54]->printOwner() << insertSpaces(13) << board.goals[55]->printOwner() << insertSpaces(6) << "16" << insertSpaces(5) << board.goals[56]->printOwner() << insertSpaces(13) << board.goals[57]->printOwner() << insertSpaces(6) << "17" << insertSpaces(5) << board.goals[58]->printOwner() << insertSpaces(13) << board.goals[59]->printOwner() <<  endl;
+                break;
+            case 31:
+                out << insertSpaces(9) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[16]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[17]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' <<  endl;
+                break;
+            case 32:
+                out << insertSpaces(9) << printSide(board.criteria[42], board.goals[60], board.criteria[43]) << insertSpaces(7) << board.tiles[16]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[44], board.goals[61], board.criteria[45]) << insertSpaces(7) << board.tiles[17]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[46], board.goals[62], board.criteria[47]) <<  endl;
+                break;
+            case 33:
+                out << insertSpaces(22) << '\\' << insertSpaces(5) << board.tiles[16]->printGeese() << insertSpaces(6) << '/' << insertSpaces(12) << '\\' << insertSpaces(5) << board.tiles[17]->printGeese() << insertSpaces(6) << '/' <<  endl;
+                break;
+            case 34:
+                out << insertSpaces(22) << board.goals[63]->printOwner() << insertSpaces(13) << board.goals[64]->printOwner() << insertSpaces(6) << "18" << insertSpaces(5) << board.goals[65]->printOwner() << insertSpaces(13) << board.goals[66]->printOwner() <<  endl;
+                break;
+            case 35:
+                out << insertSpaces(24) << '\\' << insertSpaces(12) << '/' << insertSpaces(5) << board.tiles[18]->printResource() << insertSpaces(3) << '\\' << insertSpaces(12) << '/' <<  endl;
+                break;
+            case 36:
+                out << insertSpaces(24) << printSide(board.criteria[48], board.goals[67], board.criteria[49]) << insertSpaces(7) << board.tiles[18]->printRollingValue() << insertSpaces(7) << printSide(board.criteria[50], board.goals[68], board.criteria[51]) <<  endl;               break;
+                break;
+            case 37:
+                out << insertSpaces(37) << '\\' << insertSpaces(5) << board.tiles[18]->printGeese() << insertSpaces(6) << '/' <<  endl;
+                break;
+            case 38:
+                out << insertSpaces(37) << board.goals[69]->printOwner() << insertSpaces(14) << board.goals[70]->printOwner() << insertSpaces(35) <<  endl;
+                break;
+            case 39:
+                out << insertSpaces(39) << '\\' << insertSpaces(12) << '/' << insertSpaces(33) <<  endl;
+                break;
+            case 40:
+                out << insertSpaces(39) << printSide(board.criteria[52], board.goals[71], board.criteria[53]) << insertSpaces(37) <<  endl;
+                break;
+        }
     }
     return out;
 }
-
 Tile ** Board::getTiles() {
     return tiles;
 }

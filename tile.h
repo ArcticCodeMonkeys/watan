@@ -26,5 +26,6 @@ class Tile: public Subject {
         string printResource();
         string printRollingValue();
         string printIndex(int index);
+        string printGeese();
 };
 #endif

@@ -35,8 +35,8 @@ string Tile::getResource() {
 }
 
 string Tile::printResource() {
-    int remaining_spaces = 12 - resource.length();
-    string output_string = "      " + resource;
+    int remaining_spaces = 8 - resource.length();
+    string output_string = resource;
     for (int i = 0; i < remaining_spaces; i++) {
         output_string += " ";
     }
@@ -72,4 +72,12 @@ string Tile::printIndex(int index) {
     }
     output_string += to_string(index);
     return output_string;
+}
+
+string Tile::printGeese() {
+    if(geese) {
+        return "GEESE";
+    } else {
+        return "     ";
+    }
 }
