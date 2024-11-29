@@ -43,7 +43,6 @@ Board* loadGame(string gameFile, Player students[], int currentTurn, string reso
             students[i].addResources(resourcesArr[count], stoi(readValue));
             count++;
         }
-        
         // read goals
         iss >> readValue; // skip "g"
         while (iss >> readValue) {
