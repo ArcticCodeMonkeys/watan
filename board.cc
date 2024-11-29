@@ -185,18 +185,700 @@ Board::Board(int tile[19][2]) {
 
 }
 
+
+string insertSpaces(int n) {
+    string spaces = "";
+    for (int i = 0; i < n; i++) {
+        spaces += " ";
+    }
+    return spaces;
+}
+
+string printSide(Criterion * corner1, Goal * edge, Criterion *corner2) {
+    string side = "|" + corner1->printOwner() + "|--" + edge->printOwner() + "--|" + corner2->printOwner() + "|";
+    return side;
+}
+
 std::ostream& operator<<(std::ostream& out, const Board& board) {
-    for(int i = 0; i < TILE_COUNT; i++) {
-        out << "      |" << board.tiles[i]->getCriteria(0)->printOwner() << "|--" << board.tiles[i]->getGoal(0)->printOwner() << "--|" << board.tiles[i]->getCriteria(1)->printOwner() << "|      " << endl;
-        out << "      /            \\     " << endl;
-        out << "    " << board.tiles[i]->getGoal(5)->printOwner() << "      " << board.tiles[i]->printIndex(i) << "      " << board.tiles[i]->getGoal(1)->printOwner() << "    " << endl;
-        out << "   /" << board.tiles[i]->printResource() << "\\  " << endl;
-        out << "|" << board.tiles[i]->getCriteria(5)->printOwner() << "|        " << board.tiles[i]->printRollingValue() << "        |" << board.tiles[i]->getCriteria(2)->printOwner() << "|" << endl;
-        out << "   \\      " << (board.tiles[i]->getGeese() ? "GEESE" : "     ") << "       /  " << endl;
-        out << "    " << board.tiles[i]->getGoal(4)->printOwner() << "              " << board.tiles[i]->getGoal(2)->printOwner() << "    " << endl;
-        out << "      \\            /      " << endl;
-        out << "      |" << board.tiles[i]->getCriteria(4)->printOwner() << "|--" << board.tiles[i]->getGoal(3)->printOwner() << "--|" << board.tiles[i]->getCriteria(3)->printOwner() << "|      " << endl;
-        out << endl;
+    for (int i = 0; i < 41; i++) {
+        switch (i) {
+            case 0:
+                out << insertSpaces(39);
+                out << printSide(board.criteria[0], board.goals[0], board.criteria[1]);
+                out << insertSpaces(37);
+                out << '\n';
+                break;
+            
+            case 1:
+                out << insertSpaces(39);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(33);
+                out << '\n';
+                break;
+            case 2:
+                out << insertSpaces(37);
+                out << board.goals[1]->printOwner();
+                out << insertSpaces(6);
+                out << " 0";
+                out << insertSpaces(5);
+                out << board.goals[2]->printOwner();
+                out << insertSpaces(36);
+                out << '\n';
+                break;
+            case 3:
+                out << insertSpaces(37);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[0]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << '\n';
+                break;
+            
+            case 4:
+                out << insertSpaces(24);
+                out << printSide(board.criteria[2], board.goals[3], board.criteria[3]);
+                out << insertSpaces(7);
+                out << board.tiles[0]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[4], board.goals[4], board.criteria[5]);
+                out << '\n';
+                break;
+            
+            case 5:
+                out << insertSpaces(24);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[0]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << '\n';
+                break;
+            
+            case 6:
+                out << insertSpaces(22);
+                out << board.goals[5]->printOwner();
+                out << insertSpaces(6);
+                out << " 1";
+                out << insertSpaces(5);
+                out << board.goals[6]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[7]->printOwner();
+                out << insertSpaces(6);
+                out << " 2";
+                out << insertSpaces(5);
+                out << board.goals[8]->printOwner();
+                out << '\n';
+                break;
+            
+            case 7:
+                out << insertSpaces(22);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[1]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[2]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << '\n';
+                break;
+            
+            case 8:
+                out << insertSpaces(9);
+                out << printSide(board.criteria[6], board.goals[9], board.criteria[7]);
+                out << insertSpaces(7);
+                out << board.tiles[1]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[8], board.goals[10], board.criteria[9]);
+                out << insertSpaces(7);
+                out << board.tiles[2]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[10], board.goals[11], board.criteria[11]);
+                out << '\n';
+                break;
+            
+            case 9:
+                out << insertSpaces(9);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[1]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[2]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << '\n';
+                break;
+            
+            case 10:
+                out << insertSpaces(7);
+                out << board.goals[12]->printOwner();
+                out << insertSpaces(6);
+                out << " 3";
+                out << insertSpaces(5);
+                out << board.goals[13]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[14]->printOwner();
+                out << insertSpaces(6);
+                out << " 4";
+                out << insertSpaces(5);
+                out << board.goals[15]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[16]->printOwner();
+                out << insertSpaces(6);
+                out << " 5";
+                out << insertSpaces(5);
+                out << board.goals[17]->printOwner();
+                out << '\n';
+                break;
+            
+            case 11:
+                out << insertSpaces(7);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[3]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[4]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[5]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << '\n';
+                break;
+            
+            case 12:
+                out << insertSpaces(4);
+                out << '|';
+                out << board.criteria[12]->printOwner();
+                out << '|';
+                out << insertSpaces(7);
+                out << board.tiles[3]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[13], board.goals[18], board.criteria[14]);
+                out << insertSpaces(7);
+                out << board.tiles[4]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[15], board.goals[19], board.criteria[16]);
+                out << insertSpaces(7);
+                out << board.tiles[5]->printRollingValue();
+                out << insertSpaces(7);
+                out << '|';
+                out << board.criteria[17]->printOwner();
+                out << '|';
+                out << '\n';
+                break;
+
+            case 13:
+                out << insertSpaces(7);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[3]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[4]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[5]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << '\n';
+                break;
+            
+            case 14:
+                out << insertSpaces(7);
+                out << board.goals[20]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[21]->printOwner();
+                out << insertSpaces(6);
+                out << " 6";
+                out << insertSpaces(5);
+                out << board.goals[22]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[23]->printOwner();
+                out << insertSpaces(6);
+                out << " 7";
+                out << insertSpaces(5);
+                out << board.goals[24]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[25]->printOwner();
+                out << '\n';
+                break;
+            
+            case 15:
+                out << insertSpaces(9);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[6]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[7]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << '\n';
+                break;
+            
+            case 16:
+                out << insertSpaces(9);
+                out << printSide(board.criteria[18], board.goals[26], board.criteria[19]);
+                out << insertSpaces(7);
+                out << board.tiles[6]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[20], board.goals[27], board.criteria[21]);
+                out << insertSpaces(7);
+                out << board.tiles[7]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[22], board.goals[28], board.criteria[23]);
+                out << '\n';
+                break;
+            
+            case 17:
+                out << insertSpaces(9);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[6]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[7]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << '\n';
+                break;
+
+            case 18:
+                out << insertSpaces(7);
+                out << board.goals[29]->printOwner();
+                out << insertSpaces(6);
+                out << " 8";
+                out << insertSpaces(5);
+                out << board.goals[30]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[31]->printOwner();
+                out << insertSpaces(6);
+                out << " 9";
+                out << insertSpaces(5);
+                out << board.goals[32]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[33]->printOwner();
+                out << insertSpaces(6);
+                out << "10";
+                out << insertSpaces(5);
+                out << board.goals[34]->printOwner();
+                out << '\n';
+                break;
+
+            case 19:
+                out << insertSpaces(7);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[8]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[9]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[10]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << '\n';
+                break;
+
+            case 20:
+                out << insertSpaces(4);
+                out << '|';
+                out << board.criteria[24]->printOwner();
+                out << '|';
+                out << insertSpaces(7);
+                out << board.tiles[8]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[25], board.goals[35], board.criteria[26]);
+                out << insertSpaces(7);
+                out << board.tiles[9]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[27], board.goals[36], board.criteria[28]);
+                out << insertSpaces(7);
+                out << board.tiles[10]->printRollingValue();
+                out << insertSpaces(7);
+                out << '|';
+                out << board.criteria[29]->printOwner();
+                out << '|';
+                out << '\n';
+                break;
+            
+            case 21:
+                out << insertSpaces(7);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[8]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[9]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[10]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << '\n';
+                break;
+            
+            case 22:
+                out << insertSpaces(7);
+                out << board.goals[37]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[38]->printOwner();
+                out << insertSpaces(6);
+                out << "11";
+                out << insertSpaces(5);
+                out << board.goals[39]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[40]->printOwner();
+                out << insertSpaces(6);
+                out << "12";
+                out << insertSpaces(5);
+                out << board.goals[41]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[42]->printOwner();
+                out << '\n';
+                break;
+            
+            case 23:
+                out << insertSpaces(9);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[11]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[12]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << '\n';
+                break;
+            
+            case 24:
+                out << insertSpaces(9);
+                out << printSide(board.criteria[30], board.goals[43], board.criteria[31]);
+                out << insertSpaces(7);
+                out << board.tiles[11]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[32], board.goals[44], board.criteria[33]);
+                out << insertSpaces(7);
+                out << board.tiles[12]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[34], board.goals[45], board.criteria[35]);
+                out << '\n';
+                break;
+            
+            case 25:
+                out << insertSpaces(9);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[11]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[12]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << '\n';
+            
+                break;
+            case 26:
+                out << insertSpaces(7);
+                out << board.goals[46]->printOwner();
+                out << insertSpaces(6);
+                out << "13";
+                out << insertSpaces(5);
+                out << board.goals[47]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[48]->printOwner();
+                out << insertSpaces(6);
+                out << "14";
+                out << insertSpaces(5);
+                out << board.goals[49]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[50]->printOwner();
+                out << insertSpaces(6);
+                out << "15";
+                out << insertSpaces(5);
+                out << board.goals[51]->printOwner();
+                out << '\n';
+                break;
+            
+            case 27:
+                out << insertSpaces(7);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[13]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[14]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[15]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << '\n';
+                break;
+            
+            case 28:
+                out << insertSpaces(4);
+                out << '|';
+                out << board.criteria[36]->printOwner();
+                out << '|';
+                out << insertSpaces(7);
+                out << board.tiles[13]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[37], board.goals[52], board.criteria[38]);
+                out << insertSpaces(7);
+                out << board.tiles[14]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[39], board.goals[53], board.criteria[40]);
+                out << insertSpaces(7);
+                out << board.tiles[15]->printRollingValue();
+                out << insertSpaces(7);
+                out << '|';
+                out << board.criteria[41]->printOwner();
+                out << '|';
+                out << '\n';
+                break;
+            
+            case 29:
+                out << insertSpaces(7);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[13]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[14]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[15]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << '\n';
+                break;
+            
+            case 30:
+                out << insertSpaces(7);
+                out << board.goals[54]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[55]->printOwner();
+                out << insertSpaces(6);
+                out << "16";
+                out << insertSpaces(5);
+                out << board.goals[56]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[57]->printOwner();
+                out << insertSpaces(6);
+                out << "17";
+                out << insertSpaces(5);
+                out << board.goals[58]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[59]->printOwner();
+                out << '\n';
+                break;
+            
+            case 31:
+                out << insertSpaces(9);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[16]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[17]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << '\n';
+                break;
+            
+            case 32:
+                out << insertSpaces(9);
+                out << printSide(board.criteria[42], board.goals[60], board.criteria[43]);
+                out << insertSpaces(7);
+                out << board.tiles[16]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[44], board.goals[61], board.criteria[45]);
+                out << insertSpaces(7);
+                out << board.tiles[17]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[46], board.goals[62], board.criteria[47]);
+                out << '\n';
+                break;
+            
+            case 33:
+                out << insertSpaces(22);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[16]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << insertSpaces(12);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[17]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << '\n';
+                break;
+            
+            case 34:
+                out << insertSpaces(22);
+                out << board.goals[63]->printOwner();
+                out << insertSpaces(13);;
+                out << board.goals[64]->printOwner();
+                out << insertSpaces(6);
+                out << "18";
+                out << insertSpaces(5);
+                out << board.goals[65]->printOwner();
+                out << insertSpaces(13);
+                out << board.goals[66]->printOwner();
+                out << '\n';
+                break;
+            
+            case 35:
+                out << insertSpaces(24);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(5);
+                out << board.tiles[18]->printResource();
+                out << insertSpaces(3);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << '\n';
+                break;
+            
+            case 36:
+                out << insertSpaces(24);
+                out << printSide(board.criteria[48], board.goals[67], board.criteria[49]);
+                out << insertSpaces(7);
+                out << board.tiles[18]->printRollingValue();
+                out << insertSpaces(7);
+                out << printSide(board.criteria[50], board.goals[68], board.criteria[51]);
+                out << '\n';
+                break;
+            
+            case 37:
+                out << insertSpaces(37);
+                out << '\\';
+                out << insertSpaces(5);
+                out << board.tiles[18]->printGeese();
+                out << insertSpaces(6);
+                out << '/';
+                out << '\n';
+                break;
+            case 38:
+                out << insertSpaces(37);
+                out << board.goals[69]->printOwner();
+                out << insertSpaces(14);
+                out << board.goals[70]->printOwner();
+                out << insertSpaces(35);
+                out << '\n';
+                break;
+            case 39:
+                out << insertSpaces(39);
+                out << '\\';
+                out << insertSpaces(12);
+                out << '/';
+                out << insertSpaces(33);
+                out << '\n';
+                break;
+            case 40:
+                out << insertSpaces(39);
+                out << printSide(board.criteria[52], board.goals[71], board.criteria[53]);
+                out << insertSpaces(37);
+                out << '\n';
+                break;
+        }
     }
     return out;
 }

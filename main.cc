@@ -159,6 +159,7 @@ void gameLoop(int argc, char *argv[]) {
         for(int i = 0; i < NUM_PLAYERS; i++) {
             cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
             int index;
+            cout << "> ";
             cin >> index;
             if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
                 i--;
@@ -175,6 +176,7 @@ void gameLoop(int argc, char *argv[]) {
                 }
                 int goalIndex;
                 cout << endl;
+                cout << "> ";
                 cin >> goalIndex;
                 for(size_t i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
                     if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
@@ -191,6 +193,7 @@ void gameLoop(int argc, char *argv[]) {
         for(int i = NUM_PLAYERS - 1; i >= 0; i--) {
             cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
             int index;
+            cout << "> ";
             cin >> index;
             if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
                 i++;
@@ -207,6 +210,7 @@ void gameLoop(int argc, char *argv[]) {
                 }
                 int goalIndex;
                 cout << endl;
+                cout << "> ";
                 cin >> goalIndex;
                 for(size_t i = 0; i < game.getCriteria()[index]->getAdjacents().size(); i++) {
                     if(game.getCriteria()[index]->getAdjacents()[i]->getIndex() == goalIndex) {
@@ -231,7 +235,9 @@ void gameLoop(int argc, char *argv[]) {
         cout << "Student " << students[currentTurn].getName() << "'s Turn" << endl;
         cout << students[currentTurn];
         string rollCommand;
-        while(cin >> rollCommand) {
+        while(true) {
+            cout << "> ";
+            cin >> rollCommand;
             if(rollCommand == "roll") {
                 break;
             } else if (rollCommand == "load") {
@@ -251,7 +257,6 @@ void gameLoop(int argc, char *argv[]) {
         if(diceRoll == 7) {
             //GOOSE!
             for(int i = 0; i < NUM_PLAYERS; i++) {
-                
                 int cardCount = 0;
                 int cardCountArr []= {0, 0, 0, 0, 0, 0};
                 for (const auto& it : students[i].getResources()) {
@@ -263,7 +268,6 @@ void gameLoop(int argc, char *argv[]) {
                     }
                 }
                 if (cardCount >= 10) {
-
                     int discardCount = cardCount / 2;
                     int stolen = 0;
                     while (stolen < discardCount) {
@@ -289,6 +293,7 @@ void gameLoop(int argc, char *argv[]) {
             }
             cout << "Choose where to place the GEESE." << endl;
             int index;
+            cout << "> ";
             cin >> index;
             
             if(!(tiles[index]->getGeese())) {
@@ -324,6 +329,7 @@ void gameLoop(int argc, char *argv[]) {
             }
             cout << "Type the Student's name to steal from them." << endl;
             char charCommand;
+            cout << "> ";
             cin >> charCommand;
             for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (turnOrder[i] == charCommand) {
@@ -356,6 +362,7 @@ void gameLoop(int argc, char *argv[]) {
         }
         //Step 3: Action Time
         string command;
+        cout << "> ";
         while(cin >> command) {
             if (command == "next") {
                 currentTurn = (currentTurn + 1) % 4;
