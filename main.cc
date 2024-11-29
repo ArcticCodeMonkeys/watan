@@ -472,6 +472,13 @@ void gameLoop(int argc, char *argv[]) {
                         }
                     }
                 }
+                else if (command == "trade-bank") {
+                    string give;
+                    string take;
+                    cin >> give;
+                    cin >> take;
+                    students[currentTurn].tradeBank(give, take);
+                }
                 else if (command == "save") {
                     string saveFile;
                     cin >> saveFile;
@@ -517,6 +524,7 @@ void gameLoop(int argc, char *argv[]) {
                     << "achieve <goal#>" << endl
                     << "complete <criterion#> " << endl
                     << "improve <criterion#> " << endl
+                    << "trade-bank <give> <take> " << endl
                     << "trade <colour> <give> <take> " << endl
                     << "next " << endl 
                     << "save <file> " << endl

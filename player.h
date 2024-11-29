@@ -25,6 +25,7 @@ class Player {
         bool improveCriterion(Criterion* upgrade, bool free);
         bool achieveGoal(Goal* purchase, bool free);
         void trade(Player *p, string ask, string give);
+        void tradeBank(string give, string take);
         void addResources(string resource, int count);
         void takeResources(string resource, int count);
         void printCriteria();
@@ -38,7 +39,6 @@ class Player {
         void setGoals(vector<Goal*> goals);
         void setDice(int value);
         int rollDice();
-        
         int getvictoryPoints();
         void addVictoryPoints(int amt);
         void setvictoryPoints(int points);

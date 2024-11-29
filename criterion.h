@@ -34,7 +34,6 @@ class Criterion: public Observer {
         char getType();
         void setType(char t);
         int getIndex();
-        Criterion();
         void notify(string resource) override;
         vector<Tile*> getTiles();
         void setTile(int index, Tile *t);
