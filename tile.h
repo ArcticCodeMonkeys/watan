@@ -14,9 +14,9 @@ class Tile: public Subject {
 
     public:
         Tile(int rollingValue, string resource, bool geese);
-        void notifyObservers();
         void setCriteria(int index, Criterion *c);
         void setGeese(bool geese);
+        void notifyObservers();
         Criterion* getCriteria(int index);
         bool getGeese();
         int getRollingValue();

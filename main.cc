@@ -65,7 +65,6 @@ void gameLoop(int argc, char *argv[]) {
         // loop through players, storing data
         for (int i = 0; i < NUM_PLAYERS; i++) {
             string l;
-        
             if(!getline(fileStream, l))  {
                 cout << "Could not read file" << endl;
                 return;
@@ -245,7 +244,6 @@ void gameLoop(int argc, char *argv[]) {
                 cout << "Invalid Command; try either roll, load x, or fair." << endl;
             }
         }
-        
         //Step 2: Roll the Dice
         Tile ** tiles = game.getTiles();
         int diceRoll = students[currentTurn].rollDice();

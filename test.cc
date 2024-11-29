@@ -33,3 +33,4 @@ int main() {
         cout << resourcesArr[i] << " " << resources[resourcesArr[i]] << endl;
     }
 }
+}

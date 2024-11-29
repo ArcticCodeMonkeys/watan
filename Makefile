@@ -5,10 +5,10 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra
 
 # Source files
-SRCS = board.cc player.cc criterion.cc goal.cc tile.cc dice.cc main.cc
+SRCS = subject.cc board.cc player.cc criterion.cc goal.cc tile.cc dice.cc main.cc
 
 # Header files
-HEADERS = board.h player.h criterion.h goal.h tile.h dice.h
+HEADERS = observer.h subject.h board.h player.h criterion.h goal.h tile.h dice.h
 
 # Object files
 OBJS = $(SRCS:.cc=.o)

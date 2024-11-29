@@ -6,13 +6,15 @@ using namespace std;
 Tile::Tile(int rollingValue, string resource, bool geese): rollingValue{rollingValue}, resource{resource}, geese{geese} {}
 
 void Tile::notifyObservers() {
-    for (auto &ob : criteria) {
-        ob->notify(resource);
+    for (int i = 0; i < 6; ++i) {
+        if (criteria[i] != nullptr) {
+            criteria[i]->notify(resource);  // Notify each Criterion on the Tile
+        }
     }
 }
 
 void Tile::setCriteria(int index, Criterion *c) {
-    //attach(c); SOMETHING THAT SHOULD BE DONE
+    attach(c);
     criteria[index] = c;
 }
 

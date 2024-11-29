@@ -34,7 +34,7 @@ class Criterion: public Observer {
         void setType(char t);
         int getIndex();
         Criterion();
-        void notify(string resource);
+        void notify(string resource) override;
         friend std::ostream &operator<<(std::ostream &out, const Criterion &criterion);
         vector<Tile*> getTiles();
         void setTile(int index, Tile *t);
