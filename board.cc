@@ -202,6 +202,7 @@ Board::Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], in
 
 Board::Board(int tile[19][2]) {
     string resources[] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL", "NETFLIX"}; 
+
     for (int i = 0; i < TILE_COUNT; i++) {
         tiles[i] = new Tile(tile[i][1], resources[tile[i][0]], (resources[tile[i][0]] == "NETFLIX"));
     }
