@@ -6,7 +6,7 @@
 
 
 Player::Player(vector<Criterion*> criteria, vector<Goal*> goals, map<string, int> resources, char name): criteria{criteria}, goals{goals}, resources{resources}, name{name}, victoryPoints{0}, dice{Dice::createFairDice()} {
-    for(auto it = getCriteria().begin(); it != getCriteria().end(); ++it) {
+    for(auto it = criteria.begin(); it != criteria.end(); ++it) {
         char type = (*it)->getType();
         victoryPoints += (type == 'E' ? 3 : (type == 'M' ? 2 : (type == 'A' ? 1 : 0)));
     }
@@ -35,7 +35,7 @@ bool Player::completeCriterion(Criterion *purchase, bool free) {
         return false;
     }
     //check for any adjacent houses (therefore invalid placement)
-    for(int i = 0; i < purchase->getNeighbors().size(); i++) {
+    for(size_t i = 0; i < purchase->getNeighbors().size(); i++) {
         if(purchase->getNeighbors()[i]->getPlayer() != nullptr) {
             cout << "Invalid Placement, " << purchase->getNeighbors()[i]->getPlayer()->getName() << " has already purchased the Criterion at " << purchase->getNeighbors()[i]->getIndex() << endl;
             return false;
@@ -44,7 +44,7 @@ bool Player::completeCriterion(Criterion *purchase, bool free) {
     //check for at least one adjacent goal.
 
     bool adjGoal = false;
-    for(int i = 0; i < purchase->getAdjacents().size(); i++) {
+    for(size_t i = 0; i < purchase->getAdjacents().size(); i++) {
         if(purchase->getAdjacents()[i]->getPlayer() == this) {
             adjGoal = true;
             break;
@@ -71,27 +71,27 @@ bool Player::completeCriterion(Criterion *purchase, bool free) {
     cout << "Invalid Placement, not enough resources" << endl;
     return false;
 }
-bool Player::improveCriterion(int index) {
-    if(criteria[index]->getPlayer() != this) {
+bool Player::improveCriterion(Criterion *upgrade, bool free) {
+    if(upgrade->getPlayer() != this) {
         return false;
     }
-    if(criteria[index]->getType() == 'A') {
-        if(resources["LECTURE"] > 1 && resources["STUDY"] > 2) {
+    if(upgrade->getType() == 'A') {
+        if(free || (resources["LECTURE"] > 1 && resources["STUDY"] > 2)) {
             resources["LECTURE"] -= 2;
             resources["STUDY"] -= 3;
-            criteria[index]->setType('M');
+            upgrade->setType('M');
             victoryPoints++;
             return true;
         }
         return false;
-    } else if(criteria[index]->getType() == 'M') {
-        if(resources["LAB"] > 1 && resources["LECTURE"] > 1 && resources["CAFFEINE"] > 2 && resources["TUTORIAL"] > 0 && resources["STUDY"] > 1) {
+    } else if(upgrade->getType() == 'M') {
+        if(free || (resources["LAB"] > 1 && resources["LECTURE"] > 1 && resources["CAFFEINE"] > 2 && resources["TUTORIAL"] > 0 && resources["STUDY"] > 1)) {
             resources["LAB"] -= 2;
             resources["LECTURE"] -= 2;
             resources["CAFFEINE"] -= 3;
             resources["TUTORIAL"] -= 1;
             resources["STUDY"] -= 2;
-            criteria[index]->setType('E');
+            upgrade->setType('E');
             victoryPoints++;
             return true;
         }
@@ -112,7 +112,7 @@ bool Player::achieveGoal(Goal* purchase, bool free) {
         return true;
     }
     bool adjGoal = false;
-    for(int i = 0; i < purchase->getAdjacents().size(); i++) {
+    for(size_t i = 0; i < purchase->getAdjacents().size(); i++) {
         cout << purchase->getAdjacents()[i]->getPlayer()->getName() << endl;
         if(purchase->getAdjacents()[i]->getPlayer() == this) {
             adjGoal = true;

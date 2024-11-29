@@ -80,7 +80,7 @@ void Board::tileLinking() {
         }
     }
     for (int i = 0; i < CRITERIA_COUNT; i++) {
-        for (int j = 0; j < criteria[i]->getTiles().size(); j++) {
+        for (size_t j = 0; j < criteria[i]->getTiles().size(); j++) {
             for (int k = 0; k < 6; k++) {
                 if (criteria[i]->getTiles()[j]->getCriteria(k) == criteria[i]) {
                     criteria[i]->addAdjacent(criteria[i]->getTiles()[j]->getGoal(k % 6));
@@ -89,7 +89,24 @@ void Board::tileLinking() {
             }
         }
     }
+    for (int i = 0; i < CRITERIA_COUNT; i++) {
+        vector <Goal *> adj{};
+        for (size_t j = 0; j < criteria[i]->getAdjacents().size(); j++) {
+            bool seen = false;
+            for(size_t k = 0; k < adj.size(); k++) {
+                if(adj[k] == criteria[i]->getAdjacents()[j]) {
+                    seen = true;
+                }
+            }
+            if(!seen) {
+                adj.emplace_back(criteria[i]->getAdjacents()[j]);
+            }
+        }
+        criteria[i]->setAdjacents(adj);
+
+    }
     
+
 }
 
 Board::Board() {
@@ -141,6 +158,8 @@ Board::Board(Player *goalOwners[], Player *criteriaOwners[], int typeArray[], in
         criteria[i] = new Criterion(i, nullptr, typeArray[i]); //update
         if(criteriaOwners[i]) {
             criteriaOwners[i]->completeCriterion(criteria[i], true);
+            criteria[i]->setType(typeArray[i] == 0 ? '\0' : typeArray[i] == 1 ? 'A' : typeArray[i] == 2 ? 'M': 'E');
+            criteriaOwners[i]->addVictoryPoints(typeArray[i]-1);
         }
     }
     tileLinking();

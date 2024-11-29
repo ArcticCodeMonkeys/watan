@@ -25,6 +25,7 @@ class Criterion: public Observer {
         void addNeighbor(Criterion *c);
         vector<Goal*> getAdjacents();
         void addAdjacent(Goal *goal);
+        void setAdjacents(vector<Goal*> goals);
         Player* getPlayer();
         void setPlayer(Player *p);
         string printOwner();

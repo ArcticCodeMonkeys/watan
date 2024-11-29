@@ -105,3 +105,7 @@ void Criterion::setPlayer(Player *p) {
 void Criterion::addNeighbor(Criterion *c) {
     neighbors.emplace_back(c);
 }
+
+void Criterion::setAdjacents(vector<Goal*> goals) {
+    adjacents = goals;
+}
