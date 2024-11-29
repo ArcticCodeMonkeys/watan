@@ -143,10 +143,11 @@ void Player::trade(Player *p, string ask, string give) {
         cout << p->getName() << " does not have any " << ask << " to give." << endl;
         return;
     }
-    cout << name << " offers " << p->getName() << " one " << give << " for one " << ask << ". Does " << p->getName() << " accept this offer?" << endl;
+    cout << name << " offers " << p->getName() << " one " << give << " for one " << ask << ". Does " << p->getName() << " accept this offer? (y/n)" << endl;
     char confirmation;
+    cout << "> ";
     cin >> confirmation;
-    if(confirmation == 'Y') {
+    if(confirmation == 'y' || confirmation == 'Y') {
         takeResources(give, 1);
         p->addResources(give, 1);
         addResources(ask, 1);
@@ -176,9 +177,8 @@ std::ostream &operator<<(std::ostream &out, Player &player) {
 
 void Player::printCriteria() {
     cout << getName() << " has completed: " << endl;
-    for(auto it = getCriteria().begin(); it != getCriteria().end(); ++it) {
-        Criterion* criterion = *it;
-        cout << criterion->getIndex() << " " << criterion->getType() << endl;
+    for(size_t i = 0; i < getCriteria().size(); i++) {
+        cout << getCriteria()[i]->getIndex() << " " << getCriteria()[i]->getType() << endl;
     }
 }
 

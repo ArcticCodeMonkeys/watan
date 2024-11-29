@@ -158,9 +158,19 @@ void gameLoop(int argc, char *argv[]) {
         //Stage 2: Initial Assignment purchasing
         for(int i = 0; i < NUM_PLAYERS; i++) {
             cout << "Student " << turnOrder[i] << ", where do you want to complete an Assignment?" << endl;
-            int index;
-            cout << "> ";
-            cin >> index;
+            int index = - 1;
+            do {
+                cout << "> ";
+                cin >> index;
+                if (cin.fail()) {
+                    cin.clear();
+                    cin.ignore();
+                    index = -1;
+                }
+                if (index > 72 || index < 0) {
+                    cout << "Invalid index, try again" << endl;
+                }
+            } while(index > 72 || index < 0);
             if(!students[i].completeCriterion(game.getCriteria()[index], true)) {
                 i--;
                 continue;
@@ -377,8 +387,8 @@ void gameLoop(int argc, char *argv[]) {
                 }
             }
             else if (command == "criteria") {
-                for(size_t i = 0; i < students[currentTurn].getCriteria().size(); i++) {   
-                    cout << students[currentTurn].getCriteria()[i]->getIndex() << " " << students[currentTurn].getCriteria()[i]->getType() << endl;
+                for(int i = 0; i < NUM_PLAYERS; i++) {   
+                    students[i].printCriteria();
                 }
             }
             else if (command == "achieve") {
@@ -405,7 +415,7 @@ void gameLoop(int argc, char *argv[]) {
                 cin >> take;
                 for (int i = 0; i < NUM_PLAYERS; i++) {
                     if (turnOrder[i] == target) {
-                        students[currentTurn].trade(&students[i], give, take);
+                       students[currentTurn].trade(&students[i], give, take);
                        break;
                     }
                 }
@@ -483,9 +493,10 @@ int main(int argc, char* argv[]) {
         cout << "> ";
         char confirmation;
         cin >> confirmation;
-        if(confirmation == 'n') {
+        if (confirmation != 'y' && confirmation != 'Y') {
             break;
-        }
+        } 
     }
     cout << "Thank you for playing Watan!" << endl;
 }
+
