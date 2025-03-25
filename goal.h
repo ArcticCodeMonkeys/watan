@@ -1,8 +1,8 @@
 #ifndef GOAL_H
 #define GOAL_H
-using namespace std;
 #include <vector>
 #include <string>
+using namespace std;
 
 class Player;
 class Criterion;

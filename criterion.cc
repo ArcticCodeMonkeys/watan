@@ -1,7 +1,7 @@
 #include "criterion.h"
 
-Criterion::Criterion(int index, Player *p = nullptr, int type = 0): index{index}, player{p}, type{(type == 0 ? Type::EMPTY : type == 1 ? Type::ASSIGNMENT : 
-type == 2 ? Type::MIDTERM : Type::EXAM)} {}
+Criterion::Criterion(int index, Player *p = nullptr, int type = 0): type{(type == 0 ? Type::EMPTY : type == 1 ? Type::ASSIGNMENT : 
+type == 2 ? Type::MIDTERM : Type::EXAM)}, index{index}, player{p} {}
 
 vector<Criterion*> Criterion::getNeighbors() {
     return neighbors;

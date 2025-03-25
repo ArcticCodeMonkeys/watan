@@ -104,7 +104,7 @@ bool gameLoop(string gameFile, string boardFile) {
         Player students[NUM_PLAYERS];
         char turnOrder[NUM_PLAYERS] = {'B', 'R', 'O', 'Y'};
         map<char, string> nameArr = {{'B', "Blue"}, {'R', "Red"}, {'O', "Orange"}, {'Y', "Yellow"}};
-        string resourcesArr[6] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL" ,"NETFLIX"};
+        string resourcesArr[7] = {"CAFFEINE", "LAB", "LECTURE", "STUDY", "TUTORIAL" ,"NETFLIX", "DEVELOPMENT CARD"};
         for (int i = 0; i < NUM_PLAYERS; i++) {
             students[i].setName(turnOrder[i]);
         }
@@ -568,6 +568,7 @@ bool gameLoop(string gameFile, string boardFile) {
     } catch (const string &e) {
         cout << e << endl;
     }
+    return true;
 }
         
 int main(int argc, char* argv[]) {

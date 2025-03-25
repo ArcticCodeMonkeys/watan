@@ -64,15 +64,6 @@ void Board::tileLinking() {
         }
     }
     
-    /*for (int j = 0; j < TILE_COUNT; ++j) {
-        for (int k = 0; k < 6; ++k) {
-            int val = goalMap[j][k];
-            goals[val]->addAdjacent(goals[goalMap[j][(k - 1 + 6)%6]]);
-            goals[val]->addAdjacent(goals[goalMap[j][(k + 1)%6]]);
-        }
-    }*/
-    
-    
     for (int j = 0; j < TILE_COUNT; ++j) {
         for (int k = 0; k < 6; ++k) {
             int val = criteriaMap[j][k];
@@ -111,8 +102,8 @@ void Board::tileLinking() {
     
     for (int i = 0; i < TILE_COUNT; i++) {
         for (int j = 0; j < 6; j++) {
-            for (int k = 0; k < goals[goalMap[i][j]]->getNeighbors().size(); k++) {
-                for (int l = 0; l < goals[goalMap[i][j]]->getNeighbors()[k]->getAdjacents().size(); l++) {
+            for (size_t k = 0; k < goals[goalMap[i][j]]->getNeighbors().size(); k++) {
+                for (size_t l = 0; l < goals[goalMap[i][j]]->getNeighbors()[k]->getAdjacents().size(); l++) {
                     if (goals[goalMap[i][j]]->getNeighbors()[k]->getAdjacents()[l] != goals[goalMap[i][j]]) {
                         goals[goalMap[i][j]]->addAdjacent(goals[goalMap[i][j]]->getNeighbors()[k]->getAdjacents()[l]);
                     }
